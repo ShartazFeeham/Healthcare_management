@@ -29,7 +29,7 @@ import {
   chartExample2,
 } from "variables/charts.js";
 
-import Header from "components/Headers/Header.js";
+import Header from "components/Headers/Header";
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
