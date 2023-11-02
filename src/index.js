@@ -13,9 +13,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/admin/*" element={<Logged />} />
-      <Route path="/auth/*" element={<Public />} />
-      <Route path="*" element={<Navigate to="/admin/index" replace />} />
+      <Route path="/health/*" element={<Logged />} />
+      <Route path="/public/*" element={<Public />} />
+      {/* I can add page not found page here! */}
+      {/* <Route path="*" element={<Navigate to="/health/index" replace />} /> */}
     </Routes>
   </BrowserRouter>
 );

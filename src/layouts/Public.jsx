@@ -24,7 +24,7 @@ const Public = (props) => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/auth") {
+      if (prop.layout === "/public") {
         return (
           <Route path={prop.path} element={prop.component} key={key} exact />
         );
@@ -59,7 +59,10 @@ const Public = (props) => {
           <Row className="justify-content-center">
             <Routes>
               {getRoutes(routes)}
-              <Route path="*" element={<Navigate to="/auth/login" replace />} />
+              <Route
+                path="*"
+                element={<Navigate to="/public/login" replace />}
+              />
             </Routes>
           </Row>
         </Container>

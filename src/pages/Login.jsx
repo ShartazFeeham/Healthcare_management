@@ -74,13 +74,13 @@ const Login = () => {
                 </Button>
               </div>
             </Form>
-            <Link to="/register">
+            <Link to="/public/forgotten-password">
               <small>Forgotten password</small>
             </Link>
             <br></br>
             <small>
               Not registered yet?{" "}
-              <Link to="/auth/register">Create new account</Link>
+              <Link to="/public/register">Create new account</Link>
             </small>
           </CardBody>
         </Card>

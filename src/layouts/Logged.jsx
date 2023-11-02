@@ -4,7 +4,6 @@ import { Container } from "reactstrap";
 import PublicFooter from "components/Navbars/LoggedNavbar";
 import LoggedFooter from "components/Footers/LoggedFooter";
 import Sidebar from "components/Sidebar/Sidebar.js";
-
 import routes from "routes.js";
 
 const Logged = (props) => {
