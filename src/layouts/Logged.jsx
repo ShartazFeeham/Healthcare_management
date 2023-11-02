@@ -18,7 +18,7 @@ const Logged = (props) => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/health") {
         return (
           <Route path={prop.path} element={prop.component} key={key} exact />
         );
@@ -46,7 +46,7 @@ const Logged = (props) => {
         {...props}
         routes={routes}
         logo={{
-          innerLink: "/admin/index",
+          innerLink: "/health/index",
           imgSrc: require("../assets/img/brand/argon-react.png"),
           imgAlt: "...",
         }}
@@ -58,7 +58,7 @@ const Logged = (props) => {
         />
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/admin/index" replace />} />
+          <Route path="*" element={<Navigate to="/health/index" replace />} />
         </Routes>
         <Container fluid>
           <LoggedFooter />

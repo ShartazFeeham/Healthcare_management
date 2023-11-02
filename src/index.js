@@ -15,6 +15,7 @@ root.render(
     <Routes>
       <Route path="/health/*" element={<Logged />} />
       <Route path="/public/*" element={<Public />} />
+      <Route path="/" element={<Navigate to="/health/index" replace />} />
       {/* I can add page not found page here! */}
       {/* <Route path="*" element={<Navigate to="/health/index" replace />} /> */}
     </Routes>
