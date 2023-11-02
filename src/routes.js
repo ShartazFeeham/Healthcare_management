@@ -1,10 +1,14 @@
 import Index from "pages/Index";
 import Profile from "pages/Profile";
 import Maps from "pages/Maps";
-import Register from "pages/Register";
 import Login from "pages/Login";
 import Tables from "pages/Tables";
 import Icons from "pages/Icons";
+import ForgottenPassword from "pages/ForgottenPassword";
+import VerifyAccount from "pages/VerifyAccount";
+import RegisterAdmin from "pages/RegisterAdmin";
+import RegisterPatient from "pages/RegisterPatient";
+import RegisterDoctor from "pages/RegisterDoctor";
 
 var routes = [
   {
@@ -50,10 +54,38 @@ var routes = [
     layout: "/public",
   },
   {
-    path: "/register",
+    path: "/register-patient",
     name: "Register",
     icon: "ni ni-circle-08 text-pink",
-    component: <Register />,
+    component: <RegisterPatient />,
+    layout: "/public",
+  },
+  {
+    path: "/forgotten-password",
+    name: "Forgotten password",
+    icon: "ni ni-circle-08 text-pink",
+    component: <ForgottenPassword />,
+    layout: "/public",
+  },
+  {
+    path: "/verify-email",
+    name: "Verify account",
+    icon: "ni ni-circle-08 text-pink",
+    component: <VerifyAccount />,
+    layout: "/public",
+  },
+  {
+    path: "/register-admin",
+    name: "Create admin",
+    icon: "ni ni-circle-08 text-pink",
+    component: <RegisterAdmin />,
+    layout: "/public",
+  },
+  {
+    path: "/register-doctor",
+    name: "Join as doctor",
+    icon: "ni ni-circle-08 text-pink",
+    component: <RegisterDoctor />,
     layout: "/public",
   },
 ];
