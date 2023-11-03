@@ -1,9 +1,9 @@
 import React from "react";
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import { Container } from "reactstrap";
-import PublicFooter from "components/Navbars/LoggedNavbar";
-import LoggedFooter from "components/Footers/LoggedFooter";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import PublicFooter from "../components/navbars/LoggedNavbar";
+import LoggedFooter from "../components/footers/LoggedFooter";
+import Sidebar from "components/sidebar/Sidebar";
 import routes from "routes.js";
 
 const Logged = (props) => {

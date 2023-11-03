@@ -1,14 +1,14 @@
-import Index from "pages/Index";
-import Profile from "pages/Profile";
-import Maps from "pages/Maps";
-import Login from "pages/Login";
-import Tables from "pages/Tables";
-import Icons from "pages/Icons";
-import ForgottenPassword from "pages/ForgottenPassword";
-import VerifyAccount from "pages/VerifyAccount";
-import RegisterAdmin from "pages/RegisterAdmin";
-import RegisterPatient from "pages/RegisterPatient";
-import RegisterDoctor from "pages/RegisterDoctor";
+import Index from "components/examples/Index";
+import Profile from "components/examples/Profile";
+import Maps from "components/examples/Maps";
+import Tables from "components/examples/Tables";
+import Icons from "components/examples/Icons";
+import Login from "components/accounts/Login";
+import ForgottenPassword from "components/accounts/ForgottenPassword";
+import VerifyAccount from "components/accounts/VerifyAccount";
+import RegisterAdmin from "components/accounts/RegisterAdmin";
+import RegisterPatient from "components/account/RegisterPatient";
+import RegisterDoctor from "components/account/RegisterDoctor";
 
 var routes = [
   {

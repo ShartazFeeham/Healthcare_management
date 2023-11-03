@@ -797,6 +797,12 @@ const RegisterDoctor = () => {
                 </Button>
               </div>
             </Form>
+            <small>
+              Already have an account?{" "}
+              <Link to="/public/login">
+                <b>Sign in now</b>
+              </Link>
+            </small>
           </CardBody>
         </Card>
       </Col>
