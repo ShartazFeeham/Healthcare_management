@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Modal from "react-modal";
 import {
   Button,
   Card,
@@ -19,6 +20,39 @@ import {
 const textColor = {
   color: "#555",
 };
+
+const specializationList = [
+  "Cardiology",
+  "Orthopedic Surgery",
+  "Dermatology",
+  "Anesthesiology",
+  "Gastroenterology",
+  "Pediatrics",
+  "Radiology",
+  "Neurology",
+  "Obstetrics and Gynecology",
+  "Ophthalmology",
+  "Oncology",
+  "Urology",
+  "Psychiatry",
+  "Pulmonology",
+  "Nephrology",
+  "Endocrinology",
+  "Rheumatology",
+  "Plastic Surgery",
+  "Emergency Medicine",
+  "Infectious Disease",
+  "Hematology",
+  "Family Medicine",
+  "Otolaryngology (Ear Nose Throat)",
+  "Neurosurgery",
+  "Physical Medicine and Rehabilitation",
+  "Allergy and Immunology",
+  "Geriatrics",
+  "Pathology",
+  "Critical Care Medicine",
+  "Sports Medicine",
+];
 
 const RegisterDoctor = () => {
   const [firstName, setFirstName] = useState("");
@@ -41,12 +75,57 @@ const RegisterDoctor = () => {
   const [certifications, setCertifications] = useState([]);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [experience, setExperience] = useState(null);
+  const [license, setLicense] = useState(null);
+  const [isSpecializationModalOpen, setIsSpecializationModalOpen] =
+    useState(false);
+
+  const [specialistList, setSpecialistList] = useState("");
+  const [specCount, setSpecCount] = useState(0);
 
   const handleAddQualification = () => {
     setQualifications([
       ...qualifications,
       { name: "", institution: "", year: "" },
     ]);
+  };
+
+  const handleSpecializationSelect = (spec) => {
+    console.log(specialistList);
+    console.log(specCount);
+    if (specCount >= 3) return;
+    let curList = specialistList;
+    if (!curList.includes(spec)) {
+      if (specCount > 0) curList = curList + ", ";
+      curList = curList + spec;
+      setSpecialistList(curList);
+      setSpecCount(specCount + 1);
+    }
+  };
+
+  const handleSpecializationUnselect = (spec) => {
+    console.log(specialistList);
+    console.log(specCount);
+    if (specCount <= 0) return;
+    let curList = specialistList;
+    if (curList === undefined) return;
+    if (curList.includes(spec + ", ")) {
+      curList = curList.replace(spec + ", ", "");
+      setSpecialistList(curList);
+      setSpecCount(specCount - 1);
+    } else if (curList.includes(", " + spec)) {
+      curList = curList.replace(", " + spec, "");
+      setSpecialistList(curList);
+      setSpecCount(specCount - 1);
+    } else {
+      curList = curList.replace(spec, "");
+      setSpecialistList(curList);
+      setSpecCount(specCount - 1);
+    }
+    if (specCount === 0) {
+      setSpecialistList("");
+      setSpecCount(0);
+    }
   };
 
   const handleARemoveQualification = () => {
@@ -88,20 +167,7 @@ const RegisterDoctor = () => {
     setPhoto(file);
   };
 
-  const validate = (doctorData) => {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      dateOfBirth,
-      phoneNumber,
-      gender,
-      specialization,
-      nid,
-      residence,
-    } = doctorData;
-
+  const validate = () => {
     // Check if first name and last name are at least 2 characters long
     if (firstName.length < 2 || lastName.length < 2) {
       setAlertMessage(
@@ -238,6 +304,23 @@ const RegisterDoctor = () => {
       }
     }
 
+    if (!experience || experience < 0) {
+      setAlertMessage(`Please provide valid years of experience.`);
+      return false;
+    }
+
+    if (experience > age - 16) {
+      setAlertMessage(
+        `Provide correct experience data, too young to have ${experience} years of experience in ${age} years age.`
+      );
+      return false;
+    }
+
+    if (!license || license.length < 4) {
+      setAlertMessage(`Please provide valid license.`);
+      return false;
+    }
+
     setAlertMessage("");
     return true;
   };
@@ -259,15 +342,17 @@ const RegisterDoctor = () => {
       qualifications,
       certifications,
       photo,
+      experience,
+      license,
     };
-    if (validate(doctorData)) {
+    if (validate()) {
       console.log(doctorData);
     }
   };
 
   return (
     <>
-      <Col lg="6" md="8">
+      <Col lg="8" md="8">
         <Card className="bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
@@ -281,6 +366,7 @@ const RegisterDoctor = () => {
               </div>
             )}
             <Form role="form">
+              <p>Account info</p>
               <Row>
                 <Col md="6">
                   <FormGroup>
@@ -386,6 +472,7 @@ const RegisterDoctor = () => {
                 </label>
               </div>
               <br></br>
+              <p>Personal details</p>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -421,22 +508,6 @@ const RegisterDoctor = () => {
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                   </CustomInput>
-                </InputGroup>
-              </FormGroup>
-              <FormGroup>
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-settings" style={textColor} />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Specialization"
-                    type="text"
-                    value={specialization}
-                    onChange={(e) => setSpecialization(e.target.value)}
-                    style={textColor}
-                  />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -510,7 +581,6 @@ const RegisterDoctor = () => {
                   ></div>
                 </InputGroup>
               </FormGroup>
-
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -559,6 +629,64 @@ const RegisterDoctor = () => {
                     style={{
                       minHeight: "100px",
                       ...textColor,
+                    }}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <br></br>
+              <p>Fileds and expertises</p>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-briefcase-24" style={textColor} />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Experience (years)"
+                    type="number"
+                    value={experience}
+                    onChange={(e) => setExperience(e.target.value)}
+                    style={textColor}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-check-bold" style={textColor} />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Medical License Number"
+                    type="text"
+                    value={license}
+                    onChange={(e) => setLicense(e.target.value)}
+                    style={textColor}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-badge" style={textColor} />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Specialization"
+                    type="text"
+                    value={specialistList}
+                    onClick={() => setIsSpecializationModalOpen(true)}
+                    style={{
+                      ...textColor,
+                      backgroundColor: specialization ? "#3498db" : "#f9f9f9",
+                      color: specialization ? "white" : "#555",
+                      margin: "5px",
+                      padding: "5px 10px",
+                      border: "none",
+                      cursor: "pointer",
                     }}
                   />
                 </InputGroup>
@@ -762,7 +890,6 @@ const RegisterDoctor = () => {
                   </Col>
                 </Row>
               </div>
-
               <br></br>
               <Row className="my-4">
                 <Col xs="12">
@@ -806,6 +933,57 @@ const RegisterDoctor = () => {
           </CardBody>
         </Card>
       </Col>
+      <Modal
+        isOpen={isSpecializationModalOpen}
+        onRequestClose={() => setIsSpecializationModalOpen(false)}
+        contentLabel="Specialization Modal"
+        style={{
+          content: {
+            maxWidth: "750px",
+            margin: "0 auto",
+            borderRadius: "20px",
+            boxShadow: "2px 2px 8px gray",
+          },
+        }}
+      >
+        <h3>Select Specializations (At most 3)</h3>
+        <hr></hr>
+        <div style={{ textAlign: "center" }}>
+          {specializationList.map((spec, index) =>
+            specialistList.includes(spec) ? (
+              <Button
+                key={index}
+                type="button"
+                color="info"
+                className="m-1"
+                onClick={() => handleSpecializationUnselect(spec)}
+              >
+                {spec}
+              </Button>
+            ) : (
+              <Button
+                key={index}
+                type="button"
+                color="primary"
+                className="m-1"
+                outline
+                onClick={() => handleSpecializationSelect(spec)}
+              >
+                {spec}
+              </Button>
+            )
+          )}
+        </div>
+
+        <div style={{ textAlign: "center", margin: "10px" }}>
+          <Button
+            color="warning"
+            onClick={() => setIsSpecializationModalOpen(false)}
+          >
+            Save & close
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };

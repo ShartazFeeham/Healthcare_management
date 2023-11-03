@@ -7,8 +7,9 @@ import Login from "components/accounts/Login";
 import ForgottenPassword from "components/accounts/ForgottenPassword";
 import VerifyAccount from "components/accounts/VerifyAccount";
 import RegisterAdmin from "components/accounts/RegisterAdmin";
-import RegisterPatient from "components/account/RegisterPatient";
-import RegisterDoctor from "components/account/RegisterDoctor";
+import RegisterPatient from "components/accounts/RegisterPatient";
+import RegisterDoctor from "components/accounts/RegisterDoctor";
+import PatientProfile from "components/profiles/PatientProfile";
 
 var routes = [
   {
@@ -88,5 +89,12 @@ var routes = [
     component: <RegisterDoctor />,
     layout: "/public",
   },
+  {
+    path: "/patients/:patientId",
+    name: "Patient Profile",
+    icon: "ni ni-single-02 text-primary", 
+    component: <PatientProfile />, 
+    layout: "/health",
+  }
 ];
 export default routes;
