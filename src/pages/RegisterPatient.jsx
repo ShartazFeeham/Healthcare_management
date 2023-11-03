@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -13,7 +12,11 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+
+const inputStyle = {
+  color: "#555",
+};
 
 const RegisterPatient = () => {
   const [firstName, setFirstName] = useState("");
@@ -22,6 +25,7 @@ const RegisterPatient = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleRegister = () => {
     // Add your registration logic here
@@ -41,8 +45,8 @@ const RegisterPatient = () => {
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-circle-08" />
+                    <InputGroupText style={inputStyle}>
+                      <i className="ni ni-circle-08" style={inputStyle} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -50,12 +54,13 @@ const RegisterPatient = () => {
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    style={inputStyle}
                   />
                 </InputGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-circle-08" />
+                    <InputGroupText style={inputStyle}>
+                      <i className="ni ni-circle-08" style={inputStyle} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -63,14 +68,15 @@ const RegisterPatient = () => {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    style={inputStyle}
                   />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-email-83" />
+                    <InputGroupText style={inputStyle}>
+                      <i className="ni ni-email-83" style={inputStyle} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -79,14 +85,18 @@ const RegisterPatient = () => {
                     autoComplete="new-email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    style={inputStyle}
                   />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                    <InputGroupText style={inputStyle}>
+                      <i
+                        className="ni ni-lock-circle-open"
+                        style={inputStyle}
+                      />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -95,14 +105,18 @@ const RegisterPatient = () => {
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    style={inputStyle}
                   />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                    <InputGroupText style={inputStyle}>
+                      <i
+                        className="ni ni-lock-circle-open"
+                        style={inputStyle}
+                      />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -111,6 +125,7 @@ const RegisterPatient = () => {
                     autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    style={inputStyle}
                   />
                 </InputGroup>
               </FormGroup>
@@ -133,12 +148,13 @@ const RegisterPatient = () => {
                   <div className="custom-control custom-control-alternative custom-checkbox">
                     <input
                       className="custom-control-input"
-                      id="customCheckRegister"
+                      id="customCheckAgree"
                       type="checkbox"
+                      onChange={() => setAgreeTerms(!agreeTerms)}
                     />
                     <label
                       className="custom-control-label"
-                      htmlFor="customCheckRegister"
+                      htmlFor="customCheckAgree"
                     >
                       <span className="text-muted">
                         I agree with the{" "}
@@ -154,6 +170,7 @@ const RegisterPatient = () => {
                   color="primary"
                   type="button"
                   onClick={handleRegister}
+                  disabled={!agreeTerms} // Disable the button if terms are not agreed
                 >
                   Create account
                 </Button>

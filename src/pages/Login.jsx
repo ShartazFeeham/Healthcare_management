@@ -19,11 +19,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [verified, setVerified] = useState(false); // Add the verified state
+  const [verified, setVerified] = useState(false);
 
-  const handleLogin = () => {
-    // Add your login logic here
-  };
+  const handleLogin = () => {};
 
   return (
     <>
@@ -108,13 +106,21 @@ const Login = () => {
               </div>
             </Form>
             <Link to="/public/forgotten-password">
-              <small>Forgotten password</small>
+              <small>
+                <b>Forgotten password</b>
+              </small>
             </Link>
             <br></br>
             <small>
               Not registered yet?{" "}
-              <Link to="/public/register-patient">Create patient account </Link>
-              or <Link to="/public/register-doctor"> Join as a doctor</Link>
+              <Link to="/public/register-patient">
+                <b>Create patient account</b>{" "}
+              </Link>
+              or{" "}
+              <Link to="/public/register-doctor">
+                {" "}
+                <b>Join as a doctor</b>
+              </Link>
             </small>
           </CardBody>
         </Card>

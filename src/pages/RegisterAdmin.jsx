@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -13,7 +12,10 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { useState } from "react";
+
+const textColor = {
+  color: "#555",
+};
 
 const RegisterAdmin = () => {
   const [firstName, setFirstName] = useState("");
@@ -33,14 +35,16 @@ const RegisterAdmin = () => {
         <Card className="bg-secondary shadow border-0">
           <CardBody className="px-lg-5 py-lg-5">
             <div className="text-center text-muted mb-4">
-              <h3 style={{ textTransform: "uppercase" }}>Create a new admin</h3>
+              <h3 style={{ textTransform: "uppercase", ...textColor }}>
+                Create a new admin
+              </h3>
             </div>
             <Form role="form">
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-circle-08" />
+                      <i className="ni ni-circle-08" style={textColor} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -48,12 +52,13 @@ const RegisterAdmin = () => {
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    style={textColor}
                   />
                 </InputGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-circle-08" />
+                      <i className="ni ni-circle-08" style={textColor} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -61,6 +66,7 @@ const RegisterAdmin = () => {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    style={textColor}
                   />
                 </InputGroup>
               </FormGroup>
@@ -68,7 +74,7 @@ const RegisterAdmin = () => {
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-email-83" />
+                      <i className="ni ni-email-83" style={textColor} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -77,6 +83,7 @@ const RegisterAdmin = () => {
                     autoComplete="new-email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    style={textColor}
                   />
                 </InputGroup>
               </FormGroup>
@@ -84,7 +91,7 @@ const RegisterAdmin = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                      <i className="ni ni-lock-circle-open" style={textColor} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -93,6 +100,7 @@ const RegisterAdmin = () => {
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    style={textColor}
                   />
                 </InputGroup>
               </FormGroup>
@@ -100,7 +108,7 @@ const RegisterAdmin = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                      <i className="ni ni-lock-circle-open" style={textColor} />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
@@ -109,6 +117,7 @@ const RegisterAdmin = () => {
                     autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    style={textColor}
                   />
                 </InputGroup>
               </FormGroup>
@@ -122,6 +131,7 @@ const RegisterAdmin = () => {
                 <label
                   className="custom-control-label"
                   htmlFor="customCheckRegister"
+                  style={textColor}
                 >
                   <span className="text-muted">Show password</span>
                 </label>
