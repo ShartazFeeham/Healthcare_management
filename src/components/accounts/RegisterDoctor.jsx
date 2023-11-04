@@ -16,43 +16,11 @@ import {
   Label,
   CustomInput,
 } from "reactstrap";
+import specializationList from "assets/data/enums/specializations";
 
 const textColor = {
   color: "#555",
 };
-
-const specializationList = [
-  "Cardiology",
-  "Orthopedic Surgery",
-  "Dermatology",
-  "Anesthesiology",
-  "Gastroenterology",
-  "Pediatrics",
-  "Radiology",
-  "Neurology",
-  "Obstetrics and Gynecology",
-  "Ophthalmology",
-  "Oncology",
-  "Urology",
-  "Psychiatry",
-  "Pulmonology",
-  "Nephrology",
-  "Endocrinology",
-  "Rheumatology",
-  "Plastic Surgery",
-  "Emergency Medicine",
-  "Infectious Disease",
-  "Hematology",
-  "Family Medicine",
-  "Otolaryngology (Ear Nose Throat)",
-  "Neurosurgery",
-  "Physical Medicine and Rehabilitation",
-  "Allergy and Immunology",
-  "Geriatrics",
-  "Pathology",
-  "Critical Care Medicine",
-  "Sports Medicine",
-];
 
 const RegisterDoctor = () => {
   const [firstName, setFirstName] = useState("");

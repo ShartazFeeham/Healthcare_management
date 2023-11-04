@@ -11,6 +11,7 @@ import RegisterPatient from "components/accounts/RegisterPatient";
 import RegisterDoctor from "components/accounts/RegisterDoctor";
 import PatientProfile from "components/profiles/PatientProfile";
 import DoctorProfile from "components/profiles/DoctorProfile";
+import EditDoctorProfile from "components/profiles/EditDoctorProfile";
 
 var routes = [
   {
@@ -93,16 +94,23 @@ var routes = [
   {
     path: "/patients/:patientId",
     name: "Patient Profile",
-    icon: "ni ni-single-02 text-primary", 
-    component: <PatientProfile />, 
+    icon: "ni ni-single-02 text-primary",
+    component: <PatientProfile />,
     layout: "/health",
   },
   {
     path: "/doctors/:doctorId",
     name: "Doctor Profile",
-    icon: "ni ni-single-02 text-primary", 
-    component: <DoctorProfile />, 
+    icon: "ni ni-single-02 text-primary",
+    component: <DoctorProfile />,
     layout: "/health",
-  }
+  },
+  {
+    path: "/doctors/edit-profile",
+    name: "Edic Doctor Profile",
+    icon: "ni ni-single-02 text-primary",
+    component: <EditDoctorProfile />,
+    layout: "/health",
+  },
 ];
 export default routes;

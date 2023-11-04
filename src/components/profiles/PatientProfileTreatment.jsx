@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import patientDataTreatments from "assets/data/patientprofile/patientTreatments";
+import { Link } from "react-router-dom";
 
 export const PatientProfileTreatment = () => {
   const [treatmentData, setTreatmentData] = useState(null);
@@ -55,9 +56,24 @@ export const PatientProfileTreatment = () => {
             <p>
               <FontAwesomeIcon icon={faPills} /> Medicines:{" "}
               <b>
-                {treatment.medicines
-                  .map((medicine) => medicine.name)
-                  .join(", ")}
+                {treatment.medicines.map((medicine, index) => {
+                  return (
+                    <>
+                      <Link
+                        style={{
+                          backgroundColor: "red",
+                          padding: "5px",
+                          margin: "2px",
+                          borderRadius: "5px",
+                          backgroundColor: "#eee",
+                        }}
+                        to={"/medicines/" + medicine.id}
+                      >
+                        {medicine.name}
+                      </Link>{" "}
+                    </>
+                  );
+                })}
               </b>
             </p>
           </Col>
@@ -67,9 +83,24 @@ export const PatientProfileTreatment = () => {
             <p>
               <FontAwesomeIcon icon={faDiagnoses} /> Diagnoses:{" "}
               <b>
-                {treatment.diagnoses
-                  .map((diagnosis) => diagnosis.name)
-                  .join(", ")}
+                {treatment.diagnoses.map((diag, index) => {
+                  return (
+                    <>
+                      <Link
+                        style={{
+                          backgroundColor: "red",
+                          padding: "5px",
+                          margin: "2px",
+                          borderRadius: "5px",
+                          backgroundColor: "#eee",
+                        }}
+                        to={"/medicines/" + diag.id}
+                      >
+                        {diag.name}
+                      </Link>{" "}
+                    </>
+                  );
+                })}
               </b>
             </p>
           </Col>

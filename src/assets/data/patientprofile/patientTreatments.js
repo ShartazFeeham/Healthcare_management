@@ -6,9 +6,9 @@ const patientDataTreatments = [
     closingDate: "2023-03-25",
     doctorComment: "Rest and drink fluids",
     medicines: [
-      { name: "MED32", id: "MED001" },
-      { name: "MED54", id: "MED002" },
-      { name: "MED78", id: "MED003" },
+      { name: "Tylenol", id: "MED001" },
+      { name: "Advil", id: "MED002" },
+      { name: "Sudafed", id: "MED003" },
     ],
     diagnoses: [
       { id: "DIAG001", name: "Upper Respiratory Infection" },
@@ -24,9 +24,9 @@ const patientDataTreatments = [
     closingDate: "2023-05-20",
     doctorComment: "Monitor blood pressure regularly",
     medicines: [
-      { name: "MED32", id: "MED004" },
-      { name: "MED54", id: "MED005" },
-      { name: "MED78", id: "MED006" },
+      { name: "Lisinopril", id: "MED004" },
+      { name: "Amlodipine", id: "MED005" },
+      { name: "Hydrochlorothiazide", id: "MED006" },
     ],
     diagnoses: [
       { id: "DIAG004", name: "High Blood Pressure" },
@@ -41,9 +41,9 @@ const patientDataTreatments = [
     closingDate: "2023-02-15",
     doctorComment: "Avoid allergens",
     medicines: [
-      { name: "MED32", id: "MED007" },
-      { name: "MED54", id: "MED008" },
-      { name: "MED78", id: "MED009" },
+      { name: "Zyrtec", id: "MED007" },
+      { name: "Benadryl", id: "MED008" },
+      { name: "Claritin", id: "MED009" },
     ],
     diagnoses: [
       { id: "DIAG006", name: "Allergic Rhinitis" },
