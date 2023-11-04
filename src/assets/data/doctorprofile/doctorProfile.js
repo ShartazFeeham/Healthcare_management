@@ -3,13 +3,9 @@ const doctorProfileData = {
   firstName: "Mehrab",
   lastName: "Hasan",
   email: "mehrab.hasan@example.com",
-  phone: "123-456-7890",
   gender: "Male",
-  dateOfBirth: "1980-05-15",
   profilePhoto:
     "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
-  nidNo: "1234567890",
-  residence: "123 Main Street, City, Country",
   bio: "I am a dedicated and experienced doctor with a strong commitment to providing quality healthcare. I specialize in cardiology and have been serving patients for over 15 years.",
   experience: "15 years",
   license: "MD123456",
@@ -38,8 +34,6 @@ const doctorProfileData = {
       year: "2006",
     },
   ],
-  treatmentsCount: 5000,
-  reviewCount: 55,
 };
 
 export default doctorProfileData;

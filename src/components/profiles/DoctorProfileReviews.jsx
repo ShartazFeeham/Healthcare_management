@@ -1,4 +1,4 @@
-import doctorReviews from "assets/data/doctorReviews";
+import doctorReviews from "assets/data/doctorprofile/doctorReviews";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Media, Progress, Table } from "reactstrap";

@@ -1,22 +1,14 @@
-import { useParams } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
+import doctorPersonalInfo from "assets/data/doctorprofile/doctorPersonalInfo";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 
-export const DoctorProfileDetails = ({
-  doctorData,
-  handleEditClick,
-  isEdit,
-}) => {
+export const DoctorProfileDetails = ({ doctorData }) => {
+  const [personal, setPersonal] = useState(null);
+  useEffect(() => {
+    setPersonal(doctorPersonalInfo);
+  }, [personal]);
+
   return (
     <>
       <Card className="bg-secondary shadow">
@@ -28,9 +20,9 @@ export const DoctorProfileDetails = ({
               </h3>
             </Col>
             <Col className="text-right" xs="4">
-              <Button color="primary" onClick={handleEditClick}>
-                {isEdit ? "Save Changes" : "Edit Profile"}
-              </Button>
+              <Link to={"/health/edit-profile"} className="btn btn-primary">
+                Edit profile
+              </Link>
             </Col>
           </Row>
         </CardHeader>
@@ -109,17 +101,21 @@ export const DoctorProfileDetails = ({
               );
             })}
           </div>
-          <h6 className="heading-small text-muted mb-4">Personal Info</h6>
-          <div className="pl-lg-4">
-            <Row>
-              <Col md="6">Date of Birth: {doctorData.dateOfBirth}</Col>
-              <Col md="6">Phone no: {doctorData.phone}</Col>
-            </Row>
-            <Row>
-              <Col md="6">NID No: {doctorData.nidNo}</Col>
-              <Col md="6">Residence: {doctorData.residence}</Col>
-            </Row>
-          </div>
+          {personal && (
+            <>
+              <h6 className="heading-small text-muted mb-4">Personal Info</h6>
+              <div className="pl-lg-4">
+                <Row>
+                  <Col md="6">Date of Birth: {personal.dateOfBirth}</Col>
+                  <Col md="6">Phone no: {personal.phone}</Col>
+                </Row>
+                <Row>
+                  <Col md="6">NID No: {personal.nidNo}</Col>
+                  <Col md="6">Residence: {personal.residence}</Col>
+                </Row>
+              </div>
+            </>
+          )}
         </CardBody>
       </Card>
     </>

@@ -1,7 +1,18 @@
-import { Button, Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
 import DoctorProfileAvailability from "./DoctorProfileAvailability";
+import { useEffect, useState } from "react";
+import doctorTreatmentsCount from "assets/data/doctorprofile/doctorTreatmentCount";
+import doctoReviewCount from "assets/data/doctorprofile/doctorReviewsCount";
 
 export const DoctorProfileBio = ({ doctorData }) => {
+  const [reviewCount, setReviewCount] = useState();
+  const [treatmentsCount, setTreatmentsCount] = useState();
+
+  useEffect(() => {
+    setTreatmentsCount(doctorTreatmentsCount);
+    setReviewCount(doctoReviewCount);
+  }, [reviewCount, treatmentsCount]);
+
   return (
     <>
       <Card className="card-profile shadow">
@@ -29,7 +40,7 @@ export const DoctorProfileBio = ({ doctorData }) => {
             <div className="col">
               <div className="card-profile-stats d-flex justify-content-center mt-md-5">
                 <div>
-                  <span className="heading">{doctorData.treatmentsCount}</span>
+                  <span className="heading">{treatmentsCount}</span>
                   <span className="description">Treatments</span>
                 </div>
                 <div>
@@ -37,7 +48,7 @@ export const DoctorProfileBio = ({ doctorData }) => {
                   <span className="description">Years of Experience</span>
                 </div>
                 <div>
-                  <span className="heading">{doctorData.feedbacksCount}</span>
+                  <span className="heading">{reviewCount}</span>
                   <span className="description">Feedbacks</span>
                 </div>
               </div>

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { DoctorProfileDetails } from "./DoctorProfileDetails";
 import { DoctorProfileBio } from "./DoctorProfileBio";
-import doctorProfileData from "assets/data/doctorProfile";
+import doctorProfileData from "assets/data/doctorprofile/doctorProfile";
 import { DoctorProfileReviews } from "./DoctorProfileReviews";
 
 const DoctorProfile = () => {
@@ -13,12 +13,7 @@ const DoctorProfile = () => {
     console.log("DoctorId ID:", doctorId);
   }, [doctorId]);
 
-  const [isEdit, setIsEdit] = useState(false);
   const [doctorData, setDoctorData] = useState(doctorProfileData);
-
-  const handleEditClick = () => {
-    setIsEdit(!isEdit);
-  };
 
   return (
     <>
@@ -55,11 +50,7 @@ const DoctorProfile = () => {
             <DoctorProfileBio doctorData={doctorData} />
           </Col>
           <Col className="order-xl-1" xl="8">
-            <DoctorProfileDetails
-              doctorData={doctorData}
-              handleEditClick={handleEditClick}
-              isEdit={isEdit}
-            />
+            <DoctorProfileDetails doctorData={doctorData} />
             <DoctorProfileReviews doctorId={doctorData.doctorId} />
           </Col>
         </Row>

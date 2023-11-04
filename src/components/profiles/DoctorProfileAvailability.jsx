@@ -1,6 +1,6 @@
-import doctorAvailability from "assets/data/doctorAvailability";
+import doctorAvailability from "assets/data/doctorprofile/doctorAvailability";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "reactstrap";
+import { Button, Table } from "reactstrap";
 
 const DoctorProfileAvailability = ({ doctorId }) => {
   const [onsite, setOnsite] = useState(false);
