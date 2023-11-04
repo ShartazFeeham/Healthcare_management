@@ -4,7 +4,7 @@ import { Container, Row, Col } from "reactstrap";
 import { DoctorProfileDetails } from "./DoctorProfileDetails";
 import { DoctorProfileBio } from "./DoctorProfileBio";
 import doctorProfileData from "assets/data/doctorProfile";
-import { DoctorProfileFeedbacks } from "./DoctorProfileFeedbacks";
+import { DoctorProfileReviews } from "./DoctorProfileReviews";
 
 const DoctorProfile = () => {
   const { doctorId } = useParams();
@@ -60,7 +60,7 @@ const DoctorProfile = () => {
               handleEditClick={handleEditClick}
               isEdit={isEdit}
             />
-            <DoctorProfileFeedbacks feedbacks={doctorData.feedbacks} />
+            <DoctorProfileReviews doctorId={doctorData.doctorId} />
           </Col>
         </Row>
       </Container>

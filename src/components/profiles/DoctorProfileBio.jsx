@@ -57,7 +57,7 @@ export const DoctorProfileBio = ({ doctorData }) => {
             <p>{doctorData.bio}</p>
           </div>
 
-          <DoctorProfileAvailability availability={doctorData.availability} />
+          <DoctorProfileAvailability doctorId={doctorData.doctorId} />
         </CardBody>
       </Card>
     </>

@@ -1,7 +1,14 @@
+import doctorReviews from "assets/data/doctorReviews";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Media, Progress, Table } from "reactstrap";
 
-export const DoctorProfileFeedbacks = ({ feedbacks }) => {
+export const DoctorProfileReviews = ({ doctorId }) => {
+  const [feedbacks, setFeedbacks] = useState([]);
+  useEffect(() => {
+    setFeedbacks(doctorReviews);
+  }, [feedbacks]);
+
   const calculateAverageRating = () => {
     if (feedbacks.length === 0) return 0;
 
@@ -37,7 +44,7 @@ export const DoctorProfileFeedbacks = ({ feedbacks }) => {
         style={{ margin: "5px", padding: "15px", fontWeight: "bold" }}
       >
         <b>
-          {feedbacks.length > 0 ? (
+          {feedbacks === null || feedbacks.length > 0 ? (
             <>
               PATIENT REVIEWS ({calculateAverageRating()} ⭐ FROM{" "}
               {feedbacks.length} REVIEWS)
@@ -47,7 +54,7 @@ export const DoctorProfileFeedbacks = ({ feedbacks }) => {
           )}
         </b>
       </h3>
-      {feedbacks.length > 0 && (
+      {feedbacks !== null && feedbacks.length > 0 && (
         <Table className="align-items-center table-flush">
           <thead className="thead-light">
             <tr>
