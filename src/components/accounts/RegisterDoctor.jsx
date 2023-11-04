@@ -223,7 +223,7 @@ const RegisterDoctor = () => {
       return false;
     }
 
-    if (!specialization || specialization.length < 4) {
+    if (!specialistList || specialistList.length < 4) {
       setAlertMessage("Please specify your specialization correctly.");
       return false;
     }
@@ -334,7 +334,7 @@ const RegisterDoctor = () => {
       password,
       phoneNumber,
       gender,
-      specialization,
+      specialization: specialistList,
       dateOfBirth,
       nid,
       residence,

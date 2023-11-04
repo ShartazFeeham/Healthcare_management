@@ -1,0 +1,127 @@
+import { useParams } from "react-router-dom";
+import {
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  FormGroup,
+  Form,
+  Input,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
+
+export const DoctorProfileDetails = ({
+  doctorData,
+  handleEditClick,
+  isEdit,
+}) => {
+  return (
+    <>
+      <Card className="bg-secondary shadow">
+        <CardHeader className="bg-white border-0">
+          <Row className="align-items-center">
+            <Col xs="8">
+              <h3 className="mb-0">
+                <b>DOCTOR PROFILE</b>
+              </h3>
+            </Col>
+            <Col className="text-right" xs="4">
+              <Button color="primary" onClick={handleEditClick}>
+                {isEdit ? "Save Changes" : "Edit Profile"}
+              </Button>
+            </Col>
+          </Row>
+        </CardHeader>
+        <CardBody>
+          <h6 className="heading-small text-muted mb-4">Primary Info</h6>
+          <div className="pl-lg-4">
+            <Row>
+              <Col lg="6">
+                <b>Doctor ID: {doctorData.doctorId}</b>
+              </Col>
+              <Col lg="6">
+                Email: <b>{doctorData.email}</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6">
+                First Name: <b>{doctorData.firstName}</b>
+              </Col>
+              <Col lg="6">
+                Last Name: <b>{doctorData.lastName}</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6">
+                Gender: <b>{doctorData.gender}</b>
+              </Col>
+              <Col lg="6">
+                <span style={{ color: "green" }}>
+                  <i className="ni ni-check-bold" />
+                </span>{" "}
+                Medical License Number: {doctorData.license}
+              </Col>
+            </Row>
+          </div>
+          <hr className="my-4" />
+          <h6 className="heading-small text-muted mb-4">
+            Qualifications and Certifications
+          </h6>
+          <div className="pl-lg-4">
+            {doctorData.qualifications.map((qualification) => {
+              return (
+                <>
+                  <i className="ni ni-hat-3" /> <b>{qualification.degree}</b>{" "}
+                  <br></br>
+                  <Row>
+                    <Col lg="6">
+                      <i className="ni ni-building" /> Institute:{" "}
+                      {qualification.institute} <br></br>
+                    </Col>
+                    <Col lg="6">
+                      <i className="ni ni-calendar-grid-58" /> Year:{" "}
+                      {qualification.year} <br></br>
+                    </Col>
+                  </Row>
+                  <hr></hr>
+                </>
+              );
+            })}
+            {doctorData.certifications.map((certification) => {
+              return (
+                <>
+                  <i className="ni ni-badge" /> <b>{certification.degree}</b>{" "}
+                  <br></br>
+                  <Row>
+                    <Col lg="6">
+                      <i className="ni ni-building" /> Institute:{" "}
+                      {certification.institute} <br></br>
+                    </Col>
+                    <Col lg="6">
+                      <i className="ni ni-calendar-grid-58" /> Year:{" "}
+                      {certification.year} <br></br>
+                    </Col>
+                  </Row>
+                  <hr></hr>
+                </>
+              );
+            })}
+          </div>
+          <h6 className="heading-small text-muted mb-4">Personal Info</h6>
+          <div className="pl-lg-4">
+            <Row>
+              <Col md="6">Date of Birth: {doctorData.dateOfBirth}</Col>
+              <Col md="6">Phone no: {doctorData.phone}</Col>
+            </Row>
+            <Row>
+              <Col md="6">NID No: {doctorData.nidNo}</Col>
+              <Col md="6">Residence: {doctorData.residence}</Col>
+            </Row>
+          </div>
+        </CardBody>
+      </Card>
+    </>
+  );
+};

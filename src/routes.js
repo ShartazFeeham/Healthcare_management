@@ -10,6 +10,7 @@ import RegisterAdmin from "components/accounts/RegisterAdmin";
 import RegisterPatient from "components/accounts/RegisterPatient";
 import RegisterDoctor from "components/accounts/RegisterDoctor";
 import PatientProfile from "components/profiles/PatientProfile";
+import DoctorProfile from "components/profiles/DoctorProfile";
 
 var routes = [
   {
@@ -94,6 +95,13 @@ var routes = [
     name: "Patient Profile",
     icon: "ni ni-single-02 text-primary", 
     component: <PatientProfile />, 
+    layout: "/health",
+  },
+  {
+    path: "/doctors/:doctorId",
+    name: "Doctor Profile",
+    icon: "ni ni-single-02 text-primary", 
+    component: <DoctorProfile />, 
     layout: "/health",
   }
 ];
