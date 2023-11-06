@@ -20,12 +20,6 @@ import specializationList from "assets/data/enums/specializations";
 import editDoctorProfileData from "assets/data/doctorprofile/editDoctorProfile";
 
 const EditDoctorProfile = () => {
-  const { doctorId } = useParams();
-
-  useEffect(() => {
-    console.log("DoctorId ID:", doctorId);
-  }, [doctorId]);
-
   const textColor = {
     color: "#555",
   };
@@ -341,6 +335,9 @@ const EditDoctorProfile = () => {
                         <h3 className="mb-0">
                           <b>EDIT YOUR PROFILE INFO</b>
                         </h3>
+                        <Link to={"/health/doctors/profile"}>
+                          <b>Go back to profile</b>
+                        </Link>
                       </Col>
                       <Col className="text-right" xs="4">
                         <Button color="primary" onClick={handleUpdateProfile}>
@@ -843,34 +840,32 @@ const EditDoctorProfile = () => {
           >
             <h3 className="m-3 p-2">Select Specializations (At most 3)</h3>
             <div style={{ textAlign: "center" }}>
-              {specialistList && (
-                <>
-                  {spectList.map((spec, index) =>
-                    specialistList.includes(spec) ? (
-                      <Button
-                        key={index}
-                        type="button"
-                        color="info"
-                        className="m-1"
-                        onClick={() => handleSpecializationUnselect(spec)}
-                      >
-                        {spec}
-                      </Button>
-                    ) : (
-                      <Button
-                        key={index}
-                        type="button"
-                        color="primary"
-                        className="m-1"
-                        outline
-                        onClick={() => handleSpecializationSelect(spec)}
-                      >
-                        {spec}
-                      </Button>
-                    )
-                  )}
-                </>
-              )}
+              <>
+                {spectList.map((spec, index) =>
+                  specialistList && specialistList.includes(spec) ? (
+                    <Button
+                      key={index}
+                      type="button"
+                      color="info"
+                      className="m-1"
+                      onClick={() => handleSpecializationUnselect(spec)}
+                    >
+                      {spec}
+                    </Button>
+                  ) : (
+                    <Button
+                      key={index}
+                      type="button"
+                      color="primary"
+                      className="m-1"
+                      outline
+                      onClick={() => handleSpecializationSelect(spec)}
+                    >
+                      {spec}
+                    </Button>
+                  )
+                )}
+              </>
             </div>
 
             <div style={{ textAlign: "center", margin: "10px" }}>

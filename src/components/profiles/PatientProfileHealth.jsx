@@ -25,6 +25,14 @@ export const PatientProfileHealth = ({ patientId }) => {
               </Row>
               <Row>
                 <Col lg="6">
+                  Age: <b>{patientData.age}</b>
+                </Col>
+                <Col lg="6">
+                  Occupation: <b>{patientData.occupation}</b>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg="6">
                   Blood Pressure: <b>{patientData.bloodPressure}</b>
                 </Col>
                 <Col lg="6">
@@ -41,15 +49,10 @@ export const PatientProfileHealth = ({ patientId }) => {
               </Row>
               <Row>
                 <Col lg="6">
-                  Occupation: <b>{patientData.occupation}</b>
+                  Drinking: <b>{patientData.drinking}</b>
                 </Col>
                 <Col lg="6">
                   Smoking: <b>{patientData.smoking}</b>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg="6">
-                  Drinking: <b>{patientData.drinking}</b>
                 </Col>
               </Row>
             </div>

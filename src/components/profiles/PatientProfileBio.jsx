@@ -20,7 +20,10 @@ export const PatientProfileBio = ({ patientId }) => {
               </h3>
             </Col>
             <Col className="text-right" xs="4">
-              <Link to={"/health/edit-profile"} className="btn btn-primary">
+              <Link
+                to={"/health/patients/edit-profile"}
+                className="btn btn-primary"
+              >
                 Edit profile
               </Link>
             </Col>

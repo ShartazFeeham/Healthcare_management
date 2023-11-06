@@ -20,7 +20,10 @@ export const DoctorProfileDetails = ({ doctorData }) => {
               </h3>
             </Col>
             <Col className="text-right" xs="4">
-              <Link to={"/health/edit-profile"} className="btn btn-primary">
+              <Link
+                to={"/health/doctors/edit-profile"}
+                className="btn btn-primary"
+              >
                 Edit profile
               </Link>
             </Col>
