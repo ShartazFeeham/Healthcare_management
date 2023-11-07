@@ -18,7 +18,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // core components
-import Header from "components/headers/Header";
+import Header from "components/Headers/Header";
 
 const Tables = () => {
   return (
