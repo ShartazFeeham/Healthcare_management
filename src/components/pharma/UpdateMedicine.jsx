@@ -199,6 +199,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="commercialName"
                           value={commercialName}
@@ -219,6 +220,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="medicineName"
                           value={medicineName}
@@ -239,6 +241,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="classification"
                           value={classification}
@@ -259,6 +262,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="textarea"
                           id="description"
                           value={description}
@@ -307,6 +311,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="strengthVolume"
                           value={strengthVolume}
@@ -327,6 +332,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="strengthWeight"
                           value={strengthWeight}
@@ -347,6 +353,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="textarea"
                           id="warnings"
                           value={warnings}
@@ -367,6 +374,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="textarea"
                           id="adverseEffects"
                           value={adverseEffects}
@@ -387,6 +395,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="manufacturer"
                           value={manufacturer}
@@ -407,6 +416,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="text"
                           id="nationalDrugCode"
                           value={nationalDrugCode}
@@ -427,6 +437,7 @@ const UpdateMedicine = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
+                          style={{ color: "#555" }}
                           type="date"
                           id="expirationDate"
                           value={expirationDate}
@@ -543,7 +554,7 @@ const UpdateMedicine = () => {
             borderBottom: "2px solid #eee",
           }}
         >
-          Delete Medicine
+          <i className="fa fa-trash"></i> Delete Medicine
         </div>
         <div
           style={{

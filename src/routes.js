@@ -15,6 +15,8 @@ import EditDoctorProfile from "components/profiles/EditDoctorProfile";
 import EditPatientProfile from "components/profiles/EditPatientProfile";
 import CreateMedicine from "components/pharma/CreateMedicine";
 import UpdateMedicine from "components/pharma/UpdateMedicine";
+import MedicineList from "components/pharma/MedicineList";
+import MedicineDetails from "components/pharma/MedicineDetails";
 
 var routes = [
   {
@@ -134,6 +136,20 @@ var routes = [
     name: "Update a medicine",
     icon: "ni ni-single-02 text-primary",
     component: <UpdateMedicine />,
+    layout: "/health",
+  },
+  {
+    path: "/medicines",
+    name: "Medicines list",
+    icon: "ni ni-single-02 text-primary",
+    component: <MedicineList />,
+    layout: "/health",
+  },
+  {
+    path: "/medicines/:medId",
+    name: "Medicine details",
+    icon: "ni ni-single-02 text-primary",
+    component: <MedicineDetails />,
     layout: "/health",
   },
 ];
