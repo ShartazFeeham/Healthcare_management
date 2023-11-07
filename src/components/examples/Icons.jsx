@@ -9,7 +9,7 @@ import {
   Col,
   UncontrolledTooltip,
 } from "reactstrap";
-import Header from "components/Headers/Header";
+import Header from "components/headers/Header";
 
 const Icons = () => {
   const [copiedText, setCopiedText] = useState();

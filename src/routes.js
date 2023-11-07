@@ -1,14 +1,18 @@
-import Index from "pages/Index";
-import Profile from "pages/Profile";
-import Maps from "pages/Maps";
-import Login from "pages/Login";
-import Tables from "pages/Tables";
-import Icons from "pages/Icons";
-import ForgottenPassword from "pages/ForgottenPassword";
-import VerifyAccount from "pages/VerifyAccount";
-import RegisterAdmin from "pages/RegisterAdmin";
-import RegisterPatient from "pages/RegisterPatient";
-import RegisterDoctor from "pages/RegisterDoctor";
+import Index from "components/examples/Index";
+import Profile from "components/examples/Profile";
+import Maps from "components/examples/Maps";
+import Tables from "components/examples/Tables";
+import Icons from "components/examples/Icons";
+import Login from "components/accounts/Login";
+import ForgottenPassword from "components/accounts/ForgottenPassword";
+import VerifyAccount from "components/accounts/VerifyAccount";
+import RegisterAdmin from "components/accounts/RegisterAdmin";
+import RegisterPatient from "components/accounts/RegisterPatient";
+import RegisterDoctor from "components/accounts/RegisterDoctor";
+import PatientProfile from "components/profiles/PatientProfile";
+import DoctorProfile from "components/profiles/DoctorProfile";
+import EditDoctorProfile from "components/profiles/EditDoctorProfile";
+import EditPatientProfile from "components/profiles/EditPatientProfile";
 
 var routes = [
   {
@@ -87,6 +91,34 @@ var routes = [
     icon: "ni ni-circle-08 text-pink",
     component: <RegisterDoctor />,
     layout: "/public",
+  },
+  {
+    path: "/patients/:patientId",
+    name: "Patient Profile",
+    icon: "ni ni-single-02 text-primary",
+    component: <PatientProfile />,
+    layout: "/health",
+  },
+  {
+    path: "/doctors/:doctorId",
+    name: "Doctor Profile",
+    icon: "ni ni-single-02 text-primary",
+    component: <DoctorProfile />,
+    layout: "/health",
+  },
+  {
+    path: "/doctors/edit-profile",
+    name: "Edic Doctor Profile",
+    icon: "ni ni-single-02 text-primary",
+    component: <EditDoctorProfile />,
+    layout: "/health",
+  },
+  {
+    path: "/patients/edit-profile",
+    name: "Edic Patient Profile",
+    icon: "ni ni-single-02 text-primary",
+    component: <EditPatientProfile />,
+    layout: "/health",
   },
 ];
 export default routes;

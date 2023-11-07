@@ -11,6 +11,7 @@ import {
   InputGroup,
   Row,
   Col,
+  CustomInput,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -26,6 +27,8 @@ const RegisterPatient = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState(null);
 
   const handleRegister = () => {
     // Add your registration logic here
@@ -85,6 +88,47 @@ const RegisterPatient = () => {
                     autoComplete="new-email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    style={inputStyle}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-single-02" style={inputStyle} />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <CustomInput
+                    type="select"
+                    id="gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    style={inputStyle}
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </CustomInput>
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText style={inputStyle}>
+                      <i
+                        className="ni ni-calendar-grid-58"
+                        style={inputStyle}
+                      />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Age"
+                    type="number"
+                    autoComplete="new-email"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
                     style={inputStyle}
                   />
                 </InputGroup>
@@ -178,7 +222,9 @@ const RegisterPatient = () => {
             </Form>
             <small>
               Already have an account?{" "}
-              <Link to="/public/login">Sign in now</Link>
+              <Link to="/public/login">
+                <b>Sign in now</b>
+              </Link>
             </small>
           </CardBody>
         </Card>
