@@ -1,6 +1,6 @@
 import doctorAvailability from "assets/data/doctorprofile/doctorAvailability";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
 
 const DoctorProfileAvailability = ({ doctorId }) => {
   const [onsite, setOnsite] = useState(false);
@@ -17,34 +17,38 @@ const DoctorProfileAvailability = ({ doctorId }) => {
       return data.map(
         (item, index) =>
           index < 3 && (
-            <tr key={index}>
-              <td>{item.date}</td>
-              <td>
-                <ul>
-                  {item.timeslots.map((timeslot, i) => (
-                    <li key={i}>
-                      {timeslot.fromTime} - {timeslot.toTime}
-                    </li>
-                  ))}
-                </ul>
-              </td>
-            </tr>
+            <small style={{ textAlign: "center" }}>
+              {item.date}
+              <Row key={index}>
+                <Col>
+                  <ul>
+                    {item.timeslots.map((timeslot, i) => (
+                      <li key={i}>
+                        {timeslot.fromTime} - {timeslot.toTime}
+                      </li>
+                    ))}
+                  </ul>
+                </Col>
+              </Row>
+            </small>
           )
       );
     else
       return data.map((item, index) => (
-        <tr key={index}>
-          <td>{item.date}</td>
-          <td>
-            <ul>
-              {item.timeslots.map((timeslot, i) => (
-                <li key={i}>
-                  {timeslot.fromTime} - {timeslot.toTime}
-                </li>
-              ))}
-            </ul>
-          </td>
-        </tr>
+        <small style={{ textAlign: "center" }}>
+          {item.date}
+          <Row key={index}>
+            <Col>
+              <ul>
+                {item.timeslots.map((timeslot, i) => (
+                  <li key={i}>
+                    {timeslot.fromTime} - {timeslot.toTime}
+                  </li>
+                ))}
+              </ul>
+            </Col>
+          </Row>
+        </small>
       ));
   };
 
@@ -75,18 +79,7 @@ const DoctorProfileAvailability = ({ doctorId }) => {
             <>
               {availability.onsite.length > 0 ? (
                 <div>
-                  <Table
-                    className="align-items-center table-flush"
-                    style={{ width: "100%" }}
-                  >
-                    <thead className="thead-light">
-                      <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Timeslots</th>
-                      </tr>
-                    </thead>
-                    <tbody>{tableData(availability.onsite)}</tbody>
-                  </Table>
+                  {tableData(availability.onsite)}
                   <div
                     style={{
                       textAlign: "center",
@@ -118,18 +111,7 @@ const DoctorProfileAvailability = ({ doctorId }) => {
               <>
                 {availability.telemedicine.length > 0 ? (
                   <div>
-                    <Table
-                      className="align-items-center table-flush"
-                      style={{ width: "100%" }}
-                    >
-                      <thead className="thead-light">
-                        <tr>
-                          <th scope="col">Date</th>
-                          <th scope="col">Timeslots</th>
-                        </tr>
-                      </thead>
-                      <tbody>{tableData(availability.telemedicine)}</tbody>
-                    </Table>
+                    {tableData(availability.telemedicine)}
                     <div
                       style={{
                         textAlign: "center",

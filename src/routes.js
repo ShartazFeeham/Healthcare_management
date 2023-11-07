@@ -13,6 +13,8 @@ import PatientProfile from "components/profiles/PatientProfile";
 import DoctorProfile from "components/profiles/DoctorProfile";
 import EditDoctorProfile from "components/profiles/EditDoctorProfile";
 import EditPatientProfile from "components/profiles/EditPatientProfile";
+import CreateMedicine from "components/pharma/CreateMedicine";
+import UpdateMedicine from "components/pharma/UpdateMedicine";
 
 var routes = [
   {
@@ -118,6 +120,20 @@ var routes = [
     name: "Edic Patient Profile",
     icon: "ni ni-single-02 text-primary",
     component: <EditPatientProfile />,
+    layout: "/health",
+  },
+  {
+    path: "/medicines/create",
+    name: "Create new medicine",
+    icon: "ni ni-single-02 text-primary",
+    component: <CreateMedicine />,
+    layout: "/health",
+  },
+  {
+    path: "/medicines/update/:medId",
+    name: "Update a medicine",
+    icon: "ni ni-single-02 text-primary",
+    component: <UpdateMedicine />,
     layout: "/health",
   },
 ];
