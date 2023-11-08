@@ -145,12 +145,23 @@ const UpdateMedicine = () => {
         <Row>
           <Col className="order-xl-1 center" xl="8">
             <Card className="bg-secondary shadow">
+              {medId === null ||
+                medId === undefined ||
+                (medId === ":medId" && (
+                  <div style={{ width: "100%", textAlign: "center" }}>
+                    <div className="alert alert-danger">
+                      <b>No medicine selected!</b> Please select a medicine
+                      first that you want to update from the medicine list.{" "}
+                    </div>
+                  </div>
+                ))}
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
                   <Col xs="8">
                     <h3 className="mb-0">
-                      <b>CREATE A NEW MEDICINE</b>
+                      <b>UPDATE A MEDICINE DATA</b>
                     </h3>
+
                     <Link to={"/health/medicines"}>
                       <b>Go back to medicines list</b>
                     </Link>

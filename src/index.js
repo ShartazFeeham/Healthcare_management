@@ -7,6 +7,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/argon-dashboard-react.scss";
 import Logged from "layouts/Logged";
 import Public from "layouts/Public";
+import Common from "layouts/Common";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -15,6 +16,7 @@ root.render(
     <Routes>
       <Route path="/health/*" element={<Logged />} />
       <Route path="/public/*" element={<Public />} />
+      <Route path="/common/*" element={<Common />} />
       <Route path="/" element={<Navigate to="/health/index" replace />} />
       {/* I can add page not found page here! */}
       {/* <Route path="*" element={<Navigate to="/health/index" replace />} /> */}

@@ -143,7 +143,7 @@ var routes = [
     name: "Medicines list",
     icon: "ni ni-single-02 text-primary",
     component: <MedicineList />,
-    layout: "/health",
+    layout: "/common",
   },
   {
     path: "/medicines/:medId",

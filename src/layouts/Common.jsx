@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from "react";
-
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import PublicNavbar from "components/Navbars/PublicNavbar";
 import PublicFooter from "components/Footers/PublicFooter";
-
 import routes from "routes.js";
+import CommonNavbar from "components/Navbars/CommonNavbar";
+import FloatingImages from "./FloatingImages";
 
-const Public = (props) => {
+const Common = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
-
-  // Add a state variable to store the window height
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   useEffect(() => {
-    // Update the window height when the window is resized
     const handleResize = () => {
       setWindowHeight(window.innerHeight);
     };
 
-    // Add an event listener for window resize
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -43,7 +39,7 @@ const Public = (props) => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/public") {
+      if (prop.layout === "/common") {
         return (
           <Route path={prop.path} element={prop.component} key={key} exact />
         );
@@ -55,29 +51,17 @@ const Public = (props) => {
 
   return (
     <>
+      <FloatingImages />
       <div className="main-content" ref={mainContent}>
-        <PublicNavbar />
-        <div className="header bg-gradient-info py-7 py-lg-8">
-          <div className="separator separator-bottom separator-skew zindex-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="none"
-              version="1.1"
-              viewBox="0 0 2560 100"
-              x="0"
-              y="0"
-            >
-              <polygon
-                className="fill-default"
-                points="2560 0 2560 100 0 100"
-              />
-            </svg>
-          </div>
-        </div>
-        {/* Use CSS to set minHeight as a percentage of window height */}
+        <div className="py-7 py-lg-8"></div>
+        <CommonNavbar />
+
         <Container
           className="mt--8 pb-5"
-          style={{ minHeight: `${windowHeight * 0.8}px` }}
+          style={{
+            minHeight: `${windowHeight * 0.75}px`,
+            opacity: 0.9,
+          }}
         >
           <Row className="justify-content-center">
             <Routes>
@@ -95,4 +79,4 @@ const Public = (props) => {
   );
 };
 
-export default Public;
+export default Common;

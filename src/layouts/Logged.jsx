@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import { Container } from "reactstrap";
 import PublicFooter from "../components/Navbars/LoggedNavbar";
@@ -9,8 +9,20 @@ import routes from "routes.js";
 const Logged = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     mainContent.current.scrollTop = 0;
@@ -60,7 +72,7 @@ const Logged = (props) => {
           {getRoutes(routes)}
           <Route path="*" element={<Navigate to="/health/index" replace />} />
         </Routes>
-        <Container fluid>
+        <Container fluid style={{ minHeight: `${windowHeight * 0.8}px` }}>
           <LoggedFooter />
         </Container>
       </div>
