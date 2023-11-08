@@ -3,3 +3,9 @@
 package-lock.json
 /build
 .eslintcache
+/FrontUI/node_modules
+/FrontUI/build
+/FrontUI/node_modules
+/FrontUIpackage-lock.json
+/FrontUI/build
+/FrontUI.eslintcache
