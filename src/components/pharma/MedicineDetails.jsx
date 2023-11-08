@@ -26,17 +26,7 @@ import { Link } from "react-router-dom";
 const MedicineDetails = () => {
   return (
     <>
-      <div
-        className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-        style={{
-          minHeight: "400px",
-          backgroundImage:
-            "url(" + require("../../assets/img/cover/health1.jpg") + ")",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-        }}
-      >
-        <span className="mask bg-gradient-default opacity-4" />
+      <div>
         <Container className="d-flex align-items-center" fluid>
           <Row>
             <Col lg="7" md="10">
@@ -54,7 +44,7 @@ const MedicineDetails = () => {
                     borderRadius: "3px",
                     opacity: 0.8,
                   }}
-                  to={"/health/medicines"}
+                  to={"/common/medicines"}
                 >
                   Back to medicine list
                 </Link>
@@ -63,23 +53,39 @@ const MedicineDetails = () => {
           </Row>
         </Container>
       </div>
-      <Container className="mt--9" fluid>
+      <Container className="mt-2" fluid>
         <Row>
           <Col sm="4">
-            <Card>
+            <Card
+              style={{
+                backgroundColor: "#111144",
+                borderRadius: "20px",
+              }}
+            >
               <CardBody>
                 <img
                   src={medicineDetails.photo}
                   alt={medicineDetails.commercialName}
-                  style={{ width: "100%" }}
+                  style={{
+                    borderRadius: "15px",
+                    width: "100%",
+                  }}
                 />
               </CardBody>
             </Card>
           </Col>
           <Col sm="8">
-            <Card>
+            <Card
+              style={{
+                color: "white",
+                backgroundColor: "#111144",
+                borderRadius: "20px",
+              }}
+            >
               <CardBody>
-                <CardTitle tag="h4">Medicine Details</CardTitle>
+                <CardTitle tag="h1" style={{ color: "white" }}>
+                  Medicine Details
+                </CardTitle>
                 <CardText>
                   <CardText>
                     <FaMedkit /> <strong>Commercial Name:</strong>{" "}

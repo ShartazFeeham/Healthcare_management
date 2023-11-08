@@ -17,5 +17,4 @@ export const medicineDetails = {
   expirationDate: "2023-12-31",
   photo:
     "https://cdn0.woolworths.media/content/wowproductimages/large/750755.jpg",
-  alertMessage: "Keep out of reach of children and store in a cool, dry place.",
 };

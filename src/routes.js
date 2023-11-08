@@ -150,7 +150,7 @@ var routes = [
     name: "Medicine details",
     icon: "ni ni-single-02 text-primary",
     component: <MedicineDetails />,
-    layout: "/health",
+    layout: "/common",
   },
 ];
 export default routes;

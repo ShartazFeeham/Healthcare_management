@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   UncontrolledCollapse,
@@ -12,6 +13,10 @@ import {
 } from "reactstrap";
 
 const CommonNavbar = () => {
+  const handleGoBack = () => {
+    window.history.back(); // Go back to the previous page
+  };
+
   return (
     <>
       <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">
@@ -43,7 +48,12 @@ const CommonNavbar = () => {
             </div>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="nav-link-icon" to="/" tag={Link}>
+                <NavLink
+                  className="nav-link-icon"
+                  to="/"
+                  tag={Link}
+                  onClick={handleGoBack}
+                >
                   <i className="ni ni-bold-left" />
                   <span className="nav-link-inner--text">
                     Back to previous page
