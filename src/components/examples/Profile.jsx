@@ -11,7 +11,7 @@ import {
   Col,
 } from "reactstrap";
 // core components
-import Header from "components/Headers/Header";
+import Header from "components/headers/Header";
 
 const Profile = () => {
   return (

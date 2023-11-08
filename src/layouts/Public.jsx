@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
-import PublicNavbar from "components/Navbars/PublicNavbar";
-import PublicFooter from "components/Footers/PublicFooter";
+import PublicNavbar from "components/navbars/PublicNavbar";
+import PublicFooter from "components/footers/PublicFooter";
 
 import routes from "routes.js";
 

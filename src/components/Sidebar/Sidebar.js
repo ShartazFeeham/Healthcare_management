@@ -207,6 +207,10 @@ const Sidebar = (props) => {
               </InputGroupAddon>
             </InputGroup>
           </Form>
+
+          <Link to={"/"}>
+            <i className="ni ni-spaceship"></i> Home
+          </Link>
           {/* Navigation */}
           <Nav navbar>{createLinks(routes)}</Nav>
           {/* Divider */}

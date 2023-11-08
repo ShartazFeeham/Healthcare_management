@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Route, Routes, Navigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
-import PublicNavbar from "components/Navbars/PublicNavbar";
-import PublicFooter from "components/Footers/PublicFooter";
+import PublicFooter from "components/footers/PublicFooter";
 import routes from "routes.js";
-import CommonNavbar from "components/Navbars/CommonNavbar";
+import CommonNavbar from "components/navbars/CommonNavbar";
 import FloatingImages from "./FloatingImages";
 
 const Common = (props) => {
