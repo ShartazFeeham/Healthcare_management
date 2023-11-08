@@ -17,6 +17,7 @@ import CreateMedicine from "components/pharma/CreateMedicine";
 import UpdateMedicine from "components/pharma/UpdateMedicine";
 import MedicineList from "components/pharma/MedicineList";
 import MedicineDetails from "components/pharma/MedicineDetails";
+import Community from "components/community/Community";
 
 var routes = [
   {
@@ -151,6 +152,13 @@ var routes = [
     icon: "ni ni-single-02 text-primary",
     component: <MedicineDetails />,
     layout: "/common",
+  },
+  {
+    path: "/community",
+    name: "Community",
+    icon: "ni ni-single-02 text-primary",
+    component: <Community />,
+    layout: "/health",
   },
 ];
 export default routes;
