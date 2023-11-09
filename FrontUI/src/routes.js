@@ -18,6 +18,7 @@ import UpdateMedicine from "components/pharma/UpdateMedicine";
 import MedicineList from "components/pharma/MedicineList";
 import MedicineDetails from "components/pharma/MedicineDetails";
 import Community from "components/community/Community";
+import CreateDisease from "components/disease/CreateDisease";
 
 var routes = [
   {
@@ -158,6 +159,14 @@ var routes = [
     name: "Community",
     icon: "ni ni-single-02 text-primary",
     component: <Community />,
+    layout: "/health",
+  },
+
+  {
+    path: "/diseases/create",
+    name: "Diseases",
+    icon: "ni ni-single-02 text-primary",
+    component: <CreateDisease />,
     layout: "/health",
   },
 ];
