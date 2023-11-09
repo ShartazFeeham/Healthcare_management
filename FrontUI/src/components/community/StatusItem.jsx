@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 
-const StatusItem = ({ status }) => {
+const StatusItem = ({ st }) => {
+  const [status, setStatus] = useState(st);
   const authorName = "Anonymous user";
 
   const getUser = (authorId) => {

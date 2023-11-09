@@ -24,7 +24,7 @@ const Status = () => {
   return (
     <>
       {status.map((st) => {
-        return <StatusItem status={st} />;
+        return <StatusItem st={st} />;
       })}
       {page * 5 + 5 >= total ? (
         <Row

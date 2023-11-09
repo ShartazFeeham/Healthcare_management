@@ -1,4 +1,7 @@
-const FaqItem = ({ status }) => {
+import { useState } from "react";
+
+const FaqItem = ({ st }) => {
+  const [status, setStatus] = useState(st);
   const getTitle = () => {
     return (
       <div

@@ -24,7 +24,7 @@ const FAQ = () => {
   return (
     <>
       {status.map((st) => {
-        return <FaqItem status={st} />;
+        return <FaqItem st={st} />;
       })}
       {page * 5 + 5 >= total ? (
         <Row
