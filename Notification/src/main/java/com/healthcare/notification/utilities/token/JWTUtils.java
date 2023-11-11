@@ -30,22 +30,6 @@ public class JWTUtils {
     }
 
     /**
-     * Generates a JWT token with the provided user ID and roles.
-     *
-     * @param id    The user ID to include in the token.
-     * @param roles The list of user roles to include in the token.
-     * @return The generated JWT token.
-     */
-    public static String generateToken(String id, List<String> roles){
-        return Jwts.builder()
-                .setSubject(id)
-                .claim("roles", roles)
-                .setExpiration(new Date(System.currentTimeMillis()+ TokenConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, TokenConstants.TOKEN_SECRET)
-                .compact();
-    }
-
-    /**
      * Generates a random user ID of the specified length.
      *
      * @param length The length of the generated user ID.

@@ -1,141 +1,65 @@
 package com.healthcare.notification.service.implementation;
 
 import com.healthcare.notification.entities.Notification;
-import com.healthcare.notification.entities.Preference;
-import com.healthcare.notification.exceptions.ExternalCallForbiddenException;
+import com.healthcare.notification.exceptions.AccessMismatchException;
+import com.healthcare.notification.exceptions.ItemNotFoundException;
 import com.healthcare.notification.repository.NotificationRepository;
 import com.healthcare.notification.service.interfaces.NotificationService;
+import com.healthcare.notification.service.interfaces.NotifyService;
 import com.healthcare.notification.service.interfaces.PreferenceService;
-import com.healthcare.notification.utilities.constants.TokenConstants;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final PreferenceService preferenceService;
-    private final PasswordEncoder passwordEncoder;
+    private final NotifyService notifyService;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, PreferenceService preferenceService, PasswordEncoder passwordEncoder) {
-        this.notificationRepository = notificationRepository;
-        this.preferenceService = preferenceService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    /**
-     * Create a new notification for a user.
-     *
-     * @param userId       The UUID of the user.
-     * @param key          The security key for validation.
-     * @param notification The notification to create.
-     */
     @Override
-    public void create(UUID userId, String key, Notification notification) {
-        if (!key.equals(TokenConstants.TOKEN_SECRET)) {
-            throw new ExternalCallForbiddenException();
-        }
-        notification.setUserId(userId);
+    public void create(Notification notification) {
         notification.setTimeCreate(LocalDateTime.now());
-        notification.setSeen(false);
         notificationRepository.save(notification);
+        notifyService.send(notification);
     }
 
-    /**
-     * Get filtered notifications for a user based on preferences.
-     *
-     * @param userId The UUID of the user.
-     * @return List of filtered notifications.
-     */
     @Override
-    public List<Notification> getFiltredByUserId(UUID userId) {
-        // Get user preferences
-        Preference userPreference = preferenceService.getByUserId(userId);
-        // Get current time
-        LocalTime currentTime = LocalTime.now();
-        // Filter notifications based on user preferences
-        List<Notification> notifications = notificationRepository.findByUserId(userId);
-        // Apply preference filters
-        if (userPreference.isDoNotDisturb()) {
-            notifications.clear();
-            return notifications;
-        }
-        if (userPreference.getMuteFrom() != null && userPreference.getMuteTo() != null) {
-            LocalDateTime muteFromDateTime = LocalDateTime.of(LocalDate.now(), userPreference.getMuteFrom());
-            LocalDateTime muteToDateTime = LocalDateTime.of(LocalDate.now(), userPreference.getMuteTo());
-
-            notifications.removeIf(notification -> {
-                LocalDateTime notificationTime = notification.getTimeCreate();
-                return notificationTime.isAfter(muteFromDateTime) && notificationTime.isBefore(muteToDateTime);
-            });
-        }
-
-        if (!userPreference.isGetPostInteractionNotification()) {
-            notifications.removeIf(notification -> notification.getType().equals("post_interaction"));
-        }
-        if (!userPreference.isGetConnectionInteractionNotification()) {
-            notifications.removeIf(notification -> notification.getType().equals("connection_interaction"));
-        }
-
-        if (!userPreference.isGetHealthFeedNotification()) {
-            notifications.removeIf(notification -> notification.getType().equals("health_feed"));
-        }
-
-        if (!userPreference.isGetRecommendationNotification()) {
-            notifications.removeIf(notification -> notification.getType().equals("recommendation"));
-        }
-
-        if (!userPreference.isGetAccountNotification()) {
-            notifications.removeIf(notification -> notification.getType().equals("account"));
-        }
-
-        notifications.removeIf(Notification::isSeen);
-
-        return notifications;
+    public List<Notification> getAllByUserId(String userId, int itemCount, int pageNo) {
+        int offset = 0;
+        Pageable pageable = PageRequest.of(offset, itemCount);
+        Page<Notification> notificationPage = notificationRepository.findByUserId(userId, pageable);
+        return notificationPage.getContent();
     }
 
-    /**
-     * Mark a notification as "seen" by a user.
-     *
-     * @param notificationId The UUID of the notification to mark as seen.
-     * @param userId         The UUID of the user.
-     * @throws IllegalAccessException If the notification is not found or doesn't belong to the user.
-     */
     @Override
-    public void setSeen(UUID notificationId, UUID userId) throws IllegalAccessException {
+    public void setSeen(Long notificationId, String userId) throws ItemNotFoundException, AccessMismatchException {
         Optional<Notification> notificationOp = notificationRepository.findById(notificationId);
-        if (notificationOp.isEmpty()) throw new IllegalAccessException();
+        if (notificationOp.isEmpty()) {
+            throw new ItemNotFoundException("notification", String.valueOf(notificationId));
+        }
         Notification notification = notificationOp.get();
-        if (!notification.getUserId().equals(userId)) throw new IllegalAccessException();
+        if (!notification.getUserId().equals(userId)) {
+            throw new AccessMismatchException("The requested user doesn't own the notification");
+        }
         notification.setSeen(true);
         notificationRepository.save(notification);
     }
 
-    /**
-     * Get all notifications for a user.
-     *
-     * @param userId The UUID of the user.
-     * @return List of all notifications for the user.
-     */
     @Override
-    public List<Notification> getAllByUserId(UUID userId) {
-        return notificationRepository.findByUserId(userId);
-    }
-
-    /**
-     * Delete a notification by its UUID.
-     *
-     * @param notificationId The UUID of the notification to delete.
-     */
-    @Override
-    public void delete(UUID notificationId) {
-        notificationRepository.deleteById(notificationId);
+    public void delete(Long notificationId) throws ItemNotFoundException {
+        Optional<Notification> notificationOp = notificationRepository.findById(notificationId);
+        notificationOp.ifPresent(notificationRepository::delete);
+        if (notificationOp.isEmpty()) {
+            throw new ItemNotFoundException("notification", String.valueOf(notificationId));
+        }
     }
 }

@@ -1,33 +1,46 @@
 package com.healthcare.notification.service.implementation;
 
+import com.healthcare.notification.entities.Device;
 import com.healthcare.notification.entities.Preference;
+import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.repository.DeviceRepository;
 import com.healthcare.notification.repository.PreferenceRepository;
 import com.healthcare.notification.service.interfaces.PreferenceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PreferenceServiceImpl implements PreferenceService {
 
     private final PreferenceRepository preferenceRepository;
+    private final DeviceRepository deviceRepository;
 
-    public PreferenceServiceImpl(PreferenceRepository preferenceRepository) {
-        this.preferenceRepository = preferenceRepository;
+    @Override
+    public Preference create(String userId, String email) {
+        Preference preference = new Preference();
+        preference.setPreferenceId(userId);
+        preference.setEmail(email);
+        preference.setGetAppointmentUpdates(true);
+        preference.setGetSiteUpdates(true);
+        preference.setGetAccountAccountUpdates(true);
+        preference.setGetCommunityUpdates(true);
+
+        preferenceRepository.save(preference);
+        return preference;
     }
 
-    /**
-     * Get user preferences by user ID. If preferences don't exist, create default preferences.
-     *
-     * @param userId The UUID of the user.
-     * @return The user's preferences.
-     */
     @Override
-    public Preference getByUserId(UUID userId) {
-        Optional<Preference> preferenceOp = preferenceRepository.findByUserId(userId);
+    public Preference getByUserId(String userId) {
+        Optional<Preference> preferenceOp = preferenceRepository.findById(userId);
         if (preferenceOp.isEmpty()) {
-            Preference preference = getDefaultSettings(userId);
+            Preference preference = create(userId, "");
             preferenceRepository.save(preference);
             return preference;
         } else {
@@ -35,64 +48,39 @@ public class PreferenceServiceImpl implements PreferenceService {
         }
     }
 
-    /**
-     * Update user preferences.
-     *
-     * @param userId The UUID of the user.
-     * @param updatedPreference The updated preferences to save.
-     */
     @Override
-    public void update(UUID userId, Preference updatedPreference) {
+    public void update(String userId, Preference updatedPreference) {
         Preference preference = getByUserId(userId);
 
         preference.setDoNotDisturb(updatedPreference.isDoNotDisturb());
-        preference.setMuteFrom(updatedPreference.getMuteFrom());
-        preference.setMuteTo(updatedPreference.getMuteTo());
-        preference.setGetPostInteractionNotification(updatedPreference.isGetPostInteractionNotification());
-        preference.setGetConnectionInteractionNotification(updatedPreference.isGetConnectionInteractionNotification());
-        preference.setGetHealthFeedNotification(updatedPreference.isGetHealthFeedNotification());
-        preference.setGetRecommendationNotification(updatedPreference.isGetRecommendationNotification());
-        preference.setGetAccountNotification(updatedPreference.isGetAccountNotification());
+        preference.setGetCommunityUpdates(updatedPreference.isGetCommunityUpdates());
+        preference.setGetSiteUpdates(updatedPreference.isGetSiteUpdates());
+        preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
+        preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
 
         preferenceRepository.save(preference);
     }
 
-    /**
-     * Reset user preferences to default settings.
-     *
-     * @param userId The UUID of the user.
-     * @return The user's preferences after resetting to default.
-     */
     @Override
-    public Preference resetToDefault(UUID userId) {
-        getByUserId(userId);
-        update(userId, getDefaultSettings(userId));
-        return getDefaultSettings(userId);
+    public void addDevice(String userId, String deviceCode) {
+        Preference preference = getByUserId(userId);
+        if(preference.getDevices() == null) preference.setDevices(new ArrayList<>());
+        preference.getDevices().add(new Device(deviceCode, preference));
+        preferenceRepository.save(preference);
     }
 
-    /**
-     * Create and return default preferences for a user.
-     *
-     * @param userId The UUID of the user.
-     * @return Default preferences.
-     */
-    private Preference getDefaultSettings(UUID userId) {
-        // Create a new Preference object with default values
-        Preference preference = new Preference();
-
-        // Set the user ID to the provided userID
-        preference.setUserId(userId);
-
-        // Set default values for other fields
-        preference.setDoNotDisturb(false);
-        preference.setMuteFrom(null);
-        preference.setMuteTo(null);
-        preference.setGetPostInteractionNotification(true);
-        preference.setGetConnectionInteractionNotification(true);
-        preference.setGetHealthFeedNotification(true);
-        preference.setGetRecommendationNotification(true);
-        preference.setGetAccountNotification(true);
-
-        return preference;
+    @Override
+    public void removeDevice(String userId, String deviceCode) throws ItemNotFoundException {
+        Preference preference = getByUserId(userId);
+        if(preference.getDevices() == null) preference.setDevices(new ArrayList<>());
+        Long deviceId = 0L;
+        for(Device device: preference.getDevices()){
+            if(device.getDeviceCode().equals(deviceCode)){
+                device.setPreference(null);
+                deviceRepository.delete(device);
+                return;
+            }
+        }
+        throw new ItemNotFoundException("device", deviceCode.substring(0, 5) + "...");
     }
 }

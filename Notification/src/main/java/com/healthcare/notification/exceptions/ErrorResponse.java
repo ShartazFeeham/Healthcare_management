@@ -12,8 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ErrorResponse {
     private String exception;
-    private String operation;
-    private String type;
     private String message;
     private String status;
     private Date timeStamp;

@@ -1,12 +1,13 @@
 package com.healthcare.notification.service.interfaces;
 import com.healthcare.notification.entities.Notification;
+import com.healthcare.notification.exceptions.AccessMismatchException;
+import com.healthcare.notification.exceptions.ItemNotFoundException;
+
 import java.util.List;
-import java.util.UUID;
 
 public interface NotificationService {
-    void create(UUID userId, String key, Notification notification);
-    List<Notification> getAllByUserId(UUID userId);
-    List<Notification> getFiltredByUserId(UUID userId);
-    void setSeen(UUID notificationId, UUID userId) throws IllegalAccessException;
-    void delete(UUID notificationId);
+    void create(Notification notification);
+    List<Notification> getAllByUserId(String userId, int itemCount, int pageNo);
+    void setSeen(Long notificationId, String userId) throws ItemNotFoundException, IllegalAccessException, AccessMismatchException;
+    void delete(Long notificationId) throws ItemNotFoundException;
 }

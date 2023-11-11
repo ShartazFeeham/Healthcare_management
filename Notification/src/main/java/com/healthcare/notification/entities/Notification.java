@@ -1,6 +1,5 @@
 package com.healthcare.notification.entities;
 
-import com.healthcare.notification.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,17 @@ import java.util.UUID;
 @Getter @Setter @RequiredArgsConstructor
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // References
-    private UUID notificationId;
-    private UUID userId;
+    private Long notificationId;
+    private String userId;
     // Notification properties
+    private String title;
+    private String prefix;
     private String text;
+    private String suffix;
+    private String url;
+    private String photoUrl;
     private LocalDateTime timeCreate;
     private boolean seen;
     private String type;

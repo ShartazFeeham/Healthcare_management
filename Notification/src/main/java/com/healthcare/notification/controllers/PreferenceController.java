@@ -1,55 +1,47 @@
 package com.healthcare.notification.controllers;
 
 import com.healthcare.notification.entities.Preference;
+import com.healthcare.notification.exceptions.ItemNotFoundException;
 import com.healthcare.notification.service.interfaces.PreferenceService;
-import com.healthcare.notification.utilities.token.IDExtractor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/preferences")
+@RequiredArgsConstructor
 public class PreferenceController {
 
     private final PreferenceService preferenceService;
 
-    public PreferenceController(PreferenceService preferenceService) {
-        this.preferenceService = preferenceService;
-    }
-
-    /**
-     * Get the preference for the current user.
-     *
-     * @return A ResponseEntity containing the user's preference.
-     */
     @GetMapping
     public ResponseEntity<Preference> getPreferenceByUserId() {
-        Preference preference = preferenceService.getByUserId(IDExtractor.getUserID());
+        Preference preference = preferenceService.getByUserId("PAT1");
         return ResponseEntity.ok(preference);
     }
 
-    /**
-     * Update the preference for the current user.
-     *
-     * @param updatedPreference The updated preference object.
-     * @return A ResponseEntity with a status message indicating the result of the operation.
-     */
     @PostMapping
+    public ResponseEntity<Preference> createPreference(@RequestParam String userId, @RequestParam String email) {
+        Preference preference = preferenceService.create(userId, email);
+        return ResponseEntity.ok(preference);
+    }
+
+    @PutMapping
     public ResponseEntity<String> updatePreference(@RequestBody Preference updatedPreference) {
-        preferenceService.update(IDExtractor.getUserID(), updatedPreference);
+        preferenceService.update("PAT1", updatedPreference);
         return new ResponseEntity<String>("Preference updated", HttpStatus.OK);
     }
 
-    /**
-     * Reset the preference for the current user to the default settings.
-     *
-     * @return A ResponseEntity containing the user's preference after resetting to default.
-     */
-    @PostMapping("/reset")
-    public ResponseEntity<Preference> resetPreferenceToDefault() {
-        Preference preference = preferenceService.resetToDefault(IDExtractor.getUserID());
-        return ResponseEntity.ok(preference);
+    @PostMapping("/device")
+    public ResponseEntity<String> addDevice(@RequestParam String deviceCode) {
+        preferenceService.addDevice("PAT1", deviceCode);
+        return ResponseEntity.ok("Device added.");
+    }
+
+    @DeleteMapping("/device")
+    public ResponseEntity<String> removeDevice(@RequestParam String deviceCode) throws ItemNotFoundException {
+        preferenceService.removeDevice("PAT1", deviceCode);
+        return ResponseEntity.ok("Device removed.");
     }
 }

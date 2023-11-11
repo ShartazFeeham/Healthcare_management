@@ -20,14 +20,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDatabaseExceptions(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
-                "Database Operation",
-                "Database Error",
                 "An error occurred while performing a database operation",
                 HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 new Date(),
                 request.getRequestURI()
         );
-
         // Return an HTTP response with a status code indicating an internal server error.
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
@@ -37,14 +34,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
-                "Invalid Argument",
-                "Bad Request",
                 "Invalid argument provided",
                 HttpStatus.BAD_REQUEST.toString(),
                 new Date(),
                 request.getRequestURI()
         );
-
         // Return an HTTP response with a status code indicating a bad request.
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
@@ -54,15 +48,25 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleExternalCallForbiddenException(ExternalCallForbiddenException e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
-                "External Call Forbidden",
-                "Forbidden",
                 e.getMessage(),
-                HttpStatus.FORBIDDEN.toString(),
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 new Date(),
                 request.getRequestURI()
         );
-
         // Return an HTTP response with a status code indicating a forbidden request.
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    @ExceptionHandler({CustomException.class})
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getExceptionName(),
+                e.getMessage(),
+                e.getHttpStatus().toString(),
+                new Date(),
+                request.getRequestURI()
+        );
+        // Return an HTTP response with a status code indicating a forbidden request.
+        return ResponseEntity.status(e.getHttpStatus()).body(errorResponse);
     }
 }

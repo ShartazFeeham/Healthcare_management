@@ -1,31 +1,27 @@
 package com.healthcare.notification.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Getter @Setter @RequiredArgsConstructor
 public class Preference {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID preferenceId;
-    private UUID userId;
-    // Personalized time stamp
-    private boolean doNotDisturb;
-    private LocalTime muteFrom;
-    private LocalTime muteTo;
+    @Column(name = "preference_id")
+    private String preferenceId;
+    private String email;
+    @OneToMany(mappedBy = "preference", cascade = CascadeType.ALL)
+    private List<Device> devices;
     // Personalized notification setting properties based on notification type
-    private boolean getPostInteractionNotification;
-    private boolean getConnectionInteractionNotification;
-    private boolean getHealthFeedNotification;
-    private boolean getRecommendationNotification;
-    private boolean getAccountNotification;
+    private boolean doNotDisturb;
+    private boolean getAccountAccountUpdates;
+    private boolean getAppointmentUpdates;
+    private boolean getCommunityUpdates;
+    private boolean getSiteUpdates;
 }
