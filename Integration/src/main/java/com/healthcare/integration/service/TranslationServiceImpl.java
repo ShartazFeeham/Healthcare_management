@@ -1,10 +1,10 @@
 package com.healthcare.integration.service;
 
-import com.ladder.IntegrationService.exception.GoogleTranslatorException;
-import com.ladder.IntegrationService.interfaces.TranslationService;
-import com.ladder.IntegrationService.model.LanguageTag;
-import com.ladder.IntegrationService.model.TranslationRequest;
-import com.ladder.IntegrationService.utility.helper.GoogleTranslate;
+import com.healthcare.integration.exception.GoogleTranslatorException;
+import com.healthcare.integration.interfaces.TranslationService;
+import com.healthcare.integration.model.LanguageTag;
+import com.healthcare.integration.model.TranslationRequest;
+import com.healthcare.integration.utility.helper.GoogleTranslate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

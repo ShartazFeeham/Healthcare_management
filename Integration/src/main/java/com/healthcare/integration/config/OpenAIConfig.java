@@ -1,6 +1,6 @@
 package com.healthcare.integration.config;
 
-import com.ladder.IntegrationService.utility.constants.OpenAIConstants;
+import com.healthcare.integration.utility.constants.OpenAIConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

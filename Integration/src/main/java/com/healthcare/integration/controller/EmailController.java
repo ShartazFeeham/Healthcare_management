@@ -1,7 +1,7 @@
 package com.healthcare.integration.controller;
 
-import com.ladder.IntegrationService.interfaces.EmailService;
-import com.ladder.IntegrationService.model.EmailRequest;
+import com.healthcare.integration.interfaces.EmailService;
+import com.healthcare.integration.model.EmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

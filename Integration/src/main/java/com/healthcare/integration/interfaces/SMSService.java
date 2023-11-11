@@ -1,6 +1,6 @@
 package com.healthcare.integration.interfaces;
 
-import com.ladder.IntegrationService.model.SMSRequest;
+import com.healthcare.integration.model.SMSRequest;
 
 public interface SMSService {
     public String sendSms(SMSRequest request);

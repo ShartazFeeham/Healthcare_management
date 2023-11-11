@@ -1,6 +1,6 @@
 package com.healthcare.integration.interfaces;
 
-import com.ladder.IntegrationService.model.EmailRequest;
+import com.healthcare.integration.model.EmailRequest;
 
 public interface EmailService {
     public void sendEmailSMTP(EmailRequest emailRequest);

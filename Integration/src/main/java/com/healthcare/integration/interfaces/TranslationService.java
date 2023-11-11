@@ -1,8 +1,8 @@
 package com.healthcare.integration.interfaces;
 
-import com.ladder.IntegrationService.exception.GoogleTranslatorException;
-import com.ladder.IntegrationService.model.LanguageTag;
-import com.ladder.IntegrationService.model.TranslationRequest;
+import com.healthcare.integration.exception.GoogleTranslatorException;
+import com.healthcare.integration.model.LanguageTag;
+import com.healthcare.integration.model.TranslationRequest;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.healthcare.integration.controller;
 
-import com.ladder.IntegrationService.interfaces.SMSService;
-import com.ladder.IntegrationService.model.SMSRequest;
+import com.healthcare.integration.interfaces.SMSService;
+import com.healthcare.integration.model.SMSRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

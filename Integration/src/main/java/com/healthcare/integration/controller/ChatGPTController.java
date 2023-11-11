@@ -1,6 +1,6 @@
 package com.healthcare.integration.controller;
 
-import com.ladder.IntegrationService.service.ChatGPTService;
+import com.healthcare.integration.service.ChatGPTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

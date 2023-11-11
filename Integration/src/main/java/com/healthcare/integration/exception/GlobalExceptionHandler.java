@@ -1,6 +1,6 @@
 package com.healthcare.integration.exception;
 
-import com.ladder.IntegrationService.model.ErrorResponse;
+import com.healthcare.integration.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

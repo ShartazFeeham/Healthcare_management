@@ -1,8 +1,8 @@
 package com.healthcare.integration.service;
 
-import com.ladder.IntegrationService.interfaces.FCMService;
-import com.ladder.IntegrationService.model.FCMRequest;
-import com.ladder.IntegrationService.utility.constants.FCMConstants;
+import com.healthcare.integration.interfaces.FCMService;
+import com.healthcare.integration.model.FCMRequest;
+import com.healthcare.integration.utility.constants.FCMConstants;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

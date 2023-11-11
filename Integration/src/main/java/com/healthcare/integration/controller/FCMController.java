@@ -1,7 +1,7 @@
 package com.healthcare.integration.controller;
 
-import com.ladder.IntegrationService.interfaces.FCMService;
-import com.ladder.IntegrationService.model.FCMRequest;
+import com.healthcare.integration.interfaces.FCMService;
+import com.healthcare.integration.model.FCMRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,9 +1,9 @@
 package com.healthcare.integration.controller;
 
-import com.ladder.IntegrationService.exception.GoogleTranslatorException;
-import com.ladder.IntegrationService.interfaces.TranslationService;
-import com.ladder.IntegrationService.model.LanguageTag;
-import com.ladder.IntegrationService.model.TranslationRequest;
+import com.healthcare.integration.exception.GoogleTranslatorException;
+import com.healthcare.integration.interfaces.TranslationService;
+import com.healthcare.integration.model.LanguageTag;
+import com.healthcare.integration.model.TranslationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

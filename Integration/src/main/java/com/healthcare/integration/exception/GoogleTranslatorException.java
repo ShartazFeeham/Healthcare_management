@@ -1,6 +1,6 @@
 package com.healthcare.integration.exception;
 
-import com.ladder.IntegrationService.model.TranslationRequest;
+import com.healthcare.integration.model.TranslationRequest;
 import org.springframework.http.HttpStatus;
 
 public class GoogleTranslatorException extends CustomException{

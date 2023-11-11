@@ -1,8 +1,8 @@
 package com.healthcare.integration.service;
 
-import com.ladder.IntegrationService.interfaces.SMSService;
-import com.ladder.IntegrationService.model.SMSRequest;
-import com.ladder.IntegrationService.utility.constants.TwilioConstants;
+import com.healthcare.integration.interfaces.SMSService;
+import com.healthcare.integration.model.SMSRequest;
+import com.healthcare.integration.utility.constants.TwilioConstants;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;

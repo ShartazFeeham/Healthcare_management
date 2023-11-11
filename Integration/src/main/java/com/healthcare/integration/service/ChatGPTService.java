@@ -1,8 +1,8 @@
 package com.healthcare.integration.service;
 
-import com.ladder.IntegrationService.model.GPTRequest;
-import com.ladder.IntegrationService.model.GPTResponse;
-import com.ladder.IntegrationService.utility.constants.OpenAIConstants;
+import com.healthcare.integration.model.GPTRequest;
+import com.healthcare.integration.model.GPTResponse;
+import com.healthcare.integration.utility.constants.OpenAIConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
