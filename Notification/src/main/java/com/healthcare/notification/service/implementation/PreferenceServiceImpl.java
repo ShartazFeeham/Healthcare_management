@@ -1,8 +1,8 @@
 package com.healthcare.notification.service.implementation;
 
-import com.healthapp.notificationservice.entities.Preference;
-import com.healthapp.notificationservice.repository.PreferenceRepository;
-import com.healthapp.notificationservice.service.interfaces.PreferenceService;
+import com.healthcare.notification.entities.Preference;
+import com.healthcare.notification.repository.PreferenceRepository;
+import com.healthcare.notification.service.interfaces.PreferenceService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

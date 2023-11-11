@@ -1,6 +1,6 @@
 package com.healthcare.notification.security;
-import com.healthapp.notificationservice.utilities.constants.TokenConstants;
-import com.healthapp.notificationservice.utilities.token.JWTUtils;
+import com.healthcare.notification.utilities.constants.TokenConstants;
+import com.healthcare.notification.utilities.token.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

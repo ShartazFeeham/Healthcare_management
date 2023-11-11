@@ -1,5 +1,5 @@
 package com.healthcare.notification.service.interfaces;
-import com.healthapp.notificationservice.entities.Preference;
+import com.healthcare.notification.entities.Preference;
 import java.util.UUID;
 
 public interface PreferenceService {

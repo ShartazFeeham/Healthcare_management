@@ -1,12 +1,12 @@
 package com.healthcare.notification.service.implementation;
 
-import com.healthapp.notificationservice.entities.Notification;
-import com.healthapp.notificationservice.entities.Preference;
-import com.healthapp.notificationservice.exceptions.ExternalCallForbiddenException;
-import com.healthapp.notificationservice.repository.NotificationRepository;
-import com.healthapp.notificationservice.service.interfaces.NotificationService;
-import com.healthapp.notificationservice.service.interfaces.PreferenceService;
-import com.healthapp.notificationservice.utilities.constants.TokenConstants;
+import com.healthcare.notification.entities.Notification;
+import com.healthcare.notification.entities.Preference;
+import com.healthcare.notification.exceptions.ExternalCallForbiddenException;
+import com.healthcare.notification.repository.NotificationRepository;
+import com.healthcare.notification.service.interfaces.NotificationService;
+import com.healthcare.notification.service.interfaces.PreferenceService;
+import com.healthcare.notification.utilities.constants.TokenConstants;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

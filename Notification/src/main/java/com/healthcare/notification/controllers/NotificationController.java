@@ -1,8 +1,8 @@
 package com.healthcare.notification.controllers;
 
-import com.healthapp.notificationservice.entities.Notification;
-import com.healthapp.notificationservice.service.interfaces.NotificationService;
-import com.healthapp.notificationservice.utilities.token.IDExtractor;
+import com.healthcare.notification.entities.Notification;
+import com.healthcare.notification.service.interfaces.NotificationService;
+import com.healthcare.notification.utilities.token.IDExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

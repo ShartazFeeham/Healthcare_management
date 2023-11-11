@@ -1,5 +1,5 @@
 package com.healthcare.notification.service.interfaces;
-import com.healthapp.notificationservice.entities.Notification;
+import com.healthcare.notification.entities.Notification;
 import java.util.List;
 import java.util.UUID;
 

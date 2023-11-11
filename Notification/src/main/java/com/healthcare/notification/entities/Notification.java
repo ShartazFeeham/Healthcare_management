@@ -1,6 +1,6 @@
 package com.healthcare.notification.entities;
 
-import com.healthapp.notificationservice.enums.NotificationType;
+import com.healthcare.notification.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
