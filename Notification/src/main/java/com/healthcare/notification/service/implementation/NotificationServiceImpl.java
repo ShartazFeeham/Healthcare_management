@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<Notification> getAllByUserId(String userId, int itemCount, int pageNo) {
-        int offset = 0;
+        int offset = pageNo - 1;
         Pageable pageable = PageRequest.of(offset, itemCount);
         Page<Notification> notificationPage = notificationRepository.findByUserId(userId, pageable);
         return notificationPage.getContent();
@@ -55,11 +56,15 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void delete(Long notificationId) throws ItemNotFoundException {
+    public void delete(Long notificationId, String userId) throws ItemNotFoundException, AccessMismatchException {
         Optional<Notification> notificationOp = notificationRepository.findById(notificationId);
-        notificationOp.ifPresent(notificationRepository::delete);
         if (notificationOp.isEmpty()) {
             throw new ItemNotFoundException("notification", String.valueOf(notificationId));
         }
+        Notification notification = notificationOp.get();
+        if(!notification.getUserId().equals(userId))
+            throw new AccessMismatchException
+                    ("An user doesn't have privilege to delete someone else's notification.", HttpStatus.FORBIDDEN);
+        notificationOp.ifPresent(notificationRepository::delete);
     }
 }

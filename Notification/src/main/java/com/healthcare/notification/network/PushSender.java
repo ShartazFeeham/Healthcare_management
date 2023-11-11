@@ -8,26 +8,26 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-public class EmailSender {
+public class PushSender {
 
     private final WebClient webClient;
 
-    public EmailSender(){
+    public PushSender(){
         webClient = WebClient.create();
     }
 
-    public void send(String to, String subject, String message){
-        EmailRequestDTO email = new EmailRequestDTO(to, subject, message);
-        String result = attemptSend(email)
+    public void send(String to, String title, String subTitle, String body){
+        PushRequestDTO push = new PushRequestDTO(to, body, title, subTitle);
+        String result = attemptSend(push)
                 .onErrorReturn("Error")
                 .block();
     }
 
-    private Mono<String> attemptSend(EmailRequestDTO email) {
+    private Mono<String> attemptSend(PushRequestDTO push) {
         return webClient.post()
-                .uri(AppConstants.EMAIL_URL)
+                .uri(AppConstants.PUSH_URL)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(Mono.just(email), EmailRequestDTO.class)
+                .body(Mono.just(push), PushRequestDTO.class)
                 .retrieve()
                 .bodyToMono(String.class);
     }

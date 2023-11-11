@@ -32,8 +32,8 @@ public class NotificationController {
     }
 
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<String> deleteNotification(@PathVariable Long notificationId) throws ItemNotFoundException {
-        notificationService.delete(notificationId);
+    public ResponseEntity<String> deleteNotification(@PathVariable Long notificationId) throws ItemNotFoundException, AccessMismatchException {
+        notificationService.delete(notificationId, "PAT1");
         return new ResponseEntity<String>("Notification deleted", HttpStatus.NO_CONTENT);
     }
 

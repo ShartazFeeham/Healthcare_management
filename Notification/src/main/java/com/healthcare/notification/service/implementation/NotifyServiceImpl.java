@@ -4,6 +4,7 @@ import com.healthcare.notification.entities.Notification;
 import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.enums.NotificationType;
 import com.healthcare.notification.network.EmailSender;
+import com.healthcare.notification.network.PushSender;
 import com.healthcare.notification.service.interfaces.NotifyService;
 import com.healthcare.notification.service.interfaces.PreferenceService;
 import com.healthcare.notification.utilities.constants.AppConstants;
@@ -16,8 +17,8 @@ import org.springframework.web.client.RestTemplate;
 public class NotifyServiceImpl implements NotifyService {
 
     private final PreferenceService preferenceService;
-    private final RestTemplate restTemplate;
     private final EmailSender emailSender;
+    private final PushSender pushSender;
 
     @Override
     public void send(Notification notification) {
@@ -47,17 +48,8 @@ public class NotifyServiceImpl implements NotifyService {
     private void sendPush(Notification notification, Preference preference) {
         try {
             for (int i = 0; i < preference.getDevices().size(); i++) {
-                String pushJson = "{\n" +
-                        "    \"to\": \"" + preference.getDevices().get(i) + "\",\n" +
-                        "    \"notification\": {\n" +
-                        "        \"body\": \"" + notification.getText() + "\",\n" +
-                        "        \"title\": \"" + "Healthcare app" + "\",\n" +
-                        "        \"subtitle\": \"" + notification.getSuffix() + "\"\n" +
-                        "    }\n" +
-                        "}";
-
-                // Send push notification
-                restTemplate.postForObject(AppConstants.PUSH_URL, pushJson, String.class);
+                String deviceCode = preference.getDevices().get(i).getDeviceCode();
+                pushSender.send(deviceCode, notification.getTitle(), notification.getPrefix(), notification.getText());
             }
         }
         catch (Exception e){}
