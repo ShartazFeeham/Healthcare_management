@@ -7,8 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @RequiredArgsConstructor
 public class AccountCreateDTO {
-    private String username;
+    private String userId;
     private String email;
     private String password;
-    private String phoneNo;
 }

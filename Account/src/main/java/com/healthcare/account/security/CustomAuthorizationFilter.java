@@ -1,7 +1,7 @@
 package com.healthcare.account.security;
 
-import com.prep.account.utilities.constants.AppConstants;
-import com.prep.account.utilities.token.JWTUtils;
+import com.healthcare.account.utilities.constants.AppConstants;
+import com.healthcare.account.utilities.token.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 List<String> userRoles = JWTUtils.extractUserRoles(token);
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 for (String role : userRoles) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                    authorities.add(new SimpleGrantedAuthority(role));
                 }
                 return new UsernamePasswordAuthenticationToken(user, null, authorities);
             }

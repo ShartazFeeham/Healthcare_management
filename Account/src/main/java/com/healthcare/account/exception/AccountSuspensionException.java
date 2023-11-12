@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class AccountSuspensionException  extends CustomException {
     public AccountSuspensionException () {
-        super("AccountSuspensionException", "Account", "Can not perform operation due to account suspension.", HttpStatus.FORBIDDEN);
+        super("AccountSuspensionException", "Account", "This account has been suspended for valid reason.", HttpStatus.NOT_ACCEPTABLE);
     }
 }

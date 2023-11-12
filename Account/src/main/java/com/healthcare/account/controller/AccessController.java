@@ -1,13 +1,15 @@
 package com.healthcare.account.controller;
 
-import com.prep.account.exception.AccessDeniedException;
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.exception.PasswordMismatchException;
-import com.prep.account.iservice.AccessService;
-import com.prep.account.model.LoginRequestDTO;
-import com.prep.account.model.LoginResponseDTO;
+import com.healthcare.account.exception.AccessDeniedException;
+import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.exception.PasswordMismatchException;
+import com.healthcare.account.service.iservice.AccessService;
+import com.healthcare.account.model.LoginRequestDTO;
+import com.healthcare.account.model.LoginResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountLockedException;
 
 @RestController
 @RequestMapping("/access")
@@ -21,7 +23,7 @@ public class AccessController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO)
-            throws AccountNotFoundException, PasswordMismatchException{
+            throws AccountNotFoundException, PasswordMismatchException, AccountLockedException {
         return ResponseEntity.ok(accessService.login(loginRequestDTO));
     }
 
@@ -40,12 +42,6 @@ public class AccessController {
     @GetMapping("/check-email-availability/{email}")
     public ResponseEntity<String> checkEmailAvailability(@PathVariable String email) {
         boolean isAvailable = accessService.checkEmailAvailability(email);
-        return ResponseEntity.ok(String.valueOf(isAvailable));
-    }
-
-    @GetMapping("/check-username-availability/{username}")
-    public ResponseEntity<String> checkUsernameAvailability(@PathVariable String username) {
-        boolean isAvailable = accessService.checkUsernameAvailability(username);
         return ResponseEntity.ok(String.valueOf(isAvailable));
     }
 }

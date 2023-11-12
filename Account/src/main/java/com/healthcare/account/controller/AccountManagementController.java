@@ -1,10 +1,9 @@
 package com.healthcare.account.controller;
 
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.iservice.AccountManagementService;
-import com.prep.account.model.AccountCreateDTO;
-import com.prep.account.model.AccountReadDTO;
-import com.prep.account.utilities.token.IDExtractor;
+import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.service.iservice.AccountManagementService;
+import com.healthcare.account.model.AccountCreateDTO;
+import com.healthcare.account.model.AccountReadDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,18 +21,6 @@ public class AccountManagementController {
     public ResponseEntity<String> createAccount(@RequestBody AccountCreateDTO accountCreateDTO) {
         accountManagementService.createAccount(accountCreateDTO);
         return ResponseEntity.ok("Account created successfully.");
-    }
-
-    @PutMapping("/update-username")
-    public ResponseEntity<String> updateUsername(@RequestParam String newUsername) throws AccountNotFoundException {
-        accountManagementService.updateUsername(IDExtractor.getUserID(), newUsername);
-        return ResponseEntity.ok("Username updated successfully.");
-    }
-
-    @PutMapping("/update-phone-number")
-    public ResponseEntity<String> updatePhoneNumber(@RequestParam String newPhoneNumber) throws AccountNotFoundException {
-        accountManagementService.updatePhoneNumber(IDExtractor.getUserID(), newPhoneNumber);
-        return ResponseEntity.ok("Phone number updated successfully.");
     }
 
     @GetMapping("/get-user-info/{identity}")

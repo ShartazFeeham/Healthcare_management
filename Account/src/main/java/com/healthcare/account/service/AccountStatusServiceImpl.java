@@ -1,13 +1,14 @@
 package com.healthcare.account.service;
 
-import com.prep.account.entity.Account;
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.iservice.AccountStatusService;
-import com.prep.account.repository.AccountRepository;
+import com.healthcare.account.entity.Account;
+import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.service.iservice.AccountStatusService;
+import com.healthcare.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
+
 
 @Service @RequiredArgsConstructor
 public class AccountStatusServiceImpl implements AccountStatusService {
@@ -15,9 +16,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     private final AccountRepository accountRepository;
 
     @Override
-    public void toggleTwoFactor(UUID userId, Boolean status) throws AccountNotFoundException {
+    public void toggleTwoFactor(String userId, Boolean status) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Toggle the two-factor status
@@ -26,9 +27,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void toggleDeactivation(UUID userId, Boolean status) throws AccountNotFoundException {
+    public void toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Toggle the deactivation status
@@ -38,9 +39,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 
     @Override
-    public void toggleLockout(UUID userId, Boolean status) throws AccountNotFoundException {
+    public void toggleLockout(String userId, Boolean status) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Toggle the lockout status
@@ -49,9 +50,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void toggleEnabling(UUID userId, Boolean status) throws AccountNotFoundException {
+    public void toggleEnabling(String userId, Boolean status) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Toggle the enabling status
@@ -60,9 +61,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void suspendAccount(UUID userId) throws AccountNotFoundException {
+    public void suspendAccount(String userId) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Suspend the account
@@ -71,14 +72,19 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void addBanHour(UUID userId, Integer hour) throws AccountNotFoundException {
+    public void addBanHour(String userId, Integer hour) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Add the specified number of hours to the ban period
-        Long currentBanHour = account.getBannedHour() == null ? 0L : account.getBannedHour();
-        account.setBannedHour(currentBanHour + hour);
+        account.setBanCount(account.getBanCount() + 1);
+        if(account.getBanCount() == 4) {
+            account.setAccountSuspended(true);
+        }
+        LocalDateTime time = LocalDateTime.now();
+        time = time.plusHours(hour);
+        account.setUnbanTime(time);
         accountRepository.save(account);
     }
 }

@@ -1,16 +1,13 @@
 package com.healthcare.account.service;
 
-import com.prep.account.entity.Account;
-import com.prep.account.entity.Role;
-import com.prep.account.exception.AccessDeniedException;
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.exception.PasswordMismatchException;
-import com.prep.account.iservice.AccessService;
-import com.prep.account.model.LoginRequestDTO;
-import com.prep.account.model.LoginResponseDTO;
-import com.prep.account.repository.AccountRepository;
-import com.prep.account.utilities.network.EmailSender;
-import com.prep.account.utilities.token.JWTUtils;
+import com.healthcare.account.entity.Account;
+import com.healthcare.account.exception.*;
+import com.healthcare.account.network.EmailSender;
+import com.healthcare.account.service.iservice.AccessService;
+import com.healthcare.account.model.LoginRequestDTO;
+import com.healthcare.account.model.LoginResponseDTO;
+import com.healthcare.account.repository.AccountRepository;
+import com.healthcare.account.utilities.token.JWTUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,13 +18,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountLockedException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service @RequiredArgsConstructor
 public class AccessServiceImpl implements AccessService, UserDetailsService {
@@ -39,26 +34,72 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     @Override
     public Account findByIdentity(String identity) {
         Optional<Account> accountOp = accountRepository.findByEmail(identity);
-        if (accountOp.isEmpty()) accountOp = accountRepository.findByUserName(identity);
-        try {
-            accountOp = accountRepository.findByUserId(UUID.fromString(identity));
-        }
-        catch (Exception ignored){}
-
+        if (accountOp.isEmpty()) accountOp = accountRepository.findById(identity);
         if(accountOp.isEmpty()) throw new AccountNotFoundException(identity);
         return accountOp.get();
     }
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO loginDTO) throws AccountNotFoundException, PasswordMismatchException {
+    public LoginResponseDTO login(LoginRequestDTO loginDTO) throws AccountNotFoundException, PasswordMismatchException, AccountLockedException {
         Account account = findByIdentity(loginDTO.getIdentity());
+
+        if(!passwordEncoder.matches(loginDTO.getPassword(), account.getPassword())){
+            throw new PasswordMismatchException();
+        }
+
+        if(account.isAccountSuspended()){
+            throw new AccountSuspensionException();
+        }
+
+        if (account.getUnbanTime() != null && account.getUnbanTime().isAfter(LocalDateTime.now())) {
+            LocalDateTime unbanTime = account.getUnbanTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            Duration duration = Duration.between(currentTime, unbanTime);
+            int remainingHours = (int) duration.toHours();
+
+            throw new AccountBanException(remainingHours);
+        }
+
+        int otp = 0;
+        if(account.getOtp() != null) {
+            otp = account.getOtp();
+        }
+        if(loginDTO.getOtp() != null && loginDTO.getOtp() != 0){
+            if(loginDTO.getOtp() == otp){
+                return generateLoginResponse(account);
+            }
+            else throw new OTPValidationException(loginDTO.getOtp());
+        }
+
+        if(account.isAccountLocked()){
+            throw new AccountLockoutException();
+        }
+        if(account.isTwoFactorEnabled()){
+            if(account.getOtpGenerationTime().isBefore(LocalDateTime.now().minusMinutes(5))) {
+                generateOTP(loginDTO.getIdentity());
+            }
+            throw new TwoFactorException(account.getEmail());
+        }
+
+        return generateLoginResponse(account);
+    }
+
+    private LoginResponseDTO generateLoginResponse(Account account){
         LoginResponseDTO response = new LoginResponseDTO();
-        response.setUsername(account.getUserName());
-        response.setUserId(account.getUserId().toString());
-        List<String> roles = account.getRoles().stream().map(Role::getRoleName).toList();
-        response.setRoles(roles);
-        String token = JWTUtils.generateToken(account.getUserId().toString(), roles);
+        response.setEmail(account.getEmail());
+        response.setUserId(account.getUserId());
+        response.setRole(account.getRole().toString());
+
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_" + account.getRole().toString());
+        String token = JWTUtils.generateToken(account.getUserId(), roles);
         response.setBearerToken(token);
+
+        if(account.isAccountLocked()){
+            account.setAccountLocked(false);
+            accountRepository.save(account);
+        }
 
         return response;
     }
@@ -87,20 +128,14 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     }
 
     @Override
-    public Boolean checkUsernameAvailability(String username) {
-        return accountRepository.findByUserName(username).isEmpty();
-    }
-
-    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = findByIdentity(username);
-        List<GrantedAuthority> roles = account.getRoles().stream()
-                .map(r -> new SimpleGrantedAuthority(r.getRoleName()))
-                .collect(Collectors.toList());
-        return new User(account.getUserName(),
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(account.getRole().toString()));
+        return new User(account.getUserId(),
                 account.getPassword(),
                 account.isAccountEnabled() && ! account.isAccountDeactivated(),
-                ! account.isAccountBanned() && ! account.isAccountSuspended(),
+                ! account.isAccountSuspended(),
                 true,
                 ! account.isAccountLocked(),
                 roles);

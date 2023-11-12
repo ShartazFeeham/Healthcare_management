@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 @Getter @Setter
 public class AccountLockoutException extends CustomException {
     public AccountLockoutException() {
-        super("AccountLockoutException", "Account", "Can not perform operation because account is locked.", HttpStatus.FORBIDDEN);
+        super("AccountLockoutException", "Account", "Your account is currently locked, verify your email to unlock it.", HttpStatus.NOT_ACCEPTABLE);
     }
 }

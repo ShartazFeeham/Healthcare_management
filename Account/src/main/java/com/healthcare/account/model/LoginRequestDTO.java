@@ -9,4 +9,5 @@ import lombok.Setter;
 public class LoginRequestDTO {
     private String identity;
     private String password;
+    private Integer otp;
 }

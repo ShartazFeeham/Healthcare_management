@@ -1,6 +1,6 @@
 package com.healthcare.account.utilities.token;
 
-import com.prep.account.utilities.constants.AppConstants;
+import com.healthcare.account.utilities.constants.AppConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -5,12 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class LoginResponseDTO {
     private String userId;
-    private String username;
+    private String email;
     private String bearerToken;
-    private List<String> roles;
+    private String role;
 }

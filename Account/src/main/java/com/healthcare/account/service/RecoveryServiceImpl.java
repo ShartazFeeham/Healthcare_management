@@ -1,18 +1,17 @@
 package com.healthcare.account.service;
 
-import com.prep.account.entity.Account;
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.exception.OTPValidationException;
-import com.prep.account.exception.PasswordMismatchException;
-import com.prep.account.iservice.RecoveryService;
-import com.prep.account.model.PasswordChangeDTO;
-import com.prep.account.model.PasswordResetDTO;
-import com.prep.account.repository.AccountRepository;
+import com.healthcare.account.entity.Account;
+import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.exception.OTPValidationException;
+import com.healthcare.account.exception.PasswordMismatchException;
+import com.healthcare.account.service.iservice.RecoveryService;
+import com.healthcare.account.model.PasswordChangeDTO;
+import com.healthcare.account.model.PasswordResetDTO;
+import com.healthcare.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service @RequiredArgsConstructor
 public class RecoveryServiceImpl implements RecoveryService {
@@ -20,10 +19,10 @@ public class RecoveryServiceImpl implements RecoveryService {
     private final AccountRepository accountRepository;
 
     @Override
-    public void changePassword(UUID userId, PasswordChangeDTO passwordChangeDTO)
+    public void changePassword(String userId, PasswordChangeDTO passwordChangeDTO)
             throws AccountNotFoundException, PasswordMismatchException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
+        Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Check if the old password matches the existing password
@@ -37,13 +36,13 @@ public class RecoveryServiceImpl implements RecoveryService {
     }
 
     @Override
-    public void resetPassword(UUID userId, PasswordResetDTO passwordResetDTO) throws AccountNotFoundException {
+    public void resetPassword(PasswordResetDTO passwordResetDTO) throws AccountNotFoundException {
         // Check if the account exists
-        Account account = accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
+        Account account = accountRepository.findByEmail(passwordResetDTO.getEmail())
+                .orElseThrow(() -> new AccountNotFoundException("email " + passwordResetDTO.getEmail()));
 
         if(account.getOtp() != null && account.getOtp() != 0
-                && account.getOtp() == passwordResetDTO.getOtp()
+                && account.getOtp().equals(passwordResetDTO.getOtp())
                 && account.getOtpGenerationTime().isAfter(LocalDateTime.now().minusMinutes(5L))){
             account.setPassword(passwordResetDTO.getNewPassword());
             accountRepository.save(account);

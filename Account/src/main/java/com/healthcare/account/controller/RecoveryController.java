@@ -1,12 +1,12 @@
 package com.healthcare.account.controller;
 
-import com.prep.account.exception.AccountNotFoundException;
-import com.prep.account.exception.OTPValidationException;
-import com.prep.account.exception.PasswordMismatchException;
-import com.prep.account.iservice.RecoveryService;
-import com.prep.account.model.PasswordChangeDTO;
-import com.prep.account.model.PasswordResetDTO;
-import com.prep.account.utilities.token.IDExtractor;
+import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.exception.OTPValidationException;
+import com.healthcare.account.exception.PasswordMismatchException;
+import com.healthcare.account.service.iservice.RecoveryService;
+import com.healthcare.account.model.PasswordChangeDTO;
+import com.healthcare.account.model.PasswordResetDTO;
+import com.healthcare.account.utilities.token.IDExtractor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +33,7 @@ public class RecoveryController {
     @PutMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetDTO passwordResetDTO)
             throws AccountNotFoundException, OTPValidationException {
-        recoveryService.resetPassword(IDExtractor.getUserID(), passwordResetDTO);
+        recoveryService.resetPassword(passwordResetDTO);
         return ResponseEntity.ok("Password reset successfully.");
     }
 }

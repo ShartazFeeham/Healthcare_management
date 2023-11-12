@@ -10,10 +10,7 @@ public class AppConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final Integer MAX_LOGIN_ATTEMPTS_LIMIT = 3;
     public static final String TOKEN_ALPHABETS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-    public static final String EMAIL_API_BASE_URL_1 = "https://integration3666.azurewebsites.net/v1/email/send";
-    public static final String EMAIL_API_BASE_URL_2 = "https://integration3666.azurewebsites.net/v2/email/send";
-
+    public static final String EMAIL_URL = "http://localhost:5300/v1/email/send";
     // APIs
     public static final String SIGN_IN = "/access/login";
     public static final String SIGN_UP = "/account/create-account";

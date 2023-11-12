@@ -11,10 +11,8 @@ import java.util.UUID;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class AccountReadDTO {
-    private UUID userId;
-    private String userName;
+    private String userId;
     private String email;
-    private String phoneNo;
-    private List<String> roles;
+    private String role;
     private LocalDate registerDate;
 }
