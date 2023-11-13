@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,4 +29,5 @@ public class Treatment {
     @JoinColumn(name = "patient_id")
     @JsonIgnore
     private Patient patient;
+    private String doctorId;
 }
