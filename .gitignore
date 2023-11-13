@@ -9,3 +9,5 @@ package-lock.json
 /FrontUIpackage-lock.json
 /FrontUI/build
 /FrontUI.eslintcache
+/idea
+/.idea

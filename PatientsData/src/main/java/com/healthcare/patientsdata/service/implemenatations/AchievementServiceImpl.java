@@ -1,6 +1,7 @@
 package com.healthcare.patientsdata.service.implemenatations;
 
 import com.healthcare.patientsdata.entity.Achievement;
+import com.healthcare.patientsdata.exceptions.ItemNotFoundException;
 import com.healthcare.patientsdata.repository.AchievementRepository;
 import com.healthcare.patientsdata.service.interfaces.AchievementService;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,10 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public Achievement read(Long achievementId) {
+    public Achievement read(Long achievementId) throws ItemNotFoundException {
         Optional<Achievement> achievementOptional = achievementRepository.findById(achievementId);
         if (achievementOptional.isEmpty()) {
-            // Throw an exception - Achievement not found
+            throw new ItemNotFoundException("achievement", achievementId.toString());
         }
         return achievementOptional.get();
     }
@@ -35,14 +36,15 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public void update(Achievement achievementDTO) {
+    public void update(Achievement achievementDTO) throws ItemNotFoundException {
+        read(achievementDTO.getId());
         achievementRepository.save(achievementDTO);
     }
 
     @Override
-    public void delete(Long achievementId) {
+    public void delete(Long achievementId) throws ItemNotFoundException {
         if (!achievementRepository.existsById(achievementId)) {
-
+            throw new ItemNotFoundException("achievement", achievementId.toString());
         }
         achievementRepository.deleteById(achievementId);
     }

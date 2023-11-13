@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder
 public class AchievementProgress {
@@ -16,6 +18,7 @@ public class AchievementProgress {
     private Achievement achievement;
 
     private Double score;
+    private LocalDate challengeDate;
     private int completedIn;
     private String completionDate;
 

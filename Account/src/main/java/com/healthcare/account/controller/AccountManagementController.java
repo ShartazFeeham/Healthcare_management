@@ -23,6 +23,12 @@ public class AccountManagementController {
         return ResponseEntity.ok("Account created successfully.");
     }
 
+    @PostMapping("/create-admin-account")
+    public ResponseEntity<String> createAdminAccount(@RequestBody AccountCreateDTO accountCreateDTO) {
+        accountManagementService.createAccount(accountCreateDTO);
+        return ResponseEntity.ok("Account created successfully.");
+    }
+
     @GetMapping("/get-user-info/{identity}")
     public ResponseEntity<AccountReadDTO> getUserInfo(@PathVariable String identity) throws AccountNotFoundException {
         AccountReadDTO userInfo = accountManagementService.getUserInfo(identity);

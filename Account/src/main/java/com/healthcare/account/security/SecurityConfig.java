@@ -53,8 +53,8 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/access/**").permitAll()
 
                             .requestMatchers(HttpMethod.GET, "/account/**").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/account/**").permitAll()
-                            .requestMatchers(HttpMethod.PUT, "/account/**").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/account/create-account").hasRole("INTERNAL")
+                            .requestMatchers(HttpMethod.POST, "/account/create-admin-account").hasAnyRole("INTERNAL", "ADMIN")
 
                             .requestMatchers(HttpMethod.PUT, "/status/toggle-two-factor/{status}").authenticated()
                             .requestMatchers(HttpMethod.PUT, "/status/toggle-deactivation/{status}").authenticated()
