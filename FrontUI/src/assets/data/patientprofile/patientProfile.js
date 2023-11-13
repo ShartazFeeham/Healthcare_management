@@ -1,5 +1,4 @@
 const patientProfileData = {
-  doctorId: "PAI3",
   firstName: "Ariful",
   lastName: "Islam",
   gender: "Male",

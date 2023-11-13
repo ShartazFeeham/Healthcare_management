@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FileStorageService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/FileStorageService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/External_API_integration_service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/External_API_integration_service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/File_upload_and_management_service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/File_upload_and_management_service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Final Project.iml" filepath="$PROJECT_DIR$/.idea/Final Project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IntegrationService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/IntegrationService.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NotificationService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/NotificationService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Notifications_service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Notifications_service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/User_account_service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/User_account_service.main.iml" />
     </modules>
   </component>
 </project>

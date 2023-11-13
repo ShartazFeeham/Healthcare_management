@@ -3,10 +3,9 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/../../FileStorage/build/generated/sources/annotationProcessor/java/main">
       <sourceFolder url="file://$MODULE_DIR$/../../FileStorage/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../FileStorage/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
     </content>
   </component>
   <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="625324a9-74b5-4f8d-9521-5dca892fd141" />
+    <option name="uniqueId" value="e0f919d9-962b-41fb-9ed6-cd2bc5c15656" />
   </component>
 </module>
