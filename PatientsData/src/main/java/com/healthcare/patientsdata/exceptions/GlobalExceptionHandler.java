@@ -43,20 +43,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    // Exception handler for handling ExternalCallForbiddenException
-    @ExceptionHandler({InternalCommunicationException.class})
-    public ResponseEntity<ErrorResponse> handleExternalCallForbiddenException(InternalCommunicationException e, HttpServletRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                e.getClass().getSimpleName(),
-                e.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                new Date(),
-                request.getRequestURI()
-        );
-        // Return an HTTP response with a status code indicating a forbidden request.
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    }
-
     @ExceptionHandler({CustomException.class})
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(

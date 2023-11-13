@@ -31,6 +31,7 @@ public class PatientServiceImpl implements PatientService {
         patient.setLastName(patientRegisterDTO.getLastName());
         patient.setAge(patientRegisterDTO.getAge());
         patient.setGender(patientRegisterDTO.getGender());
+        patient.setEmail(patientRegisterDTO.getEmail());
 
         AccountCreateDTO account = new AccountCreateDTO();
         account.setUserId(id);
@@ -38,11 +39,12 @@ public class PatientServiceImpl implements PatientService {
         account.setPassword(patientRegisterDTO.getPassword());
 
         patientRepository.save(patient);
-        String result = accountCreateRequester.send(account);
-
-        if(result == null){
+        try{
+            String result = accountCreateRequester.send(account);
+        }
+        catch (Exception e){
             patientRepository.deleteById(id);
-            throw new InternalCommunicationException("Failed to create account, try again after sometimes.");
+            throw e;
         }
     }
 
