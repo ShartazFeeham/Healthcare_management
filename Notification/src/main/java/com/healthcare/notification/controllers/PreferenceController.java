@@ -2,7 +2,9 @@ package com.healthcare.notification.controllers;
 
 import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.model.DeviceRequest;
 import com.healthcare.notification.service.interfaces.PreferenceService;
+import com.healthcare.notification.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class PreferenceController {
 
     @GetMapping
     public ResponseEntity<Preference> getPreferenceByUserId() {
-        Preference preference = preferenceService.getByUserId("PAT1");
+        Preference preference = preferenceService.getByUserId(IDExtractor.getUserID());
         return ResponseEntity.ok(preference);
     }
 
@@ -29,19 +31,19 @@ public class PreferenceController {
 
     @PutMapping
     public ResponseEntity<String> updatePreference(@RequestBody Preference updatedPreference) {
-        preferenceService.update("PAT1", updatedPreference);
+        preferenceService.update(IDExtractor.getUserID(), updatedPreference);
         return new ResponseEntity<String>("Preference updated", HttpStatus.OK);
     }
 
     @PostMapping("/device")
-    public ResponseEntity<String> addDevice(@RequestParam String deviceCode) {
-        preferenceService.addDevice("PAT1", deviceCode);
+    public ResponseEntity<String> addDevice(@RequestBody DeviceRequest deviceRequest) {
+        preferenceService.addDevice(deviceRequest);
         return ResponseEntity.ok("Device added.");
     }
 
     @DeleteMapping("/device")
-    public ResponseEntity<String> removeDevice(@RequestParam String deviceCode) throws ItemNotFoundException {
-        preferenceService.removeDevice("PAT1", deviceCode);
+    public ResponseEntity<String> removeDevice(@RequestBody DeviceRequest deviceRequest) throws ItemNotFoundException {
+        preferenceService.removeDevice(deviceRequest);
         return ResponseEntity.ok("Device removed.");
     }
 }

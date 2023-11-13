@@ -104,6 +104,11 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         return response;
     }
 
+    private void addNotificationData(LoginRequestDTO loginRequestDTO){
+        if(loginRequestDTO.getDeviceCode() == null) return;
+
+    }
+
     @Override
     public void generateOTP(String identity) throws AccountNotFoundException {
         Account account = findByIdentity(identity);

@@ -28,18 +28,38 @@ public class NotificationController {
 
     @GetMapping("/{itemCount}/{pageNo}")
     public ResponseEntity<List<Notification>> getAllNotifications(@PathVariable int itemCount, @PathVariable int pageNo) {
-        return ResponseEntity.ok(notificationService.getAllByUserId("PAT1", itemCount, pageNo));
+        return ResponseEntity.ok(notificationService.getAllByUserId(IDExtractor.getUserID(), itemCount, pageNo));
     }
 
     @DeleteMapping("/{notificationId}")
     public ResponseEntity<String> deleteNotification(@PathVariable Long notificationId) throws ItemNotFoundException, AccessMismatchException {
-        notificationService.delete(notificationId, "PAT1");
+        notificationService.delete(notificationId, IDExtractor.getUserID());
         return new ResponseEntity<String>("Notification deleted", HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/set-seen/{notificationId}")
     public ResponseEntity<String> setSeen(@PathVariable Long notificationId) throws AccessMismatchException, ItemNotFoundException, IllegalAccessException {
-        notificationService.setSeen(notificationId, "PAT1");
+        notificationService.setSeen(notificationId, IDExtractor.getUserID());
         return new ResponseEntity<String>("Notification updated to seen status", HttpStatus.OK);
+    }
+
+    @GetMapping("/unseen-count")
+    public ResponseEntity<Integer> getUnseenCount() {
+        try {
+            Integer unseenCount = notificationService.getUnseenCount(IDExtractor.getUserID());
+            return ResponseEntity.ok(unseenCount);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/set-all-seen")
+    public ResponseEntity<String> setAllSeen() {
+        try {
+            notificationService.setAllSeen(IDExtractor.getUserID());
+            return new ResponseEntity<>("All notifications set to seen", HttpStatus.OK);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

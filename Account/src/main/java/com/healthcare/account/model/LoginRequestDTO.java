@@ -10,4 +10,5 @@ public class LoginRequestDTO {
     private String identity;
     private String password;
     private Integer otp;
+    private String deviceCode;
 }

@@ -10,4 +10,6 @@ public interface NotificationService {
     List<Notification> getAllByUserId(String userId, int itemCount, int pageNo);
     void setSeen(Long notificationId, String userId) throws ItemNotFoundException, IllegalAccessException, AccessMismatchException;
     void delete(Long notificationId, String userId) throws ItemNotFoundException, AccessMismatchException;
+    Integer getUnseenCount(String userId) throws ItemNotFoundException;
+    void setAllSeen(String userId) throws ItemNotFoundException;
 }

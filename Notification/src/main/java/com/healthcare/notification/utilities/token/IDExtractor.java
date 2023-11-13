@@ -10,7 +10,7 @@ public class IDExtractor {
      *
      * @return The UUID of the authenticated user.
      */
-    public static UUID getUserID() {
-        return UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+    public static String getUserID() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

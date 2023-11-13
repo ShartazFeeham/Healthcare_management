@@ -31,13 +31,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             // Require authentication for these endpoints with specific HTTP methods.
-//                            .requestMatchers(HttpMethod.GET, "/preferences/**").authenticated()
-//                            .requestMatchers(HttpMethod.POST, "/preferences/**").authenticated()
-//                            .requestMatchers(HttpMethod.POST, "/notifications/all").authenticated()
-//                            .requestMatchers(HttpMethod.DELETE, "/notifications/filtered").authenticated()
-//                            .requestMatchers(HttpMethod.PUT, "/notifications/set-seen/**").authenticated()
-                            // Allow any other requests without authentication.
-                            .anyRequest().permitAll();
+                            .requestMatchers(HttpMethod.POST, "/notifications").hasRole("INTERNAL")
+                            .requestMatchers(HttpMethod.POST, "/preferences").hasRole("INTERNAL")
+                            .requestMatchers(HttpMethod.POST, "/device").hasRole("INTERNAL")
+                            .requestMatchers(HttpMethod.DELETE, "/device").hasRole("INTERNAL")
+                            // Set any other requests to authentication.
+                            .anyRequest().authenticated();
                 })
                 // Add the custom authorization filter before the UsernamePasswordAuthenticationFilter.
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -67,4 +67,28 @@ public class NotificationServiceImpl implements NotificationService {
                     ("An user doesn't have privilege to delete someone else's notification.", HttpStatus.FORBIDDEN);
         notificationOp.ifPresent(notificationRepository::delete);
     }
+
+    @Override
+    public Integer getUnseenCount(String userId) throws ItemNotFoundException {
+        Integer unseenCount = notificationRepository.countByUserIdAndSeenFalse(userId);
+        if (unseenCount == null) {
+            throw new ItemNotFoundException("user", userId);
+        }
+        return unseenCount;
+    }
+
+    @Override
+    public void setAllSeen(String userId) throws ItemNotFoundException {
+        List<Notification> unseenNotifications = notificationRepository.findByUserIdAndSeenFalse(userId);
+        if (unseenNotifications.isEmpty()) {
+            throw new ItemNotFoundException("No unseen notifications for the user", userId);
+        }
+
+        for (Notification notification : unseenNotifications) {
+            notification.setSeen(true);
+        }
+
+        notificationRepository.saveAll(unseenNotifications);
+    }
+
 }

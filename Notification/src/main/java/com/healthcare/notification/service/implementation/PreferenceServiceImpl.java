@@ -3,6 +3,7 @@ package com.healthcare.notification.service.implementation;
 import com.healthcare.notification.entities.Device;
 import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.model.DeviceRequest;
 import com.healthcare.notification.repository.DeviceRepository;
 import com.healthcare.notification.repository.PreferenceRepository;
 import com.healthcare.notification.service.interfaces.PreferenceService;
@@ -62,25 +63,34 @@ public class PreferenceServiceImpl implements PreferenceService {
     }
 
     @Override
-    public void addDevice(String userId, String deviceCode) {
-        Preference preference = getByUserId(userId);
+    public void addDevice(DeviceRequest deviceRequest) {
+        Preference preference = getByUserId(deviceRequest.getUserId());
+        if(preference.getEmail() == null || preference.getEmail().isEmpty()) {
+            preference.setEmail(deviceRequest.getEmail());
+        }
         if(preference.getDevices() == null) preference.setDevices(new ArrayList<>());
-        preference.getDevices().add(new Device(deviceCode, preference));
+        if(!preference.getDevices().stream()
+                .filter(d -> d.getDeviceCode().equals(deviceRequest.getDeviceCode()))
+                .collect(Collectors.toSet()).isEmpty()){
+            return;
+        }
+        preference.getDevices().add(new Device(deviceRequest.getDeviceCode(), preference));
         preferenceRepository.save(preference);
     }
 
     @Override
-    public void removeDevice(String userId, String deviceCode) throws ItemNotFoundException {
-        Preference preference = getByUserId(userId);
+    public void removeDevice(DeviceRequest deviceRequest) throws ItemNotFoundException {
+        Preference preference = getByUserId(deviceRequest.getUserId());
         if(preference.getDevices() == null) preference.setDevices(new ArrayList<>());
         Long deviceId = 0L;
         for(Device device: preference.getDevices()){
-            if(device.getDeviceCode().equals(deviceCode)){
+            if(device.getDeviceCode().equals(deviceRequest.getDeviceCode())){
                 device.setPreference(null);
                 deviceRepository.delete(device);
                 return;
             }
         }
-        throw new ItemNotFoundException("device", deviceCode.substring(0, 5) + "...");
+        throw new ItemNotFoundException("device",
+                deviceRequest.getDeviceCode().substring(0, 5) + "...");
     }
 }

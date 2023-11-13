@@ -21,6 +21,7 @@ public class PushSender {
         String result = attemptSend(push)
                 .onErrorReturn("Error")
                 .block();
+        System.out.println("Done...");
     }
 
     private Mono<String> attemptSend(PushRequestDTO push) {
