@@ -1,5 +1,6 @@
 package com.healthcare.patientsdata.entity;
 
+import com.healthcare.patientsdata.enums.AchievementDifficulty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,8 +13,10 @@ public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
-    private String difficulty;
-    private Double goal;
-    private String logoUrl;
+    private String goalDescription;
+    private Double goalScore;
+    private AchievementDifficulty difficulty;
+    private String logoURL;
 }

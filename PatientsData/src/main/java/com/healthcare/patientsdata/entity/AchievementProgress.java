@@ -10,8 +10,12 @@ public class AchievementProgress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "achievement_id")
     private Achievement achievement;
-    private Double completed;
+
+    private Double score;
     private int completedIn;
     private String completionDate;
 
