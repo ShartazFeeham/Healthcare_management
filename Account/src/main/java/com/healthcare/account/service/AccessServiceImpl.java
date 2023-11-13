@@ -2,6 +2,7 @@ package com.healthcare.account.service;
 
 import com.healthcare.account.entity.Account;
 import com.healthcare.account.exception.*;
+import com.healthcare.account.network.DeviceInfoSender;
 import com.healthcare.account.network.EmailSender;
 import com.healthcare.account.service.iservice.AccessService;
 import com.healthcare.account.model.LoginRequestDTO;
@@ -30,6 +31,7 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
+    private final DeviceInfoSender deviceInfoSender;
 
     @Override
     public Account findByIdentity(String identity) {
@@ -67,7 +69,7 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         }
         if(loginDTO.getOtp() != null && loginDTO.getOtp() != 0){
             if(loginDTO.getOtp() == otp){
-                return generateLoginResponse(account);
+                return generateLoginResponse(account, loginDTO.getDeviceCode());
             }
             else throw new OTPValidationException(loginDTO.getOtp());
         }
@@ -82,10 +84,10 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
             throw new TwoFactorException(account.getEmail());
         }
 
-        return generateLoginResponse(account);
+        return generateLoginResponse(account, loginDTO.getDeviceCode());
     }
 
-    private LoginResponseDTO generateLoginResponse(Account account){
+    private LoginResponseDTO generateLoginResponse(Account account, String deviceCode){
         LoginResponseDTO response = new LoginResponseDTO();
         response.setEmail(account.getEmail());
         response.setUserId(account.getUserId());
@@ -96,17 +98,16 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         String token = JWTUtils.generateToken(account.getUserId(), roles);
         response.setBearerToken(token);
 
+        if(deviceCode != null){
+            deviceInfoSender.send(account.getUserId(), account.getEmail(), deviceCode);
+        }
+
         if(account.isAccountLocked()){
             account.setAccountLocked(false);
             accountRepository.save(account);
         }
 
         return response;
-    }
-
-    private void addNotificationData(LoginRequestDTO loginRequestDTO){
-        if(loginRequestDTO.getDeviceCode() == null) return;
-
     }
 
     @Override

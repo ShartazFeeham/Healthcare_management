@@ -11,6 +11,8 @@ public class AppConstants {
     public static final Integer MAX_LOGIN_ATTEMPTS_LIMIT = 3;
     public static final String TOKEN_ALPHABETS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     public static final String EMAIL_URL = "http://localhost:5300/v1/email/send";
+    public static final String DEVICE_INFO_URL = "http://localhost:7600/preferences/device";
+    public static final String INTERNAL_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJTlRFUk5BTCIsInJvbGVzIjpbIlJPTEVfSU5URVJOQUwiXSwiZXhwIjoyMDE1MjE2Mzg0fQ.GpRoQRcjHJjk6DHaT-qpV0dkvJF_7GGsiaq6pTmc_Fk";
     // APIs
     public static final String SIGN_IN = "/access/login";
     public static final String SIGN_UP = "/account/create-account";
