@@ -25,7 +25,7 @@ public class JWTUtils {
 
     public static String generateInternalToken(){
         List<String> roles = new ArrayList<>();
-        roles.add("INTERNAL");
+        roles.add("ROLE_INTERNAL");
         return Jwts.builder()
                 .setSubject("INTERNAL")
                 .claim("roles", roles)

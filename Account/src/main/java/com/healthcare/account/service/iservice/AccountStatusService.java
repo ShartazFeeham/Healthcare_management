@@ -8,7 +8,7 @@ public interface AccountStatusService {
     void toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException;
 
     // Controlled by server
-    void suspendAccount(String userId) throws AccountNotFoundException;
+    void suspendAccount(String userId, boolean status) throws AccountNotFoundException;
     void addBanHour(String userId, Integer hour) throws AccountNotFoundException;
     void toggleLockout(String userId, Boolean action) throws AccountNotFoundException;
     void toggleEnabling(String userId, Boolean action) throws AccountNotFoundException;

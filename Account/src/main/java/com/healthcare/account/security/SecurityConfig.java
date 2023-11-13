@@ -49,27 +49,23 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->{
                     auth
-//                            .requestMatchers(HttpMethod.POST, "/access/**").permitAll()
-//                            .requestMatchers(HttpMethod.GET, "/access/**").permitAll()
-//
-//                            .requestMatchers(HttpMethod.GET, "/account/**").authenticated()
-//                            .requestMatchers(HttpMethod.POST, "/account/**").permitAll()
-//                            .requestMatchers(HttpMethod.PUT, "/account/**").authenticated()
-//
-//                            .requestMatchers(HttpMethod.PUT, "/status/toggle-two-factor/{status}").authenticated()
-//                            .requestMatchers(HttpMethod.PUT, "/status/toggle-deactivation/{status}").authenticated()
-//                            .requestMatchers(HttpMethod.PUT, "/status/toggle-lockout/{userId}/{status}").hasRole("INTERNAL")
-//                            .requestMatchers(HttpMethod.PUT, "/status/toggle-enabling/{userId}/{status}").hasRole("INTERNAL")
-//                            .requestMatchers(HttpMethod.PUT, "/status/suspend**").hasRole("INTERNAL")
-//                            .requestMatchers(HttpMethod.PUT, "/status/add-ban-hour**").hasRole("INTERNAL")
-//
-//                            .requestMatchers(HttpMethod.PUT, "/recovery/change-password").authenticated()
-//                            .requestMatchers(HttpMethod.PUT, "/recovery/reset-password").authenticated()
-//
-//                            .requestMatchers(HttpMethod.PUT, "/role/assign-role/{userId}").hasRole("ADMIN")
-//                            .requestMatchers(HttpMethod.GET, "/role/get-roles/{userId}").authenticated()
-//                            .requestMatchers(HttpMethod.PUT, "/role/remove-role/{userId}").hasRole("ADMIN")
-                            .anyRequest().permitAll();
+                            .requestMatchers(HttpMethod.POST, "/access/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/access/**").permitAll()
+
+                            .requestMatchers(HttpMethod.GET, "/account/**").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/account/**").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/account/**").authenticated()
+
+                            .requestMatchers(HttpMethod.PUT, "/status/toggle-two-factor/{status}").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/status/toggle-deactivation/{status}").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/status/toggle-lockout/{userId}/{status}").hasAnyRole("INTERNAL", "ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/status/toggle-enabling/{userId}/{status}").hasAnyRole("INTERNAL", "ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/status/suspend/**").hasAnyRole("INTERNAL", "ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/status/add-ban-hour/**").hasAnyRole("INTERNAL", "ADMIN")
+
+                            .requestMatchers(HttpMethod.PUT, "/recovery/change-password").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/recovery/reset-password").permitAll()
+                            .anyRequest().authenticated();
                 })
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -61,13 +61,13 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void suspendAccount(String userId) throws AccountNotFoundException {
+    public void suspendAccount(String userId, boolean status) throws AccountNotFoundException {
         // Check if the account exists
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
 
         // Suspend the account
-        account.setAccountSuspended(true);
+        account.setAccountSuspended(status);
         accountRepository.save(account);
     }
 
@@ -79,10 +79,13 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
         // Add the specified number of hours to the ban period
         account.setBanCount(account.getBanCount() + 1);
-        if(account.getBanCount() == 4) {
+        if(account.getBanCount() > 3) {
             account.setAccountSuspended(true);
         }
         LocalDateTime time = LocalDateTime.now();
+        if(account.getUnbanTime() != null && account.getUnbanTime().isAfter(time)) {
+            time = account.getUnbanTime();
+        }
         time = time.plusHours(hour);
         account.setUnbanTime(time);
         accountRepository.save(account);

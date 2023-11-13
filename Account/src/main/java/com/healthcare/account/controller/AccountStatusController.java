@@ -44,10 +44,10 @@ public class AccountStatusController {
         return ResponseEntity.ok("Account enabling status updated successfully.");
     }
 
-    @PutMapping("/suspend-account/{userId}")
-    public ResponseEntity<String> suspendAccount(@PathVariable String userId) throws AccountNotFoundException {
-        accountStatusService.suspendAccount(userId);
-        return ResponseEntity.ok("Account suspended successfully.");
+    @PutMapping("/toggle-suspension/{userId}/{status}")
+    public ResponseEntity<String> suspendAccount(@PathVariable String userId, @PathVariable boolean status) throws AccountNotFoundException {
+        accountStatusService.suspendAccount(userId, status);
+        return ResponseEntity.ok("Account suspension status updated successfully.");
     }
 
     @PutMapping("/add-ban-hour/{userId}")
