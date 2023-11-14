@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDatabaseExceptions(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
-                "An error occurred while performing a database operation",
+                "An error occurred while performing value check/database operation",
                 HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                 new Date(),
                 request.getRequestURI()

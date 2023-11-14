@@ -52,11 +52,12 @@ public class TreatmentServiceImpl implements TreatmentService {
     @Override
     public void update(Long treatmentId, Treatment treatmentDTO) throws ItemNotFoundException, AccessMismatchException {
         Treatment treatment = read(treatmentId);
-        if(!treatment.getReportWriter().equals(IDExtractor.getUserID()))
+        if(treatment.getReportWriter() == null || !treatment.getReportWriter().equals(IDExtractor.getUserID()))
             throw new AccessMismatchException(
                     "Only the person who wrote the treatment can update the treatment.");
 
         treatmentDTO.setId(treatmentId);
+        treatmentDTO.setReportWriter(IDExtractor.getUserID());
         treatmentDTO.setPatient(treatment.getPatient());
         treatmentRepository.save(treatmentDTO);
     }
