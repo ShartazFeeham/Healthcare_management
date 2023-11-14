@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class ChatGPTService {
     private final RestTemplate template;
     public String chat(String prompt){
-        GPTRequest request=new GPTRequest(OpenAIConstants.GPT_MODEL, prompt);
+        GPTRequest request = new GPTRequest(OpenAIConstants.GPT_MODEL, prompt);
         GPTResponse chatGptResponse = template.postForObject(OpenAIConstants.API_URL, request, GPTResponse.class);
         return chatGptResponse.getChoices().get(0).getMessage().getContent();
     }

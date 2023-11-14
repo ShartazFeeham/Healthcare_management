@@ -12,9 +12,4 @@ public class Medicine {
     private Long id;
     private String medicineId;
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    @JsonIgnore
-    private Treatment treatment;
 }

@@ -17,7 +17,7 @@ public class TreatmentController {
 
     private final TreatmentService treatmentService;
 
-    @GetMapping("/{userId}")
+    @GetMapping("/by-patients/{userId}")
     public ResponseEntity<List<Treatment>> getPatientTreatments(@PathVariable String userId) {
         try {
             List<Treatment> treatments = treatmentService.getPatientTreatments(userId);

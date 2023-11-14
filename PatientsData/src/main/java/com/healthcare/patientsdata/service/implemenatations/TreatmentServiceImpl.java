@@ -1,5 +1,6 @@
 package com.healthcare.patientsdata.service.implemenatations;
 import com.healthcare.patientsdata.entity.Patient;
+import com.healthcare.patientsdata.entity.Score;
 import com.healthcare.patientsdata.entity.Treatment;
 import com.healthcare.patientsdata.exceptions.ItemNotFoundException;
 import com.healthcare.patientsdata.repository.PatientRepository;
@@ -8,6 +9,7 @@ import com.healthcare.patientsdata.service.interfaces.TreatmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +46,11 @@ public class TreatmentServiceImpl implements TreatmentService {
     @Override
     public void update(Treatment treatmentDTO) throws ItemNotFoundException {
         Treatment treatment = read(treatmentDTO.getId());
+        treatmentRepository.deleteById(treatmentDTO.getId());
         treatmentDTO.setPatient(treatment.getPatient());
         treatmentRepository.save(treatmentDTO);
+
+
     }
 
     @Override

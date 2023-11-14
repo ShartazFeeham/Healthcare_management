@@ -44,6 +44,6 @@ public class Patient {
     private List<Treatment> treatments;
 
     public void setAllergies(String allergies) {
-        this.allergies = Arrays.stream(allergies.split(",")).toList();
+        this.allergies = Arrays.stream(allergies.trim().replace(" ", "").split(",")).toList();
     }
 }

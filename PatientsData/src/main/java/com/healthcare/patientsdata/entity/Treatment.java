@@ -20,9 +20,9 @@ public class Treatment {
     private String closingDate;
     private String doctorComment;
     private String progression;
-    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Medicine> medicines;
-    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Diagnosis> diagnoses;
 
     @ManyToOne

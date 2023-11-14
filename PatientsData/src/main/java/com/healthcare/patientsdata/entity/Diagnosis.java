@@ -12,9 +12,4 @@ public class Diagnosis {
     private Long id;
     private String diagnosisId;
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    @JsonIgnore
-    private Treatment treatment;
 }

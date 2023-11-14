@@ -33,7 +33,6 @@ public class DeviceInfoSender {
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
                         clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                            System.err.println("Error response: " + errorBody);
                             return Mono.error(new RuntimeException("Error during device info send"));
                         })
                 )

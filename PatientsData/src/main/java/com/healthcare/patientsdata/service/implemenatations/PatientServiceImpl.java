@@ -50,7 +50,7 @@ public class PatientServiceImpl implements PatientService {
 
     private String getId(String firstName, String lastName) {
         // Generate the initial ID pattern using the first letters of the first and last name
-        String idPattern = firstName.toUpperCase().charAt(0) + "" + lastName.toUpperCase().charAt(0);
+        String idPattern = "P" + firstName.toUpperCase().charAt(0) + lastName.toUpperCase().charAt(0);
         long count = patientRepository.countByUserIdStartingWith(idPattern) + 1;
         return  idPattern + count;
     }
