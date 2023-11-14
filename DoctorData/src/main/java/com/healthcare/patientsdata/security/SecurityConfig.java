@@ -30,10 +30,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             // Require authentication for these endpoints with specific HTTP methods.
-                            .requestMatchers(HttpMethod.POST, "/achievements").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.PUT, "/achievements/**").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.DELETE, "/achievements/**").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.POST, "/patients/register").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/doctors/**").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.POST, "/doctors/register").permitAll()
                             // Set any other requests to authentication.
                             .anyRequest().authenticated();
                 })
