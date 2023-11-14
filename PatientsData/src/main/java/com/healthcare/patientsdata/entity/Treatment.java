@@ -15,7 +15,7 @@ public class Treatment {
     private Long id;
 
     private String diseaseName;
-    private String treatedBy;
+    private String reportWriter;
     private String issueDate;
     private String closingDate;
     private String doctorComment;
@@ -24,6 +24,7 @@ public class Treatment {
     private List<Medicine> medicines;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Diagnosis> diagnoses;
+    private String appointmentId;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")

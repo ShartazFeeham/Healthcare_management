@@ -39,14 +39,14 @@ public class ProgressController {
 
     @PostMapping("/add-score/{progressId}/{score}/{date}")
     public ResponseEntity<String> addScore(@PathVariable Long progressId, @PathVariable double score,
-                                           @PathVariable String date) throws ItemNotFoundException {
+                                           @PathVariable String date) throws ItemNotFoundException, AccessMismatchException {
         LocalDate scoreDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String response = progressService.addScore(progressId, score, scoreDate);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete-score/{scoreId}")
-    public ResponseEntity<String> deleteScore(@PathVariable Long scoreId) throws ItemNotFoundException {
+    public ResponseEntity<String> deleteScore(@PathVariable Long scoreId) throws ItemNotFoundException, AccessMismatchException {
         progressService.deleteScore(scoreId);
         return ResponseEntity.ok("Score deleted successfully");
     }

@@ -18,9 +18,15 @@ public class EmailSender {
 
     public void send(String to, String subject, String message){
         EmailRequestDTO email = new EmailRequestDTO(to, subject, message);
-        String result = attemptSend(email)
-                .onErrorReturn("Error")
-                .block();
+        Mono<String> asyncRequest = asyncCall(email);
+        asyncRequest.subscribe(result -> {
+            System.out.println("Call succeeded.");
+        });
+    }
+
+    private Mono<String> asyncCall(EmailRequestDTO requestDTO){
+        return attemptSend(requestDTO)
+                .onErrorReturn("Error");
     }
 
     private Mono<String> attemptSend(EmailRequestDTO email) {
@@ -32,4 +38,3 @@ public class EmailSender {
                 .bodyToMono(String.class);
     }
 }
-

@@ -1,6 +1,7 @@
 package com.healthcare.patientsdata.controller;
 
 import com.healthcare.patientsdata.entity.Treatment;
+import com.healthcare.patientsdata.exceptions.AccessMismatchException;
 import com.healthcare.patientsdata.exceptions.ItemNotFoundException;
 import com.healthcare.patientsdata.service.interfaces.TreatmentService;
 import lombok.RequiredArgsConstructor;
@@ -18,52 +19,32 @@ public class TreatmentController {
     private final TreatmentService treatmentService;
 
     @GetMapping("/by-patients/{userId}")
-    public ResponseEntity<List<Treatment>> getPatientTreatments(@PathVariable String userId) {
-        try {
-            List<Treatment> treatments = treatmentService.getPatientTreatments(userId);
-            return ResponseEntity.ok(treatments);
-        } catch (ItemNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    public ResponseEntity<List<Treatment>> getPatientTreatments(@PathVariable String userId) throws ItemNotFoundException {
+        List<Treatment> treatments = treatmentService.getPatientTreatments(userId);
+        return ResponseEntity.ok(treatments);
     }
 
     @GetMapping("/{treatmentId}")
-    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long treatmentId) {
-        try {
-            Treatment treatment = treatmentService.read(treatmentId);
-            return ResponseEntity.ok(treatment);
-        } catch (ItemNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long treatmentId) throws ItemNotFoundException {
+        Treatment treatment = treatmentService.read(treatmentId);
+        return ResponseEntity.ok(treatment);
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<String> createTreatment(@PathVariable String userId, @RequestBody Treatment treatmentDTO) {
-        try {
-            treatmentService.create(userId, treatmentDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Treatment created successfully");
-        } catch (ItemNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<String> createTreatment(@PathVariable String userId, @RequestBody Treatment treatmentDTO) throws ItemNotFoundException, AccessMismatchException {
+        treatmentService.create(userId, treatmentDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Treatment created successfully");
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateTreatment(@RequestBody Treatment treatmentDTO) {
-        try {
-            treatmentService.update(treatmentDTO);
-            return ResponseEntity.ok("Treatment updated successfully");
-        } catch (ItemNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @PutMapping("/{treatmentId}")
+    public ResponseEntity<String> updateTreatment(@PathVariable Long treatmentId, @RequestBody Treatment treatmentDTO) throws ItemNotFoundException, AccessMismatchException {
+        treatmentService.update(treatmentId, treatmentDTO);
+        return ResponseEntity.ok("Treatment updated successfully");
     }
 
     @DeleteMapping("/{treatmentId}")
-    public ResponseEntity<String> deleteTreatment(@PathVariable Long treatmentId) {
-        try {
-            treatmentService.delete(treatmentId);
-            return ResponseEntity.ok("Treatment deleted successfully");
-        } catch (ItemNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<String> deleteTreatment(@PathVariable Long treatmentId) throws ItemNotFoundException, AccessMismatchException {
+        treatmentService.delete(treatmentId);
+        return ResponseEntity.ok("Treatment deleted successfully");
     }
 }

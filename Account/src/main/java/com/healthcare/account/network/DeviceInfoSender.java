@@ -18,9 +18,15 @@ public class DeviceInfoSender {
 
     public void send(String userId, String email, String deviceCode){
         DeviceRequest request = new DeviceRequest(userId, email, deviceCode);
-        String result = attemptSend(request)
-                .onErrorReturn("Error")
-                .block();
+        Mono<String> asyncRequest = asyncCall(request);
+        asyncRequest.subscribe(result -> {
+            System.out.println("Call succeeded.");
+        });
+    }
+
+    private Mono<String> asyncCall(DeviceRequest requestDTO){
+        return attemptSend(requestDTO)
+                .onErrorReturn("Error");
     }
 
     private Mono<String> attemptSend(DeviceRequest request) {

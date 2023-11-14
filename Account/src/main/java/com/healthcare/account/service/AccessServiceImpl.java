@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.security.auth.login.AccountLockedException;
 import java.security.SecureRandom;
@@ -120,7 +121,8 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         account.setOtpGenerationTime(LocalDateTime.now());
         accountRepository.save(account);
 
-        emailSender.send(account.getEmail(), "Health app OTP Token", "Your OTP is " + otp + ". Use it to gain access to your account.");
+        emailSender.send(account.getEmail(), "Health app OTP Token",
+                "Your OTP is " + otp + ". Use it to gain access to your account.");
     }
 
     @Override

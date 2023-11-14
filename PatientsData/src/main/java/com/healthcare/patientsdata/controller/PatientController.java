@@ -7,6 +7,7 @@ import com.healthcare.patientsdata.models.PatientHealthDTO;
 import com.healthcare.patientsdata.models.PatientProfileUpdateDTO;
 import com.healthcare.patientsdata.models.PatientRegisterDTO;
 import com.healthcare.patientsdata.service.interfaces.PatientService;
+import com.healthcare.patientsdata.utilities.token.IDExtractor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,9 @@ public class PatientController {
         return ResponseEntity.ok(healthDTO);
     }
 
-    @PutMapping("/{userId}/update-profile")
-    public ResponseEntity<String> updatePatientProfile(@PathVariable String userId, @RequestBody PatientProfileUpdateDTO request) throws ItemNotFoundException {
-        patientService.updatePatientProfile(userId, request);
+    @PutMapping("/update-profile")
+    public ResponseEntity<String> updatePatientProfile(@RequestBody PatientProfileUpdateDTO request) throws ItemNotFoundException {
+        patientService.updatePatientProfile(IDExtractor.getUserID(), request);
         return ResponseEntity.ok("Patient profile updated successfully");
     }
 }

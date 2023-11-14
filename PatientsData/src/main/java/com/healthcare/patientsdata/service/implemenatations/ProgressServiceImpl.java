@@ -13,11 +13,13 @@ import com.healthcare.patientsdata.repository.ProgressRepository;
 import com.healthcare.patientsdata.repository.ScoreRepository;
 import com.healthcare.patientsdata.service.interfaces.AchievementService;
 import com.healthcare.patientsdata.service.interfaces.ProgressService;
+import com.healthcare.patientsdata.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,7 +50,7 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public void acceptChallenge(Long achievementId) throws ItemNotFoundException, DuplicateEntityException {
-        String userId = "PSF1";
+        String userId = IDExtractor.getUserID();
 
         Achievement achievement = achievementService.read(achievementId);
         Optional<Patient> patientOp = patientRepository.findById(userId);
@@ -57,7 +59,7 @@ public class ProgressServiceImpl implements ProgressService {
 
         List<AchievementProgress> progresses = patient.getAchievementProgresses();
         if(!progresses.stream().filter(p -> p.getAchievement().getId().equals(achievementId)).toList().isEmpty()){
-            throw new DuplicateEntityException("achievement challange", achievementId.toString());
+            throw new DuplicateEntityException("achievement challenge", achievementId.toString());
         }
 
         AchievementProgress newProgress = new AchievementProgress();
@@ -72,7 +74,7 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public void cancelChallenge(Long progressId) throws ItemNotFoundException, AccessMismatchException {
-        String userId = "PSF1";
+        String userId = IDExtractor.getUserID();
 
         Optional<Patient> patientOp = patientRepository.findById(userId);
         if (patientOp.isEmpty()) throw new ItemNotFoundException("patient", userId);
@@ -95,7 +97,7 @@ public class ProgressServiceImpl implements ProgressService {
 
 
     @Override
-    public String addScore(Long progressId, double score, LocalDate date) throws ItemNotFoundException {
+    public String addScore(Long progressId, double score, LocalDate date) throws ItemNotFoundException, AccessMismatchException {
         Optional<AchievementProgress> progressOptional = progressRepository.findById(progressId);
         if (progressOptional.isEmpty()) {
             throw new ItemNotFoundException("achievement challenge", progressId.toString());
@@ -103,6 +105,11 @@ public class ProgressServiceImpl implements ProgressService {
 
         AchievementProgress progress = progressOptional.get();
         List<Score> scores = progress.getScores();
+
+        String userId = IDExtractor.getUserID();
+        if (!progress.getPatient().getUserId().equals(userId)) throw new AccessMismatchException(
+                "Requested user has no permission to modify other users' achievements! " +
+                        "Further attempt can result into ban.");
 
         Score newScore = new Score();
         newScore.setPoint(score);
@@ -120,7 +127,7 @@ public class ProgressServiceImpl implements ProgressService {
     }
 
     @Override
-    public void deleteScore(Long scoreId) throws ItemNotFoundException {
+    public void deleteScore(Long scoreId) throws ItemNotFoundException, AccessMismatchException {
         Optional<Score> scoreOptional = scoreRepository.findById(scoreId);
         if (scoreOptional.isEmpty()) {
             throw new ItemNotFoundException("achievement progress score", scoreId.toString());
@@ -128,9 +135,14 @@ public class ProgressServiceImpl implements ProgressService {
 
         Score score = scoreOptional.get();
         AchievementProgress progress = score.getProgress();
-        progress.getScores().remove(score);
+        String userId = IDExtractor.getUserID();
+        if (!progress.getPatient().getUserId().equals(userId)) throw new AccessMismatchException(
+                "Requested user has no permission to modify other users' achievements! " +
+                        "Further attempt can result into ban.");
+
 
         // Update & save progress details
+        progress.getScores().remove(score);
         updateProgressDetails(progress);
         scoreRepository.delete(score);
         progressRepository.save(progress);
@@ -143,7 +155,7 @@ public class ProgressServiceImpl implements ProgressService {
         if (totalScore >= progress.getAchievement().getGoalScore()
                 && progress.getCompletionDate() == null) {
             LocalDate currentDate = LocalDate.now();
-            long daysDifference = java.time.temporal.ChronoUnit.DAYS.between(progress.getChallengeDate(), currentDate);
+            long daysDifference = ChronoUnit.DAYS.between(progress.getChallengeDate(), currentDate);
             progress.setCompletedIn((int) daysDifference);
             progress.setCompletionDate(currentDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
 
