@@ -11,26 +11,35 @@ import reactor.core.publisher.Mono;
 public class PushSender {
 
     private final WebClient webClient;
+    private final ExceptionExtractor exceptionExtractor;
 
-    public PushSender(){
+    public PushSender(ExceptionExtractor exceptionExtractor){
         webClient = WebClient.create();
+        this.exceptionExtractor = exceptionExtractor;
     }
 
     public void send(String to, String title, String subTitle, String body){
-        PushRequestDTO push = new PushRequestDTO(to, body, title, subTitle);
-        String result = attemptSend(push)
-                .onErrorReturn("Error")
-                .block();
-        System.out.println("Done...");
+        PushRequestDTO request = new PushRequestDTO(to, body, title, subTitle);
+        Mono<String> asyncRequest = attemptSend(request);
+        asyncRequest.subscribe(result -> {
+            System.out.println("Call succeeded.");
+        });
     }
 
-    private Mono<String> attemptSend(PushRequestDTO push) {
+    private Mono<String> attemptSend(PushRequestDTO request) {
         return webClient.post()
                 .uri(AppConstants.PUSH_URL)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(Mono.just(push), PushRequestDTO.class)
+                .header(HttpHeaders.AUTHORIZATION, AppConstants.INTERNAL_TOKEN)
+                .body(Mono.just(request), EmailRequestDTO.class)
                 .retrieve()
-                .bodyToMono(String.class);
+                .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
+                            return Mono.error(exceptionExtractor.extract(errorBody));
+                        })
+                )
+                .bodyToMono(String.class).onErrorReturn("Error");
     }
 }
 

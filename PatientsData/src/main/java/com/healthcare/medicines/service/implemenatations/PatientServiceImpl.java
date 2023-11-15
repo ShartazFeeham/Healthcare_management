@@ -8,6 +8,7 @@ import com.healthcare.medicines.models.PatientProfileUpdateDTO;
 import com.healthcare.medicines.models.PatientRegisterDTO;
 import com.healthcare.medicines.network.AccountCreateDTO;
 import com.healthcare.medicines.network.AccountCreateRequester;
+import com.healthcare.medicines.network.PhoneNoUpdateRequester;
 import com.healthcare.medicines.repository.PatientRepository;
 import com.healthcare.medicines.service.interfaces.PatientService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final AccountCreateRequester accountCreateRequester;
+    private final PhoneNoUpdateRequester phoneNoUpdateRequester;
 
     @Override
     public void register(PatientRegisterDTO patientRegisterDTO) throws InternalCommunicationException {
@@ -125,6 +127,7 @@ public class PatientServiceImpl implements PatientService {
         patient.setAsthma(request.isAsthma());
 
         patientRepository.save(patient);
-    }
 
+        phoneNoUpdateRequester.send(patient.getUserId(), patient.getPhone());
+    }
 }

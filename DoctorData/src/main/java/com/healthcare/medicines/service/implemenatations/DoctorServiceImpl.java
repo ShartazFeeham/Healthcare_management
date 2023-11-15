@@ -11,6 +11,7 @@ import com.healthcare.medicines.models.ReadDoctorProfileDTO;
 import com.healthcare.medicines.models.UpdateDoctorProfileDTO;
 import com.healthcare.medicines.network.AccountCreateDTO;
 import com.healthcare.medicines.network.AccountCreateRequester;
+import com.healthcare.medicines.network.PhoneNoUpdateRequester;
 import com.healthcare.medicines.repository.DoctorRepository;
 import com.healthcare.medicines.service.interfaces.DoctorService;
 import com.healthcare.medicines.utilities.token.IDExtractor;
@@ -24,12 +25,14 @@ public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final AccountCreateRequester accountCreateRequester;
+    private final PhoneNoUpdateRequester phoneNoUpdateRequester;
 
     @Override
     public void register(CreateDoctorAccountDTO createDoctorAccountDTO) {
 
         Doctor doctor = new Doctor();
         String id = getId(createDoctorAccountDTO.getFirstName(), createDoctorAccountDTO.getLastName());
+        doctor.setUserId(id);
 
         // Mapping fields from DTO to Doctor entity
         doctor.setFirstName(createDoctorAccountDTO.getFirstName());
@@ -67,11 +70,13 @@ public class DoctorServiceImpl implements DoctorService {
             doctorRepository.deleteById(id);
             throw e;
         }
+
+        phoneNoUpdateRequester.send(doctor.getUserId(), doctor.getPhoneNumber());
     }
 
     private String getId(String firstName, String lastName) {
         // Generate the initial ID pattern using the first letters of the first and last name
-        String idPattern = "P" + firstName.toUpperCase().charAt(0) + lastName.toUpperCase().charAt(0);
+        String idPattern = "D" + firstName.toUpperCase().charAt(0) + lastName.toUpperCase().charAt(0);
         long count = doctorRepository.countByUserIdStartingWith(idPattern) + 1;
         return  idPattern + count;
     }
@@ -134,10 +139,13 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setBio(updateDoctorProfileDTO.getBio());
         doctor.setExperience(updateDoctorProfileDTO.getExperience());
         //doctor.setPhoto(updateDoctorProfileDTO.getPhoto());
-        doctor.setQualifications(updateDoctorProfileDTO.getQualifications());
-        doctor.setCertifications(updateDoctorProfileDTO.getCertifications());
+        doctor.getQualifications().clear();
+        doctor.getCertifications().clear();
+        doctor.getQualifications().addAll(updateDoctorProfileDTO.getQualifications());
+        doctor.getCertifications().addAll(updateDoctorProfileDTO.getCertifications());
 
         doctorRepository.save(doctor);
+        phoneNoUpdateRequester.send(doctor.getUserId(), doctor.getPhoneNumber());
     }
 
     @Override

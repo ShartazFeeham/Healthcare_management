@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.medicines.exceptions.CustomException;
 import com.healthcare.medicines.utilities.constants.AppConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,9 +16,10 @@ import reactor.core.publisher.Mono;
 public class AccountCreateRequester {
 
     private final WebClient webClient;
-
-    public AccountCreateRequester(){
+    private final ExceptionExtractor exceptionExtractor;
+    public AccountCreateRequester(ExceptionExtractor exceptionExtractor){
         webClient = WebClient.create();
+        this.exceptionExtractor = exceptionExtractor;
     }
 
     public String send(AccountCreateDTO request){
@@ -38,58 +40,10 @@ public class AccountCreateRequester {
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
                         clientResponse -> clientResponse.bodyToMono(String.class).flatMap(errorBody -> {
-                            return Mono.error(new CustomException(
-                                    extractErrorName(errorBody),
-                                    extractErrorMessage(errorBody),
-                                    extractErrorStatus(errorBody)));
+                            return Mono.error(exceptionExtractor.extract(errorBody));
                         })
                 )
                 .bodyToMono(String.class);
-    }
-
-    private String extractErrorMessage(String errorBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(errorBody);
-
-            if (jsonNode.has("message")) {
-                return jsonNode.get("message").asText();
-            } else {
-                return "Error message not found in the response";
-            }
-        } catch (Exception e) {
-            return "Error parsing the error response: " + e.getMessage();
-        }
-    }
-
-    private String extractErrorName(String errorBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(errorBody);
-
-            if (jsonNode.has("exception")) {
-                return jsonNode.get("exception").asText();
-            } else {
-                return "Error message not found in the response";
-            }
-        } catch (Exception e) {
-            return "Error parsing the error response: " + e.getMessage();
-        }
-    }
-    private HttpStatus extractErrorStatus(String errorBody) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(errorBody);
-
-            if (jsonNode.has("status")) {
-                String status = jsonNode.get("status").asText();
-                return HttpStatus.valueOf(status.substring(status.indexOf(" ") + 1));
-            } else {
-                return HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-        } catch (Exception e) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
     }
 }
 

@@ -10,4 +10,5 @@ public class AppConstants {
     public static final String TOKEN_ALPHABETS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     public static final String INTERNAL_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJTlRFUk5BTCIsInJvbGVzIjpbIlJPTEVfSU5URVJOQUwiXSwiZXhwIjoyMDE1MjE2Mzg0fQ.GpRoQRcjHJjk6DHaT-qpV0dkvJF_7GGsiaq6pTmc_Fk";
     public static final String ACCOUNT_CREATE_ENDPOINT = "http://localhost:5100/account/create-account";
+    public static final String PHONE_UPDATE_ENDPOINT = "http://localhost:7600/preferences/phone";
 }

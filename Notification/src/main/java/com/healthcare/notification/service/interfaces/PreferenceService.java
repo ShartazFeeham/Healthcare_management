@@ -11,4 +11,5 @@ public interface PreferenceService {
     void update(String userId, Preference updatedPreference);
     void addDevice(DeviceRequest deviceRequest);
     void removeDevice(DeviceRequest deviceRequest) throws ItemNotFoundException;
+    void updatePhoneNo(String userId, String phoneNo);
 }

@@ -3,6 +3,7 @@ package com.healthcare.notification.controllers;
 import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
 import com.healthcare.notification.model.DeviceRequest;
+import com.healthcare.notification.model.PhoneNoRequest;
 import com.healthcare.notification.service.interfaces.PreferenceService;
 import com.healthcare.notification.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,11 @@ public class PreferenceController {
     public ResponseEntity<String> removeDevice(@RequestBody DeviceRequest deviceRequest) throws ItemNotFoundException {
         preferenceService.removeDevice(deviceRequest);
         return ResponseEntity.ok("Device removed.");
+    }
+
+    @PostMapping("/phone")
+    public ResponseEntity<String> addPhone(@RequestBody PhoneNoRequest phoneNoRequest){
+        preferenceService.updatePhoneNo(phoneNoRequest.getUserId(), phoneNoRequest.getPhoneNo());
+        return ResponseEntity.ok("Phone number updated.");
     }
 }

@@ -28,6 +28,9 @@ public class PreferenceServiceImpl implements PreferenceService {
         Preference preference = new Preference();
         preference.setPreferenceId(userId);
         preference.setEmail(email);
+        preference.setGetEmailNotifications(true);
+        preference.setGetSMSNotifications(true);
+        preference.setGetPushNotifications(true);
         preference.setGetAppointmentUpdates(true);
         preference.setGetSiteUpdates(true);
         preference.setGetAccountAccountUpdates(true);
@@ -58,6 +61,9 @@ public class PreferenceServiceImpl implements PreferenceService {
         preference.setGetSiteUpdates(updatedPreference.isGetSiteUpdates());
         preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
         preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
+        preference.setGetEmailNotifications(updatedPreference.isGetEmailNotifications());
+        preference.setGetPushNotifications(updatedPreference.isGetPushNotifications());
+        preference.setGetSMSNotifications(updatedPreference.isGetSMSNotifications());
 
         preferenceRepository.save(preference);
     }
@@ -92,5 +98,16 @@ public class PreferenceServiceImpl implements PreferenceService {
         }
         throw new ItemNotFoundException("device",
                 deviceRequest.getDeviceCode().substring(0, 5) + "...");
+    }
+
+    @Override
+    public void updatePhoneNo(String userId, String phoneNo) {
+        Preference preference = getByUserId(userId);
+        if(!phoneNo.startsWith("+")){
+            phoneNo = "+88" + phoneNo;
+        }
+        preference.setPhoneNo(phoneNo);
+
+        preferenceRepository.save(preference);
     }
 }

@@ -5,6 +5,7 @@ import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.enums.NotificationType;
 import com.healthcare.notification.network.EmailSender;
 import com.healthcare.notification.network.PushSender;
+import com.healthcare.notification.network.SMSSender;
 import com.healthcare.notification.service.interfaces.NotifyService;
 import com.healthcare.notification.service.interfaces.PreferenceService;
 import com.healthcare.notification.utilities.constants.AppConstants;
@@ -19,15 +20,25 @@ public class NotifyServiceImpl implements NotifyService {
     private final PreferenceService preferenceService;
     private final EmailSender emailSender;
     private final PushSender pushSender;
+    private final SMSSender smsSender;
 
     @Override
     public void send(Notification notification) {
         Preference preference = preferenceService.getByUserId(notification.getUserId());
 
         if (filter(notification, preference)) {
-            sendPush(notification, preference);
-            sendEmail(notification, preference);
+            if(preference.isGetPushNotifications()) sendPush(notification, preference);
+            if(preference.isGetEmailNotifications()) sendEmail(notification, preference);
+            if(preference.isGetSMSNotifications()) sendSMS(notification, preference);
         }
+    }
+
+    private void sendSMS(Notification notification, Preference preference) {
+        String text = "";
+        text = text + notification.getTitle() + "\n\n"
+                + notification.getText()
+                + notification.getSuffix() + "\nSee more at: " + notification.getUrl();
+        smsSender.send(preference.getPhoneNo(), text);
     }
 
     private boolean filter(Notification notification, Preference preference) {

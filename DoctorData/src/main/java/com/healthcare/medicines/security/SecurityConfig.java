@@ -32,9 +32,8 @@ public class SecurityConfig {
                             // Require authentication for these endpoints with specific HTTP methods.
                             .requestMatchers(HttpMethod.PUT, "/doctors/**").authenticated()
                             .requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.POST, "/doctors/register").permitAll()
                             // Set any other requests to authentication.
-                            .anyRequest().authenticated();
+                            .anyRequest().permitAll();
                 })
                 // Add the custom authorization filter before the UsernamePasswordAuthenticationFilter.
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
