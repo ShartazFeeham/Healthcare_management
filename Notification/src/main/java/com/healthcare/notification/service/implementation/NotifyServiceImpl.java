@@ -34,10 +34,12 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
     private void sendSMS(Notification notification, Preference preference) {
-        String text = "";
-        text = text + notification.getTitle() + "\n\n"
+        String text = "-\n\n";
+        text = text + notification.getTitle().toUpperCase() + "\n\n"
                 + notification.getText()
-                + notification.getSuffix() + "\nSee more at: " + notification.getUrl();
+                + notification.getSuffix() + "\nSee more at: "
+                + notification.getUrl() + "\n\n"
+                + "EA Healthcare - your health, our concern. ♡";
         smsSender.send(preference.getPhoneNo(), text);
     }
 

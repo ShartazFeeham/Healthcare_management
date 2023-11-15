@@ -8,7 +8,7 @@
 
 - 1. Patient service port: 7100 ✅
 - 3. Doctor service port: 7200 ✅
-- 3. Pharma service port: 7300
+- 3. Pharma service port: 7300 ✅
 - 4. Appointment service port: 7400
 - 5. Community service port: 7500
 - 6. Notification service port: 7600 ✅
@@ -31,7 +31,7 @@
 ## ID formats
 
 - Patient: **PSF2** (Patient Shartaz Feeham 2) **P** + <First letter of **first name>**<First letter of **last name**><Serial no>
-- Docroe: **DFS1** (Doctor Farhat Snigdah 1) **D** + <First letter of **first name**><First letter of **last name**><Serial no>
+- Doctor: **DFS1** (Doctor Farhat Snigdah 1) **D** + <First letter of **first name**><First letter of **last name**><Serial no>
 - Appointment: **DFS1-PSF2-1** <Doctor ID>-<Patient ID>-<Serial>
 - Appointment (unregistered): **DFS1-ExP1** <Doctor ID>-Ex(extartanl)P<serial>
 - Medicine: **MED1** (MED + <serial>)
