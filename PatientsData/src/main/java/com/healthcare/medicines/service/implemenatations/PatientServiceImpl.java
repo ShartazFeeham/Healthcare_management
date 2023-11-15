@@ -2,10 +2,7 @@ package com.healthcare.medicines.service.implemenatations;
 import com.healthcare.medicines.entity.Patient;
 import com.healthcare.medicines.exceptions.InternalCommunicationException;
 import com.healthcare.medicines.exceptions.ItemNotFoundException;
-import com.healthcare.medicines.models.PatientBioDTO;
-import com.healthcare.medicines.models.PatientHealthDTO;
-import com.healthcare.medicines.models.PatientProfileUpdateDTO;
-import com.healthcare.medicines.models.PatientRegisterDTO;
+import com.healthcare.medicines.models.*;
 import com.healthcare.medicines.network.AccountCreateDTO;
 import com.healthcare.medicines.network.AccountCreateRequester;
 import com.healthcare.medicines.network.PhoneNoUpdateRequester;
@@ -129,5 +126,14 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.save(patient);
 
         phoneNoUpdateRequester.send(patient.getUserId(), patient.getPhone());
+    }
+
+    @Override
+    public UserMinimalInfoDTO getUserMinimalInfo(String userId) throws ItemNotFoundException {
+        Patient patient = patientRepository.findById(userId)
+                .orElseThrow(() -> new ItemNotFoundException("patient", userId));
+        return UserMinimalInfoDTO.builder().photoURL(patient.getProfilePhoto())
+                .firstName(patient.getFirstName()).lastName(patient.getLastName())
+                .build();
     }
 }

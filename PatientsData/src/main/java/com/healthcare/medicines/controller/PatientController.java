@@ -2,10 +2,7 @@ package com.healthcare.medicines.controller;
 
 import com.healthcare.medicines.exceptions.InternalCommunicationException;
 import com.healthcare.medicines.exceptions.ItemNotFoundException;
-import com.healthcare.medicines.models.PatientBioDTO;
-import com.healthcare.medicines.models.PatientHealthDTO;
-import com.healthcare.medicines.models.PatientProfileUpdateDTO;
-import com.healthcare.medicines.models.PatientRegisterDTO;
+import com.healthcare.medicines.models.*;
 import com.healthcare.medicines.service.interfaces.PatientService;
 import com.healthcare.medicines.utilities.token.IDExtractor;
 import org.springframework.http.HttpStatus;
@@ -44,5 +41,10 @@ public class PatientController {
     public ResponseEntity<String> updatePatientProfile(@RequestBody PatientProfileUpdateDTO request) throws ItemNotFoundException {
         patientService.updatePatientProfile(IDExtractor.getUserID(), request);
         return ResponseEntity.ok("Patient profile updated successfully");
+    }
+
+    @GetMapping("/minimal-info/{userId}")
+    public ResponseEntity<UserMinimalInfoDTO> updatePatientProfile(@PathVariable String userId) throws ItemNotFoundException {
+        return ResponseEntity.ok(patientService.getUserMinimalInfo(userId));
     }
 }

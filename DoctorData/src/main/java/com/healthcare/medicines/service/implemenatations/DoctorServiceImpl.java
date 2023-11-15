@@ -5,10 +5,7 @@ import com.healthcare.medicines.entity.Doctor;
 import com.healthcare.medicines.entity.Qualification;
 import com.healthcare.medicines.exceptions.AccessMismatchException;
 import com.healthcare.medicines.exceptions.ItemNotFoundException;
-import com.healthcare.medicines.models.CreateDoctorAccountDTO;
-import com.healthcare.medicines.models.ReadDoctorPersonalInfoDTO;
-import com.healthcare.medicines.models.ReadDoctorProfileDTO;
-import com.healthcare.medicines.models.UpdateDoctorProfileDTO;
+import com.healthcare.medicines.models.*;
 import com.healthcare.medicines.network.AccountCreateDTO;
 import com.healthcare.medicines.network.AccountCreateRequester;
 import com.healthcare.medicines.network.PhoneNoUpdateRequester;
@@ -153,5 +150,14 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = doctorRepository.findById(userId)
                 .orElseThrow(() -> new ItemNotFoundException("Doctor", userId));
         doctorRepository.deleteById(userId);
+    }
+
+    @Override
+    public UserMinimalInfoDTO getUserMinimalInfo(String userId) throws ItemNotFoundException {
+        Doctor patient = doctorRepository.findById(userId)
+                .orElseThrow(() -> new ItemNotFoundException("doctor", userId));
+        return UserMinimalInfoDTO.builder().photoURL(patient.getProfilePhoto())
+                .firstName(patient.getFirstName()).lastName(patient.getLastName())
+                .build();
     }
 }

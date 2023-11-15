@@ -16,20 +16,16 @@ import java.util.UUID;
 @Table(name = "comments")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "comment_id")
-    private UUID commentId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "commented_by")
-    private String userFullName;
+    private String userId;
+
     @Column(columnDefinition = "TEXT")
     private String content;
-
     private LocalDateTime timeCreated;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Interact> likes;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Interact> dislikes;
+    private List<Interact> reactions;
 
     // Relational references
     // Recursive self referencing relation
@@ -41,7 +37,6 @@ public class Comment {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
     private List<Comment> replies;
 
-    private UUID userId;
     @ManyToOne
     @JoinColumn(name = "parent_post_id")
     @JsonIgnore

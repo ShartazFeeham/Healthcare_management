@@ -1,6 +1,5 @@
 package com.healthapp.communityservice.repositories;
 
-import com.healthapp.communityservice.entities.Connection;
 import com.healthapp.communityservice.entities.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

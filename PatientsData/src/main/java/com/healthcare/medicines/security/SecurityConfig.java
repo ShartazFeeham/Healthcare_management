@@ -34,6 +34,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/achievements/**").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.DELETE, "/achievements/**").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.POST, "/patients/register").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/patients//minimal-info/**").permitAll()
                             // Set any other requests to authentication.
                             .anyRequest().authenticated();
                 })

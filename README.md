@@ -10,7 +10,7 @@
 - 3. Doctor service port: 7200 ✅
 - 3. Pharma service port: 7300 ✅
 - 4. Appointment service port: 7400
-- 5. Community service port: 7500
+- 5. Community service port: 7500 ✅
 - 6. Notification service port: 7600 ✅
 - 7. Help service port: 7700
 - 8. CDSS service port: 7800

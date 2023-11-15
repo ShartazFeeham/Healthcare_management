@@ -26,11 +26,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->{
-                    auth
-                            .requestMatchers(HttpMethod.POST, "/community/achievements").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.PUT, "/community/achievements/**").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.DELETE, "/community/achievements/**").hasRole("ADMIN")
-                            .anyRequest().authenticated();
+                    auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

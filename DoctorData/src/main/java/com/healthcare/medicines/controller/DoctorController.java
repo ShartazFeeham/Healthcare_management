@@ -2,10 +2,7 @@ package com.healthcare.medicines.controller;
 
 import com.healthcare.medicines.exceptions.AccessMismatchException;
 import com.healthcare.medicines.exceptions.ItemNotFoundException;
-import com.healthcare.medicines.models.CreateDoctorAccountDTO;
-import com.healthcare.medicines.models.ReadDoctorPersonalInfoDTO;
-import com.healthcare.medicines.models.ReadDoctorProfileDTO;
-import com.healthcare.medicines.models.UpdateDoctorProfileDTO;
+import com.healthcare.medicines.models.*;
 import com.healthcare.medicines.service.interfaces.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,5 +45,10 @@ public class DoctorController {
     public ResponseEntity<String> deleteDoctor(@PathVariable String userId) throws ItemNotFoundException {
         doctorService.delete(userId);
         return ResponseEntity.ok("Doctor deleted successfully");
+    }
+
+    @GetMapping("/minimal-info/{userId}")
+    public ResponseEntity<UserMinimalInfoDTO> updatePatientProfile(@PathVariable String userId) throws ItemNotFoundException {
+        return ResponseEntity.ok(doctorService.getUserMinimalInfo(userId));
     }
 }
