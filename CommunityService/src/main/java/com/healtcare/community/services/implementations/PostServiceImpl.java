@@ -1,6 +1,7 @@
 package com.healtcare.community.services.implementations;
 
 import com.healtcare.community.entities.Post;
+import com.healtcare.community.enums.PostType;
 import com.healtcare.community.exception.AccessDeniedException;
 import com.healtcare.community.exception.ItemNotFoundException;
 import com.healtcare.community.models.PostDetailDTO;
@@ -28,6 +29,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void create(String userId, PostCreateDTO postCreateDTO) {
         Post post = new Post();
+        checkPermissionForPost(postCreateDTO.getType(), userId);
         post.setTitle(postCreateDTO.getTitle());
         post.setContent(postCreateDTO.getContent());
         post.setUserId(userId);
@@ -37,6 +39,30 @@ public class PostServiceImpl implements PostService {
 
         postRepository.save(post);
     }
+
+    private void checkPermissionForPost(String type, String userId) {
+        char userType = userId.charAt(0);
+        switch (userType) {
+            case 'P' -> {
+                if (!(type.equals(PostType.STATUS.getValue()) || type.equals(PostType.FEEDBACK.getValue()))) {
+                    throw new AccessDeniedException(type + " post. You (Patient) can only post Status and Feedback.");
+                }
+            }
+            case 'D' -> {
+                if (!(type.equals(PostType.STATUS.getValue()) || type.equals(PostType.ARTICLE.getValue())
+                        || type.equals(PostType.FIRST_AID.getValue()))) {
+                    throw new AccessDeniedException(type + " post. You (Doctor) can only post Status, Article, and First Aid.");
+                }
+            }
+            case 'A' -> {
+                if (type.equals(PostType.FEEDBACK.getValue())) {
+                    throw new AccessDeniedException(type + " post. Admins cannot post Feedback.");
+                }
+            }
+            default -> throw new AccessDeniedException("Invalid user type.");
+        }
+    }
+
 
     @Override
     public List<PostReadDTO> getByType(String type, int page, int size) {

@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -47,8 +45,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(commentCreateDTO.getContent());
         comment.setTimeCreated(LocalDateTime.now());
 
-//        comment.setUserId(IDExtractor.getUserID());
-        comment.setUserId("PSF2");
+        comment.setUserId(IDExtractor.getUserID());
         commentRepository.save(comment);
     }
 
@@ -66,7 +63,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void update(Long commentId, String userId, String content) {
         Comment comment = readComment(commentId);
-        if(!comment.getUserId().equals(userId)) throw new AccessDeniedException("comment, you can't edit this comment as you don't own it!");
+        if(!comment.getUserId().equals(userId)) throw new AccessDeniedException
+                ("'" + comment.getContent().substring(0, Math.min(8, comment.getContent().length()))
+                        + "...' comment, you can't edit this comment as you don't own it!");
         comment.setContent(content);
         commentRepository.save(comment);
     }
@@ -79,6 +78,8 @@ public class CommentServiceImpl implements CommentService {
                 || userId.startsWith("A")) {
             commentRepository.delete(comment);
         }
-        else throw new AccessDeniedException("comment, you can't edit this comment as you don't own it!");
+        else throw new AccessDeniedException
+                ("'" + comment.getContent().substring(0, Math.min(8, comment.getContent().length()))
+                        + "...' comment, you can't edit this comment as you don't own it!");
     }
 }
