@@ -1,13 +1,12 @@
-package com.healthapp.communityservice.entities;
+package com.healtcare.community.entities;
 
-import java.util.UUID;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.UUID;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Interact {
     @Id

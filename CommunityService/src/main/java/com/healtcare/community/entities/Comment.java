@@ -1,17 +1,14 @@
-package com.healthapp.communityservice.entities;
-
+package com.healtcare.community.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.UUID;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -24,8 +21,6 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String content;
     private LocalDateTime timeCreated;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Interact> reactions;
 
     // Relational references
     // Recursive self referencing relation

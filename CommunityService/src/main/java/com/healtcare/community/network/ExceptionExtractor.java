@@ -1,8 +1,8 @@
-package com.healthcare.notification.network;
+package com.healtcare.community.network;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.healthcare.notification.exceptions.CustomException;
+import com.healtcare.community.exception.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 

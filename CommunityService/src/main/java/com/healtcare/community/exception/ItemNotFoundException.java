@@ -1,5 +1,6 @@
-package com.healthapp.communityservice.exception;
+package com.healtcare.community.exception;
 
+import com.healtcare.community.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class ItemNotFoundException extends CustomException {

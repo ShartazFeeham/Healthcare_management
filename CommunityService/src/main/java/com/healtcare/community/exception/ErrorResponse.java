@@ -1,4 +1,4 @@
-package com.healthcare.account.exception;
+package com.healtcare.community.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

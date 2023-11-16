@@ -1,10 +1,12 @@
-package com.healthapp.communityservice.models.commentdto;
+package com.healtcare.community.models;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
 
 @Getter @Setter @RequiredArgsConstructor
-public class CommentUpdateDTO {
+public class CommentCreateDTO {
     private String content;
+    private Long parentCommentId;
+    private Long parentPostId;
 }

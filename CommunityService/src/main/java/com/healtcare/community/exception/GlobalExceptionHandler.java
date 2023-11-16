@@ -1,6 +1,5 @@
-package com.healthapp.communityservice.exception;
+package com.healtcare.community.exception;
 
-import com.healthcare.account.exception.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
