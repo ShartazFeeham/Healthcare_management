@@ -1,6 +1,5 @@
 package com.healtcare.community.services.interfaces;
 
-import com.healtcare.community.entities.Post;
 import com.healtcare.community.models.PostCreateDTO;
 import com.healtcare.community.models.PostDetailDTO;
 import com.healtcare.community.models.PostReadDTO;

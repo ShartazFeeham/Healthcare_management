@@ -71,7 +71,7 @@ public class NotifyServiceImpl implements NotifyService {
     private void sendEmail(Notification notification, Preference preference) {
         String message = (notification.getPrefix() == null ? "" : (notification.getPrefix() + " "))
                 + (notification.getText() == null ? "" : (notification.getText() + " "))
-                + (notification.getSuffix() == null ? "" : (notification.getSuffix())) + "/n/n"
+                + (notification.getSuffix() == null ? "" : (notification.getSuffix())) + " "
                 + (notification.getUrl() != null ? "Click the link to see details - " + notification.getUrl() : "");
         emailSender.send(preference.getEmail(), notification.getTitle(), message);
     }

@@ -5,6 +5,8 @@ import com.healtcare.community.entities.Post;
 import com.healtcare.community.exception.AccessDeniedException;
 import com.healtcare.community.exception.ItemNotFoundException;
 import com.healtcare.community.models.CommentCreateDTO;
+import com.healtcare.community.network.NotificationRequest;
+import com.healtcare.community.network.NotificationSender;
 import com.healtcare.community.repositories.CommentRepository;
 import com.healtcare.community.repositories.PostRepository;
 import com.healtcare.community.services.interfaces.CommentService;
@@ -20,6 +22,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final NotificationSender notificationSender;
 
     @Override
     public void create(CommentCreateDTO commentCreateDTO) {
@@ -47,6 +50,11 @@ public class CommentServiceImpl implements CommentService {
 
         comment.setUserId(IDExtractor.getUserID());
         commentRepository.save(comment);
+
+//        if(!IDExtractor.getUserID().equals(comment.getParentPost().getUserId())) -> commented out self interaction validation for project evaluation
+        notifyPostAuthor(comment, comment.getParentPost().getUserId());
+//        if(!IDExtractor.getUserID().equals(comment.getParentComment().getUserId())) -> commented out self interaction validation for project evaluation
+        if(comment.getParentComment() != null) notifyCommentAuthor(comment, comment.getParentComment().getUserId());
     }
 
     private Comment readComment(Long id){
@@ -81,5 +89,41 @@ public class CommentServiceImpl implements CommentService {
         else throw new AccessDeniedException
                 ("'" + comment.getContent().substring(0, Math.min(8, comment.getContent().length()))
                         + "...' comment, you can't edit this comment as you don't own it!");
+    }
+
+    private void notifyPostAuthor(Comment comment, String postAuthor){
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .title("New comment on your post.")
+                .text("Your post '" + comment.getParentPost().getContent()
+                        .substring(0, Math.min(comment.getParentPost().getContent().length(), 8))
+                        + "...' has a new comment.")
+                .type("COMMUNITY")
+                .suffix("Visit the post to see the more")
+                .userId(postAuthor)
+                .url("http://localhost:3000/health/community/post/" + comment.getParentPost().getPostId())
+                .build();
+        if(comment.getParentPost().getPhotoURL() != null && !comment.getParentPost().getPhotoURL().isEmpty()){
+            notificationRequest.setPhotoUrl(comment.getParentPost().getPhotoURL());
+        }
+
+        notificationSender.send(notificationRequest);
+    }
+
+    private void notifyCommentAuthor(Comment comment, String commentAuthor){
+        NotificationRequest notificationRequest = NotificationRequest.builder()
+                .title("New Reply on your comment.")
+                .text("Your comment on post '" + comment.getParentPost().getContent()
+                        .substring(0, Math.min(comment.getParentPost().getContent().length(), 8))
+                        + "...' has a new reply.")
+                .type("COMMUNITY")
+                .suffix("Visit the post to see the more")
+                .userId(commentAuthor)
+                .url("http://localhost:3000/health/community/post/" + comment.getParentPost().getPostId())
+                .build();
+        if(comment.getParentPost().getPhotoURL() != null && !comment.getParentPost().getPhotoURL().isEmpty()){
+            notificationRequest.setPhotoUrl(comment.getParentPost().getPhotoURL());
+        }
+
+        notificationSender.send(notificationRequest);
     }
 }
