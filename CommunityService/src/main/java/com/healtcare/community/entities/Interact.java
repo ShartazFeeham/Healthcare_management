@@ -13,5 +13,5 @@ public class Interact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer interactId;
     private String userId;
-    private int type;
+    private Integer type;
 }

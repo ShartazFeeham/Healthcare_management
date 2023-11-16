@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostReadDTO> getByType(String type, int page, int size) {
-        Page<Post> postsPage = postRepository.findByType(type, PageRequest.of(page, size));
+        Page<Post> postsPage = postRepository.findByTypeOrderByTimeCreatedDesc(type, PageRequest.of(page, size));
         List<Post> posts = postsPage.getContent();
         return posts.stream().map(this::convertToReadDTO).toList();
     }
@@ -77,11 +78,11 @@ public class PostServiceImpl implements PostService {
         postReadDTO.setAuthorId(post.getUserId());
         postReadDTO.setTitle(post.getTitle());
         postReadDTO.setContent(post.getContent());
-        // Assuming you have a method to format LocalDateTime to String
         postReadDTO.setDate(timeFormatter.format(post.getTimeCreated()));
         postReadDTO.setPhoto(post.getPhotoURL());
         postReadDTO.setCommentsCount(post.getComments().size());
-        postReadDTO.setReactionsCount(post.getReactions().size());
+        postReadDTO.setReactions(post.getSortedReactionsByFrequency());
+        //Write code here
         return postReadDTO;
     }
 

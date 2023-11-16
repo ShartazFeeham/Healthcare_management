@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter @Setter @RequiredArgsConstructor
 public class PostReadDTO {
     private Long postId;
@@ -13,6 +16,5 @@ public class PostReadDTO {
     private String date;
     private String photo;
     private int commentsCount;
-    private int reactionsCount;
-    private int[] reactions;
+    private List<Integer> reactions;
 }
