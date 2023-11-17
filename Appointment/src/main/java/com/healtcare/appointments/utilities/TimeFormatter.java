@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -51,5 +52,9 @@ public class TimeFormatter {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, hh:mma");
             return localDateTime.format(formatter);
         }
+    }
+    private static final DateTimeFormatter TWELVE_HOUR_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
+    public String formatTo12HourFormat(LocalTime localTime) {
+        return localTime.format(TWELVE_HOUR_FORMATTER);
     }
 }

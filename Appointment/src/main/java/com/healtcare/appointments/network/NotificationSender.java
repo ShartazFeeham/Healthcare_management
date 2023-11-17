@@ -1,6 +1,6 @@
 package com.healtcare.appointments.network;
 
-import com.healthcare.notification.utilities.constants.AppConstants;
+import com.healtcare.appointments.utilities.constants.AppConstants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

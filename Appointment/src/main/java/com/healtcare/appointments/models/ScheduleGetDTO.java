@@ -8,14 +8,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class ScheduleDTO {
-    // Date of the appointment
-    private LocalDate date;
-    // Shifts and capacities
+public class ScheduleGetDTO {
     private Integer morning;
-    private Integer morningCapacity;
+    private AvailabilityDTO morningAvailability;
     private Integer afterNoon;
-    private Integer afterNoonCapacity;
+    private AvailabilityDTO afternoonAvailability;
     private Integer evening;
-    private Integer eveningCapacity;
+    private AvailabilityDTO eveningAvailability;
 }

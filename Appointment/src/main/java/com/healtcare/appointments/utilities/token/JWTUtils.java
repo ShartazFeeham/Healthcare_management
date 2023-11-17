@@ -1,4 +1,4 @@
-package com.healthcare.notification.utilities.token;
+package com.healtcare.appointments.utilities.token;
 
 import com.healthcare.notification.utilities.constants.TokenConstants;
 import io.jsonwebtoken.Claims;

@@ -1,4 +1,4 @@
-package com.healthcare.notification.utilities.constants;
+package com.healtcare.appointments.utilities.constants;
 
 public class TokenConstants {
     public static final String TOKEN_SECRET = "PAKHI_PAKA_PEPE_KHAY";

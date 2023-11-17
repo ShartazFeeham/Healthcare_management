@@ -1,8 +1,6 @@
-package com.healthcare.notification.utilities.token;
+package com.healtcare.appointments.utilities.token;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.UUID;
 
 public class IDExtractor {
     /**
