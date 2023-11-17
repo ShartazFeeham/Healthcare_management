@@ -32,8 +32,8 @@
 
 - Patient: **PSF2** (Patient Shartaz Feeham 2) **P** + <First letter of **first name>**<First letter of **last name**><Serial no>
 - Doctor: **DFS1** (Doctor Farhat Snigdah 1) **D** + <First letter of **first name**><First letter of **last name**><Serial no>
-- Appointment: **DFS1-PSF2-1** <Doctor ID>-<Patient ID>-<Serial>
-- Appointment (unregistered): **DFS1-ExP1** <Doctor ID>-Ex(extartanl)P<serial>
-- Medicine: **MED1** (MED + <serial>)
-- Equipment: **EQU1** (EQU + <serial>)
-- CDSS: **C-PSF1-1** (C-<Patient ID>-<Serial>)
+- Appointment: **DFS1-PSF2-1** DoctorID-PatientID-SerialNO
+- Appointment (unregistered): **DFS1-ExP1** DoctorID-Ex(extartanl)P<Serial-NO>
+- Medicine: **MED1** (MED + SerialNo + Random 2-digit number)
+- Equipment: **EQU1** (EQU + SerialNo + Random 2-digit number)
+- CDSS: **C-PSF1-1** (C-PatientID-SerialID)
