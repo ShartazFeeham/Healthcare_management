@@ -4,8 +4,16 @@ import com.healtcare.appointments.entities.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     List<Appointment> findByDoctorIdAndDateAndShift(String doctorId, LocalDate date, String shift);
+    List<Appointment> findByPatientIdAndCancelled(String patientId, boolean cancelled);
+    List<Appointment> findByPatientIdAndCancelledAndAppointmentTimeAfter(String patientId, boolean cancelled, LocalDateTime appointmentTime);
+    int countByDoctorIdAndDateAndShift(String doctorId, LocalDate date, String shift);
+    int countByDoctorIdAndDateAndShiftAndCancelled(String doctorId, LocalDate date, String shift, boolean cancelled);
+    int countByDoctorId(String doctorId);
+    boolean existsById(Long id);
 }

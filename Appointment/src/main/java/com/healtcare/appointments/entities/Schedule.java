@@ -23,7 +23,7 @@ public class Schedule {
     private Integer afternoonShift;
     private Integer eveningShift;
 
-    private Long morningCapacity;
-    private Long afternoonCapacity;
+    private Integer morningCapacity;
+    private Integer afternoonCapacity;
     private Integer eveningCapacity;
 }
