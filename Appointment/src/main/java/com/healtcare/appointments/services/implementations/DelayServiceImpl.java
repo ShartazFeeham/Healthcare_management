@@ -75,10 +75,7 @@ public class DelayServiceImpl implements DelayService {
         shift = shift.toLowerCase();
 
         // If the appointment is not on the same date as the delay, delete the delay and return 0.
-        if (!appointmentTime.toLocalDate().isEqual(entryTime.toLocalDate())) {
-            delayRepository.deleteById(doctorId);
-            return 0;
-        }
+        if (!appointmentTime.toLocalDate().isEqual(entryTime.toLocalDate())) return 0;
 
         // Determine the shift start and end times based on the specified shift.
         LocalTime shiftStartTime;
@@ -93,16 +90,10 @@ public class DelayServiceImpl implements DelayService {
         } else if ("evening".equalsIgnoreCase(shift)) {
             shiftStartTime = AppointmentConstants.EVENING_START_TIME;
             shiftEndTime = AppointmentConstants.EVENING_END_TIME;
-        } else {
-            throw new ItemNotFoundException("shift ", shift);
-        }
+        } else throw new ItemNotFoundException("shift ", shift);
 
-        // If the entry time is not within the specified shift, delete the delay and return 0.
-        if (entryTime.toLocalTime().isBefore(shiftStartTime)
-                || entryTime.toLocalTime().isAfter(shiftEndTime)) {
-            delayRepository.deleteById(doctorId);
-            return 0;
-        }
+        // If the entry time is not within the specified shift, return 0.
+        if (entryTime.toLocalTime().isBefore(shiftStartTime) || entryTime.toLocalTime().isAfter(shiftEndTime)) return 0;
         // Return the delay in minutes.
         return delay.getDelayMinutes();
     }
@@ -152,6 +143,7 @@ public class DelayServiceImpl implements DelayService {
 
         // Notify each patient about the updated appointment time.
         for (Appointment appointment : appointments) {
+            if(appointment.isCancelled()) continue;
             String userId = appointment.getPatientId();
             String appointmentOriginalTime = timeFormatter
                     .formatTo12HourFormat(appointment.getAppointmentTime().toLocalTime());

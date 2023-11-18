@@ -1,9 +1,8 @@
 package com.healtcare.appointments.utilities.token;
 
-import com.healthcare.notification.utilities.constants.TokenConstants;
+import com.healtcare.appointments.utilities.constants.TokenConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;

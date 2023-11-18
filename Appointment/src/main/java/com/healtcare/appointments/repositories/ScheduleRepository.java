@@ -13,6 +13,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Optional<Schedule> findByDateAndDoctorId(LocalDate date, String doctorId);
 
-    @Query("SELECT DISTINCT s.date FROM Schedule s WHERE s.doctorId = :doctorId")
-    List<LocalDate> findDistinctDatesByDoctorId(@Param("doctorId") String doctorId);
+    @Query("SELECT DISTINCT s.date FROM Schedule s WHERE s.doctorId = :doctorId AND s.date > :startDate")
+    List<LocalDate> findDistinctDatesByDoctorIdAndStartDate(@Param("doctorId") String doctorId, @Param("startDate") LocalDate startDate);
 }

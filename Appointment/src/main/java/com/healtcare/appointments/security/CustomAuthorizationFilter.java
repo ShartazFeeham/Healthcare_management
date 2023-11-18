@@ -1,7 +1,7 @@
 package com.healtcare.appointments.security;
 
-import com.healthcare.notification.utilities.constants.TokenConstants;
-import com.healthcare.notification.utilities.token.JWTUtils;
+import com.healtcare.appointments.utilities.constants.TokenConstants;
+import com.healtcare.appointments.utilities.token.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -11,6 +11,5 @@ import java.time.LocalDate;
 public class AppointmentRequestDTO {
     LocalDate date;
     String doctorId;
-    String type;
     Integer shift;
 }

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class TimeFormatter {
     public String format(LocalDateTime localDateTime) {
         if(localDateTime.isBefore(LocalDateTime.now())) return getUpcomingTimeFormat(localDateTime);

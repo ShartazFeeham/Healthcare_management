@@ -3,6 +3,7 @@ package com.healtcare.appointments.utilities;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -56,5 +57,11 @@ public class TimeFormatter {
     private static final DateTimeFormatter TWELVE_HOUR_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
     public String formatTo12HourFormat(LocalTime localTime) {
         return localTime.format(TWELVE_HOUR_FORMATTER);
+    }
+    public String formatDate(LocalDate date) {
+        // Define the desired date format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        // Format the LocalDate using the formatter and return
+        return date.format(formatter);
     }
 }

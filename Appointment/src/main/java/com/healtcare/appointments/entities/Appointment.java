@@ -6,22 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Appointment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String doctorId;
     private String patientId;
-    private String date;
+    private LocalDate date;
     private String shift;
     private String type;
     private Integer serialNo;
     private LocalDateTime appointmentTime;
     private LocalDateTime schedulingTime;
-    private Integer delayTime;
     private boolean cancelled;
 }
