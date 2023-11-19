@@ -8,13 +8,16 @@ import "assets/scss/argon-dashboard-react.scss";
 import Logged from "layouts/Logged";
 import Public from "layouts/Public";
 import Common from "layouts/Common";
+import { Authenticate } from "scripts/authenticate";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/health/*" element={<Logged />} />
+      <Route element={<Authenticate requiredRole={"ANY"} />}>
+        <Route path="/health/*" element={<Logged />} />
+      </Route>
       <Route path="/public/*" element={<Public />} />
       <Route path="/common/*" element={<Common />} />
       <Route path="/" element={<Navigate to="/health/index" replace />} />

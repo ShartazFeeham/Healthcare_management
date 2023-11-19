@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -14,8 +14,10 @@ import {
   Col,
 } from "reactstrap";
 import { useState, useEffect } from "react";
+import AxiosInstance from "scripts/axioInstance";
 
 const ForgottenPassword = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
@@ -23,11 +25,30 @@ const ForgottenPassword = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [timer, setTimer] = useState(30);
   const [showPassword, setShowPassword] = useState(false);
+  const [warning, setWarning] = useState("");
+  const [success, setSuccess] = useState("");
+
+  function validateEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
 
   const handleSendOTP = () => {
+    if (!validateEmail(email)) {
+      setWarning("Write email correctly.");
+      return;
+    }
+    setWarning("");
+
     setIsOtpSent(true);
-    // Add logic to send OTP here
-    // You can also start a timer to count down
+    const url = "http://localhost:5100/access/generate-otp/" + email;
+    AxiosInstance.post(url, "")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        setWarning(error.response.data.message);
+      });
     const countdown = setInterval(() => {
       setTimer((prevTimer) => prevTimer - 1);
     }, 1000);
@@ -47,7 +68,40 @@ const ForgottenPassword = () => {
   const isResetButtonDisabled = !otp || !password || !confirmPassword;
 
   const handleResetPassword = () => {
-    // Add logic to reset password here
+    setSuccess("");
+    setWarning("");
+    const url = "http://localhost:5100/recovery/reset-password";
+    if (!email || !otp || !password || !validateEmail(email)) {
+      setWarning("Fill up the fields correctly.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setWarning("Password in both fields must match.");
+      return;
+    }
+    let resetReq = {
+      email: email,
+      newPassword: password,
+      otp: !otp || otp == 0 ? 0 : otp,
+    };
+    console.log(resetReq);
+    AxiosInstance.put(url, resetReq)
+      .then((result) => {
+        if (result.status === 200) {
+          console.log(result);
+          setSuccess(
+            "Your password has been reset. Now you can go to login page and sign in!"
+          );
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setOtp("");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setWarning(error.response.data.message);
+      });
   };
 
   return (
@@ -61,6 +115,8 @@ const ForgottenPassword = () => {
           </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">
             <Form role="form">
+              {warning && <div className="alert alert-danger">{warning}</div>}
+              {success && <div className="alert alert-success">{success}</div>}
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -86,7 +142,9 @@ const ForgottenPassword = () => {
                     onClick={handleSendOTP}
                     disabled={isOtpSent}
                   >
-                    {isOtpSent ? `Resend OTP in ${timer}s` : "Send OTP"}
+                    {isOtpSent
+                      ? `OTP Sent. Resend OTP in ${timer}s`
+                      : "Send OTP"}
                   </Button>
                 </div>
                 <InputGroup className="input-group-alternative">

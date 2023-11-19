@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class CreateDoctorAccountDTO {
@@ -22,7 +23,7 @@ public class CreateDoctorAccountDTO {
     private String nid;
     private String password;
     private String phoneNumber;
-    private File photo;
+    private MultipartFile photo;
     private List<Qualification> qualifications;
     private String residence;
     private String specialization;

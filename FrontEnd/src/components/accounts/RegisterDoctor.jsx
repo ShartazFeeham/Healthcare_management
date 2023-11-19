@@ -17,6 +17,7 @@ import {
   CustomInput,
 } from "reactstrap";
 import specializationList from "assets/data/enums/specializations";
+import AxiosInstance from "scripts/axioInstance";
 
 const textColor = {
   color: "#555",
@@ -50,6 +51,8 @@ const RegisterDoctor = () => {
 
   const [specialistList, setSpecialistList] = useState("");
   const [specCount, setSpecCount] = useState(0);
+  const [warning, setWarning] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleAddQualification = () => {
     setQualifications([
@@ -294,6 +297,8 @@ const RegisterDoctor = () => {
   };
 
   const handleRegister = () => {
+    setWarning("");
+    setSuccess("");
     window.scrollTo(0, 0);
     const doctorData = {
       firstName,
@@ -309,13 +314,24 @@ const RegisterDoctor = () => {
       bio,
       qualifications,
       certifications,
-      photo,
+      // photo,
       experience,
       license,
     };
-    if (validate()) {
-      console.log(doctorData);
+    if (!validate()) {
+      return;
     }
+    const url = "http://localhost:7200/doctors/register";
+    AxiosInstance.post(url, doctorData)
+      .then((response) => {
+        setSuccess(
+          response.data +
+            ". Go to login page to verify and sign into your account."
+        );
+      })
+      .catch((error) => {
+        setWarning(error.response.data.message);
+      });
   };
 
   return (
@@ -335,6 +351,8 @@ const RegisterDoctor = () => {
             )}
             <Form role="form">
               <p>Account info</p>
+              {warning && <div className="alert alert-danger">{warning}</div>}
+              {success && <div className="alert alert-success">{success}</div>}
               <Row>
                 <Col md="6">
                   <FormGroup>

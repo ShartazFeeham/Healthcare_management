@@ -9,6 +9,7 @@ import com.healthcare.account.model.PasswordChangeDTO;
 import com.healthcare.account.model.PasswordResetDTO;
 import com.healthcare.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class RecoveryServiceImpl implements RecoveryService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void changePassword(String userId, PasswordChangeDTO passwordChangeDTO)
@@ -44,7 +46,7 @@ public class RecoveryServiceImpl implements RecoveryService {
         if(account.getOtp() != null && account.getOtp() != 0
                 && account.getOtp().equals(passwordResetDTO.getOtp())
                 && account.getOtpGenerationTime().isAfter(LocalDateTime.now().minusMinutes(5L))){
-            account.setPassword(passwordResetDTO.getNewPassword());
+            account.setPassword(passwordEncoder.encode(passwordResetDTO.getNewPassword()));
             accountRepository.save(account);
         }
         else throw new OTPValidationException(passwordResetDTO.getOtp());

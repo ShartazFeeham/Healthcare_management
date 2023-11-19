@@ -69,6 +69,9 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
             otp = account.getOtp();
         }
         if(loginDTO.getOtp() != null && loginDTO.getOtp() != 0){
+            if(account.getOtpGenerationTime().isBefore(LocalDateTime.now().minusMinutes(5))){
+                throw new OTPExpiredException(loginDTO.getOtp());
+            }
             if(loginDTO.getOtp() == otp){
                 return generateLoginResponse(account, loginDTO.getDeviceCode());
             }
@@ -81,8 +84,8 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         if(account.isTwoFactorEnabled()){
             if(account.getOtpGenerationTime().isBefore(LocalDateTime.now().minusMinutes(5))) {
                 generateOTP(loginDTO.getIdentity());
+                throw new TwoFactorException(account.getEmail());
             }
-            throw new TwoFactorException(account.getEmail());
         }
 
         return generateLoginResponse(account, loginDTO.getDeviceCode());

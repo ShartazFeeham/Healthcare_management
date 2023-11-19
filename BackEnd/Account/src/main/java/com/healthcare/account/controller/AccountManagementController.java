@@ -1,6 +1,7 @@
 package com.healthcare.account.controller;
 
 import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.model.AdminAccountCreateDTO;
 import com.healthcare.account.service.iservice.AccountManagementService;
 import com.healthcare.account.model.AccountCreateDTO;
 import com.healthcare.account.model.AccountReadDTO;
@@ -24,9 +25,9 @@ public class AccountManagementController {
     }
 
     @PostMapping("/create-admin-account")
-    public ResponseEntity<String> createAdminAccount(@RequestBody AccountCreateDTO accountCreateDTO) {
-        accountManagementService.createAccount(accountCreateDTO);
-        return ResponseEntity.ok("Account created successfully.");
+    public ResponseEntity<String> createAdminAccount(@RequestBody AdminAccountCreateDTO adminCreateDTO) {
+        accountManagementService.createAdminAccount(adminCreateDTO);
+        return ResponseEntity.ok("New Admin account created successfully.");
     }
 
     @GetMapping("/get-user-info/{identity}")

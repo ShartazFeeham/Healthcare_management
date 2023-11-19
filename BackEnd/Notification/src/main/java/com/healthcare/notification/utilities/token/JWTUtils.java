@@ -64,6 +64,8 @@ public class JWTUtils {
      */
     public static List<String> extractUserRoles(String token) {
         Claims claims = Jwts.parser().setSigningKey(TokenConstants.TOKEN_SECRET).parseClaimsJws(token).getBody();
-        return  (List<String>) claims.get("roles");
+        @SuppressWarnings("unchecked") // Suppress warning for this specific cast
+        List<String> roles = (List<String>) claims.get("roles");
+        return roles;
     }
 }

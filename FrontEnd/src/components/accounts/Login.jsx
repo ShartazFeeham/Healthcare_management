@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -14,14 +14,79 @@ import {
   Col,
 } from "reactstrap";
 import { useState } from "react";
+import { endPoints } from "scripts/constants";
+import getDeviceCode from "scripts/firebasesetup";
+import AxiosInstance from "scripts/axioInstance";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+  const [otp, setOtp] = useState();
+  const [warning, setWarning] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [timer, setTimer] = useState(30);
 
-  const handleLogin = () => {};
+  const handleSendOTP = () => {
+    const url = "http://localhost:5100/access/generate-otp/" + email;
+    AxiosInstance.post(url, "")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        setWarning(error.response.data.message);
+      });
+    setIsOtpSent(true);
+    const countdown = setInterval(() => {
+      setTimer((prevTimer) => prevTimer - 1);
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(countdown);
+      setIsOtpSent(false);
+      setTimer(30);
+    }, 30000);
+  };
+
+  const handleLogin = () => {
+    const url = "http://localhost:5100/access/login";
+    // const deviceToken = getDeviceCode();
+    if (!email || !password) {
+      setWarning("Fill up your email and password correctly.");
+      return;
+    }
+    setWarning("");
+    let loginReq = {
+      identity: email,
+      password: password,
+      otp: !otp || otp == 0 ? 0 : otp,
+    };
+    AxiosInstance.post(url, loginReq)
+      .then((result) => {
+        if (result.status === 200) {
+          const token = result.data.bearerToken;
+          const role = result.data.role;
+          const email = result.data.email;
+          const username = result.data.username;
+          localStorage.setItem("token", token);
+          localStorage.setItem("role", role);
+          localStorage.setItem("email", email);
+          localStorage.setItem("username", username);
+
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status == 406) {
+          setShowOtp(true);
+        }
+        setWarning(error.response.data.message);
+      });
+  };
 
   return (
     <>
@@ -48,6 +113,7 @@ const Login = () => {
               </div>
             ) : null}
             <Form role="form">
+              {warning && <div className="alert alert-danger">{warning}</div>}
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -64,6 +130,7 @@ const Login = () => {
                   />
                 </InputGroup>
               </FormGroup>
+
               <FormGroup>
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -80,7 +147,7 @@ const Login = () => {
                   />
                 </InputGroup>
               </FormGroup>
-              <div className="custom-control custom-control-alternative custom-checkbox">
+              <div className="custom-control custom-control-alternative custom-checkbox mb-3">
                 <input
                   className="custom-control-input"
                   id="customCheckRegister"
@@ -94,6 +161,37 @@ const Login = () => {
                   <span className="text-muted">Show password</span>
                 </label>
               </div>
+              {showOtp && (
+                <FormGroup className="mb-3">
+                  <InputGroup className="input-group-alternative">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>
+                        <i className="ni ni-key-25" />
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      placeholder="OTP"
+                      type="number"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                    />
+                  </InputGroup>
+                  <div className="text-left">
+                    <Button
+                      className="mt-3"
+                      color="primary"
+                      type="button"
+                      onClick={handleSendOTP}
+                      disabled={isOtpSent}
+                    >
+                      {isOtpSent
+                        ? `OTP Sent. Resend OTP in ${timer}s`
+                        : "Send OTP"}
+                    </Button>
+                  </div>
+                </FormGroup>
+              )}
+
               <div className="text-right">
                 <Button
                   className="my-2"

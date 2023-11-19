@@ -14,6 +14,7 @@ import {
   CustomInput,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import AxiosInstance from "scripts/axioInstance";
 
 const inputStyle = {
   color: "#555",
@@ -29,9 +30,64 @@ const RegisterPatient = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [gender, setGender] = useState("");
   const [age, setAge] = useState(null);
+  const [warning, setWarning] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleRegister = () => {
-    // Add your registration logic here
+    setWarning("");
+    setSuccess("");
+    const validationResult = validateData();
+    if (!validationResult.isValid) {
+      setWarning(validationResult.error);
+      return;
+    }
+    const url = "http://localhost:7100/patients/register";
+
+    const requestBody = {
+      firstName,
+      lastName,
+      email,
+      gender,
+      password,
+      age: parseInt(age),
+    };
+
+    AxiosInstance.post(url, requestBody)
+      .then((response) => {
+        setSuccess(
+          response.data +
+            ". Go to login page to verify and sign into your account."
+        );
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setGender("");
+        setPassword("");
+        setConfirmPassword("");
+        setAge("");
+      })
+      .catch((error) => {
+        setWarning(error.response.data.message);
+      });
+  };
+
+  const validateData = () => {
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !gender ||
+      !age
+    ) {
+      return { isValid: false, error: "Please fill in all fields." };
+    }
+    if (password !== confirmPassword) {
+      return { isValid: false, error: "Passwords do not match." };
+    }
+
+    return { isValid: true, error: "" };
   };
 
   return (
@@ -45,6 +101,8 @@ const RegisterPatient = () => {
               </h3>
             </div>
             <Form role="form">
+              {warning && <div className="alert alert-danger">{warning}</div>}
+              {success && <div className="alert alert-success">{success}</div>}
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
