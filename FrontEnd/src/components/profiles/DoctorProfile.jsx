@@ -1,19 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { DoctorProfileDetails } from "./DoctorProfileDetails";
 import { DoctorProfileBio } from "./DoctorProfileBio";
 import doctorProfileData from "assets/data/doctorprofile/doctorProfile";
 import { DoctorProfileReviews } from "./DoctorProfileReviews";
+import AxiosInstance from "scripts/axioInstance";
 
 const DoctorProfile = () => {
-  const { doctorId } = useParams();
-
-  useEffect(() => {
-    console.log("DoctorId ID:", doctorId);
-  }, [doctorId]);
-
+  let { doctorId } = useParams();
+  const navigate = useNavigate();
   const [doctorData, setDoctorData] = useState(doctorProfileData);
+
+  const userId = localStorage.getItem("userId")
+    ? localStorage.getItem("userId")
+    : null;
+  if (doctorId === ":doctorId" && userId && userId[0] === "D") {
+    doctorId = userId;
+  } else {
+    doctorId = null;
+  }
+  useEffect(() => {
+    if (doctorId === null) {
+      return navigate("/");
+    }
+    AxiosInstance.get(`http://localhost:7200/doctors/${doctorId}/profile-info`)
+      .then((response) => {
+        console.log(response);
+        setDoctorData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, [doctorId]);
 
   return (
     <>

@@ -104,6 +104,7 @@ public class DoctorServiceImpl implements DoctorService {
 
         // Mapping fields from Doctor entity to ReadDoctorProfileDTO
         profileDTO.setDoctorId(doctor.getDoctorId());
+        profileDTO.setDoctorId(doctor.getDoctorId());
         profileDTO.setFirstName(doctor.getFirstName());
         profileDTO.setLastName(doctor.getLastName());
         profileDTO.setEmail(doctor.getEmail());

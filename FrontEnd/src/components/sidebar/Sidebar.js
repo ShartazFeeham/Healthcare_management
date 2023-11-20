@@ -36,33 +36,33 @@ var ps;
 
 const Sidebar = (props) => {
   const [collapseOpen, setCollapseOpen] = useState();
-  // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
-  // toggles collapse between opened and closed (true/false)
   const toggleCollapse = () => {
     setCollapseOpen((data) => !data);
   };
-  // closes the collapse
   const closeCollapse = () => {
     setCollapseOpen(false);
   };
-  // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
     return routes.map((prop, key) => {
-      return (
-        <NavItem key={key}>
-          <NavLink
-            to={prop.layout + prop.path}
-            tag={NavLinkRRD}
-            onClick={closeCollapse}
-          >
-            <i className={prop.icon} />
-            {prop.name}
-          </NavLink>
-        </NavItem>
-      );
+      const role = localStorage.getItem("role")
+        ? localStorage.getItem("role")
+        : "PUBLIC";
+      if (prop.role.includes(role))
+        return (
+          <NavItem key={key}>
+            <NavLink
+              to={prop.layout + prop.path}
+              tag={NavLinkRRD}
+              onClick={closeCollapse}
+            >
+              <i className={prop.icon} />
+              {prop.name}
+            </NavLink>
+          </NavItem>
+        );
     });
   };
 
@@ -87,7 +87,6 @@ const Sidebar = (props) => {
       id="sidenav-main"
     >
       <Container fluid>
-        {/* Toggler */}
         <button
           className="navbar-toggler"
           type="button"
@@ -95,7 +94,6 @@ const Sidebar = (props) => {
         >
           <span className="navbar-toggler-icon" />
         </button>
-        {/* Brand */}
         {logo ? (
           <NavbarBrand className="pt-0" {...navbarBrandProps}>
             <img
@@ -105,7 +103,6 @@ const Sidebar = (props) => {
             />
           </NavbarBrand>
         ) : null}
-        {/* User */}
         <Nav className="align-items-center d-md-none">
           <UncontrolledDropdown nav>
             <DropdownToggle nav className="nav-link-icon">
@@ -161,9 +158,7 @@ const Sidebar = (props) => {
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
-        {/* Collapse */}
         <Collapse navbar isOpen={collapseOpen}>
-          {/* Collapse header */}
           <div className="navbar-collapse-header d-md-none">
             <Row>
               {logo ? (
@@ -191,7 +186,6 @@ const Sidebar = (props) => {
               </Col>
             </Row>
           </div>
-          {/* Form */}
           <Form className="mt-4 mb-3 d-md-none">
             <InputGroup className="input-group-rounded input-group-merge">
               <Input
@@ -207,45 +201,29 @@ const Sidebar = (props) => {
               </InputGroupAddon>
             </InputGroup>
           </Form>
-
-          <Link to={"/"}>
-            <i className="ni ni-spaceship"></i> Home
-          </Link>
-          {/* Navigation */}
           <Nav navbar>{createLinks(routes)}</Nav>
-          {/* Divider */}
           <hr className="my-3" />
-          {/* Heading */}
-          <h6 className="navbar-heading text-muted">Documentation</h6>
-          {/* Navigation */}
+          <h6 className="navbar-heading text-muted">More</h6>
           <Nav className="mb-md-3" navbar>
             <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
-                <i className="ni ni-spaceship" />
-                Getting started
+              <NavLink href="#">
+                <i class="fa-solid fa-info"></i>
+                About Us
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">
-                <i className="ni ni-palette" />
-                Foundation
+              <NavLink href="#">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                FAQ
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">
-                <i className="ni ni-ui-04" />
-                Components
+              <NavLink href="#">
+                <i class="fa-solid fa-file-contract"></i>
+                Terms & Conditions
               </NavLink>
             </NavItem>
           </Nav>
-          {/* <Nav className="mb-md-3" navbar>
-            <NavItem className="active-pro active">
-              <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">
-                <i className="ni ni-spaceship" />
-                Upgrade to PRO
-              </NavLink>
-            </NavItem>
-          </Nav> */}
         </Collapse>
       </Container>
     </Navbar>

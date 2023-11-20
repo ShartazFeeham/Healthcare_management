@@ -62,7 +62,7 @@ export const DoctorProfileBio = ({ doctorData }) => {
             </div>
             <div>
               <i className="ni education_hat mr-2" />@
-              {doctorData.qualifications[0].institute}
+              {doctorData.qualifications[0].institution}
             </div>
             <hr className="my-4" />
             <p>{doctorData.bio}</p>
