@@ -8,4 +8,7 @@ public class AccountLockoutException extends CustomException {
     public AccountLockoutException() {
         super("AccountLockoutException", "Account", "Your account is currently locked, verify your email to unlock it.", HttpStatus.NOT_ACCEPTABLE);
     }
+    public AccountLockoutException(String message){
+        super("AccountLockoutException", "Account", message, HttpStatus.FORBIDDEN);
+    }
 }

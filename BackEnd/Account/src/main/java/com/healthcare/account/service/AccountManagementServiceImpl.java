@@ -42,6 +42,9 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         newAccount.setPassword(passwordEncoder.encode(accountCreateDTO.getPassword()));
         newAccount.setRegisterDate(LocalDate.now());
         newAccount.setAccountLocked(true);
+        if(accountCreateDTO.getUserId().startsWith("D")){
+            newAccount.setAccountDeactivated(true);
+        }
 
         if(newAccount.getUserId().startsWith("P")) newAccount.setRole(Role.PATIENT);
         else if(newAccount.getUserId().startsWith("D")) newAccount.setRole(Role.DOCTOR);

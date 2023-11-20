@@ -1,15 +1,21 @@
 package com.healthcare.account.service;
 
 import com.healthcare.account.entity.Account;
+import com.healthcare.account.entity.Role;
 import com.healthcare.account.exception.*;
+import com.healthcare.account.model.ReadForListDTO;
+import com.healthcare.account.model.UserMinimalInfoDTO;
 import com.healthcare.account.network.DeviceInfoSender;
 import com.healthcare.account.network.EmailSender;
+import com.healthcare.account.repository.AdminAccountRepository;
 import com.healthcare.account.service.iservice.AccessService;
 import com.healthcare.account.model.LoginRequestDTO;
 import com.healthcare.account.model.LoginResponseDTO;
 import com.healthcare.account.repository.AccountRepository;
 import com.healthcare.account.utilities.token.JWTUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,13 +24,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
-import javax.security.auth.login.AccountLockedException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class AccessServiceImpl implements AccessService, UserDetailsService {
@@ -33,6 +38,7 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
     private final DeviceInfoSender deviceInfoSender;
+    private final AdminAccountRepository adminAccountRepository;
 
     @Override
     public Account findByIdentity(String identity) {
@@ -43,7 +49,7 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     }
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO loginDTO) throws AccountNotFoundException, PasswordMismatchException, AccountLockedException {
+    public LoginResponseDTO login(LoginRequestDTO loginDTO) throws AccountNotFoundException, PasswordMismatchException {
         Account account = findByIdentity(loginDTO.getIdentity());
 
         if(!passwordEncoder.matches(loginDTO.getPassword(), account.getPassword())){
@@ -111,6 +117,10 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
             accountRepository.save(account);
         }
 
+        if(account.isAccountDeactivated()){
+            throw new AccountLockoutException("Your account is deactivated. An admin will check you account and verify, then you can login.");
+        }
+
         return response;
     }
 
@@ -136,6 +146,44 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
     @Override
     public Boolean checkEmailAvailability(String email) {
         return accountRepository.findByEmail(email).isEmpty();
+    }
+
+    @Override
+    public List<ReadForListDTO> getDoctors(int page, int size) {
+        Page<Account> doctorsPage = accountRepository.findByRole(Role.DOCTOR, PageRequest.of(page, size));
+
+        return doctorsPage.getContent().stream()
+                .map(this::convertToDoctorsReadDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReadForListDTO> getPatients(int page, int size) {
+        Page<Account> doctorsPage = accountRepository.findByRole(Role.PATIENT, PageRequest.of(page, size));
+
+        return doctorsPage.getContent().stream()
+                .map(this::convertToDoctorsReadDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserMinimalInfoDTO getMinimalInfo(String userId) {
+        var result = adminAccountRepository.findById(userId);
+        if(result.isEmpty()) throw new AccountNotFoundException(userId);
+        UserMinimalInfoDTO minimalInfo = new UserMinimalInfoDTO();
+        minimalInfo.setPhotoURL(null);
+        minimalInfo.setFirstName(result.get().getFirstName());
+        minimalInfo.setLastName(result.get().getLastName());
+        return minimalInfo;
+    }
+
+    private ReadForListDTO convertToDoctorsReadDTO(Account account) {
+        return ReadForListDTO.builder()
+                .userId(account.getUserId())
+                .email(account.getEmail())
+                .registerDate(account.getRegisterDate())
+                .deactivation(account.isAccountDeactivated())
+                .build();
     }
 
     @Override

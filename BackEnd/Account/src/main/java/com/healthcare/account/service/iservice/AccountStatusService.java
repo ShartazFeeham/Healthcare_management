@@ -1,11 +1,12 @@
 package com.healthcare.account.service.iservice;
 
 import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.model.ReadForListDTO;
 
 public interface AccountStatusService {
     // User controllable
     void toggleTwoFactor(String userId, Boolean status) throws AccountNotFoundException;
-    void toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException;
+    ReadForListDTO toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException;
 
     // Controlled by server
     void suspendAccount(String userId, boolean status) throws AccountNotFoundException;

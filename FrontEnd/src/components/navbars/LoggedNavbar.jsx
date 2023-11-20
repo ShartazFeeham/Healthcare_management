@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownItem,
@@ -15,8 +16,55 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import AxiosInstance from "scripts/axioInstance";
+import { isLogged } from "scripts/accountInfo";
 
 const LoggedNavbar = (props) => {
+  const navigate = useNavigate();
+  if (!isLogged) {
+    navigate("/");
+  }
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    photoURL: null,
+  });
+
+  useEffect(() => {
+    let url;
+    const userId = localStorage.getItem("userId");
+    if (userId[0] === "P")
+      url = "http://localhost:7100/patients/minimal-info/" + userId;
+    else if (userId[0] === "D")
+      url = "http://localhost:7200/doctors/minimal-info/" + userId;
+    else url = "http://localhost:5100/access/minimal-info/" + userId;
+    AxiosInstance.get(url)
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []);
+
+  const renderUserPhoto = () => {
+    if (userData.photoURL) {
+      return (
+        <span className="avatar avatar-sm rounded-circle">
+          <img alt="User" src={userData.photoURL} />
+        </span>
+      );
+    } else {
+      return (
+        <span className="avatar avatar-sm rounded-circle">
+          <FontAwesomeIcon icon={faUserCircle} />
+        </span>
+      );
+    }
+  };
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -43,42 +91,21 @@ const LoggedNavbar = (props) => {
             <UncontrolledDropdown nav>
               <DropdownToggle className="pr-0" nav>
                 <Media className="align-items-center">
-                  <span className="avatar avatar-sm rounded-circle">
-                    <img
-                      alt="..."
-                      src={require("../../assets/img/theme/team-4-800x800.jpg")}
-                    />
-                  </span>
+                  {renderUserPhoto()}
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                      {userData.firstName} {userData.lastName}
                     </span>
                   </Media>
                 </Media>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-arrow" right>
-                <DropdownItem className="noti-title" header tag="div">
-                  <h6 className="text-overflow m-0">Welcome!</h6>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-single-02" />
-                  <span>My profile</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-settings-gear-65" />
+                <DropdownItem to="/health/settings" tag={Link}>
+                  <i class="fa fa-cog" aria-hidden="true"></i>
                   <span>Settings</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-calendar-grid-58" />
-                  <span>Activity</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-support-16" />
-                  <span>Support</span>
-                </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
-                  <i className="ni ni-user-run" />
+                <DropdownItem to="/health/logout" tag={Link}>
+                  <i class="fa fa-sign-out" aria-hidden="true"></i>
                   <span>Logout</span>
                 </DropdownItem>
               </DropdownMenu>

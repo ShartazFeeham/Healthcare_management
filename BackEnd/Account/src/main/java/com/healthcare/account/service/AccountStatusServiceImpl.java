@@ -2,6 +2,7 @@ package com.healthcare.account.service;
 
 import com.healthcare.account.entity.Account;
 import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.model.ReadForListDTO;
 import com.healthcare.account.service.iservice.AccountStatusService;
 import com.healthcare.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
     }
 
     @Override
-    public void toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException {
+    public ReadForListDTO toggleDeactivation(String userId, Boolean status) throws AccountNotFoundException {
         // Check if the account exists
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountNotFoundException("user ID " + userId));
@@ -35,6 +36,16 @@ public class AccountStatusServiceImpl implements AccountStatusService {
         // Toggle the deactivation status
         account.setAccountDeactivated(status);
         accountRepository.save(account);
+        return convertToDoctorsReadDTO(account);
+    }
+
+    private ReadForListDTO convertToDoctorsReadDTO(Account account) {
+        return ReadForListDTO.builder()
+                .userId(account.getUserId())
+                .email(account.getEmail())
+                .registerDate(account.getRegisterDate())
+                .deactivation(account.isAccountDeactivated())
+                .build();
     }
 
 

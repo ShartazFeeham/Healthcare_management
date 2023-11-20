@@ -55,7 +55,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/account/create-admin-account").hasAnyRole("INTERNAL", "ADMIN")
 
                             .requestMatchers(HttpMethod.PUT, "/status/toggle-two-factor/{status}").authenticated()
-                            .requestMatchers(HttpMethod.PUT, "/status/toggle-deactivation/{status}").authenticated()
+                            .requestMatchers(HttpMethod.PUT, "/status/toggle-deactivation/{status}").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.PUT, "/status/toggle-lockout/{userId}/{status}").hasAnyRole("INTERNAL", "ADMIN")
                             .requestMatchers(HttpMethod.PUT, "/status/toggle-enabling/{userId}/{status}").hasAnyRole("INTERNAL", "ADMIN")
                             .requestMatchers(HttpMethod.PUT, "/status/suspend/**").hasAnyRole("INTERNAL", "ADMIN")

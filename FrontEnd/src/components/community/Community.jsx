@@ -14,12 +14,12 @@ const Community = () => {
           style={{
             height: "100px",
             backgroundImage:
-              "url(" + require("../../assets/img/cover/health5.jpg") + ")",
+              "url(" + require("../../assets/img/cover/community1.png") + ")",
             backgroundSize: "cover",
             backgroundPosition: "center top",
           }}
         >
-          <span className="mask bg-gradient-default opacity-8" />
+          <span className="mask bg-gradient-default opacity-6" />
           <Container className="d-flex align-items-center" fluid>
             <Row>
               <h1 className="display-2 opacity-7" style={{ color: "white" }}>

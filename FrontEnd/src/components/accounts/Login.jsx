@@ -70,11 +70,11 @@ const Login = () => {
           const token = result.data.bearerToken;
           const role = result.data.role;
           const email = result.data.email;
-          const username = result.data.username;
+          const userId = result.data.userId;
           localStorage.setItem("token", token);
           localStorage.setItem("role", role);
           localStorage.setItem("email", email);
-          localStorage.setItem("username", username);
+          localStorage.setItem("userId", userId);
 
           navigate("/");
         }
@@ -118,11 +118,12 @@ const Login = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-email-83" />
+                      <i style={{ color: "#777" }} className="ni ni-email-83" />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Email"
+                    style={{ color: "#777" }}
+                    placeholder="Email or Username"
                     type="email"
                     autoComplete="new-email"
                     value={email}
@@ -135,10 +136,14 @@ const Login = () => {
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
-                      <i className="ni ni-lock-circle-open" />
+                      <i
+                        style={{ color: "#777" }}
+                        className="ni ni-lock-circle-open"
+                      />
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    style={{ color: "#777" }}
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"

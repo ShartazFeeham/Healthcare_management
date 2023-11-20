@@ -19,6 +19,9 @@ import MedicineList from "components/pharma/MedicineList";
 import MedicineDetails from "components/pharma/MedicineDetails";
 import Community from "components/community/Community";
 import CreateDisease from "components/disease/CreateDisease";
+import DoctorsList from "components/accounts/DoctorList";
+import PatientsList from "components/accounts/PatientsList";
+import Logout from "components/accounts/Logout";
 
 var routes = [
   {
@@ -89,7 +92,7 @@ var routes = [
     name: "Create admin",
     icon: "ni ni-circle-08 text-pink",
     component: <RegisterAdmin />,
-    layout: "/public",
+    layout: "/health",
   },
   {
     path: "/register-doctor",
@@ -161,12 +164,32 @@ var routes = [
     component: <Community />,
     layout: "/health",
   },
-
   {
     path: "/diseases/create",
     name: "Diseases",
     icon: "ni ni-single-02 text-primary",
     component: <CreateDisease />,
+    layout: "/health",
+  },
+  {
+    path: "/doctors",
+    name: "Doctors List",
+    icon: "ni ni-single-02 text-primary",
+    component: <DoctorsList />,
+    layout: "/health",
+  },
+  {
+    path: "/patients",
+    name: "Patients List",
+    icon: "ni ni-single-02 text-primary",
+    component: <PatientsList />,
+    layout: "/health",
+  },
+  {
+    path: "/logout",
+    name: "Sign out",
+    icon: "ni ni-single-02 text-primary",
+    component: <Logout />,
     layout: "/health",
   },
 ];

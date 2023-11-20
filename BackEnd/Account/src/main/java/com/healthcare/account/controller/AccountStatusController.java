@@ -1,6 +1,7 @@
 package com.healthcare.account.controller;
 
 import com.healthcare.account.exception.AccountNotFoundException;
+import com.healthcare.account.model.ReadForListDTO;
 import com.healthcare.account.service.iservice.AccountStatusService;
 import com.healthcare.account.utilities.token.IDExtractor;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,9 @@ public class AccountStatusController {
         return ResponseEntity.ok("Two-factor authentication status updated successfully.");
     }
 
-    @PutMapping("/toggle-deactivation/{status}")
-    public ResponseEntity<String> toggleDeactivation(@PathVariable Boolean status) throws AccountNotFoundException {
-        accountStatusService.toggleDeactivation(IDExtractor.getUserID(), status);
-        return ResponseEntity.ok("Account deactivation status updated successfully.");
+    @PutMapping("/toggle-deactivation/{userId}/{status}")
+    public ResponseEntity<ReadForListDTO> toggleDeactivation(@PathVariable String userId, @PathVariable Boolean status) throws AccountNotFoundException {
+        return ResponseEntity.ok(accountStatusService.toggleDeactivation(userId, status));
     }
 
     // Server controlled
