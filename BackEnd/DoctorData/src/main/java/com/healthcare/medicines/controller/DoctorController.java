@@ -4,6 +4,7 @@ import com.healthcare.medicines.exceptions.AccessMismatchException;
 import com.healthcare.medicines.exceptions.ItemNotFoundException;
 import com.healthcare.medicines.models.*;
 import com.healthcare.medicines.service.interfaces.DoctorService;
+import com.healthcare.medicines.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,16 @@ public class DoctorController {
         return ResponseEntity.ok(profileInfo);
     }
 
-    @PutMapping("/{userId}/update")
-    public ResponseEntity<String> updateDoctorProfile(@PathVariable String userId, @RequestBody UpdateDoctorProfileDTO updateDoctorProfileDTO)
+    @GetMapping("/existing-edit-data")
+    public ResponseEntity<DoctorEditExistingDTO> getEditExistingInfo() throws ItemNotFoundException {
+        DoctorEditExistingDTO profileInfo = doctorService.editExisting();
+        return ResponseEntity.ok(profileInfo);
+    }
+
+    @PutMapping("/edit-profile")
+    public ResponseEntity<String> updateDoctorProfile(@RequestBody UpdateDoctorProfileDTO updateDoctorProfileDTO)
             throws AccessMismatchException, ItemNotFoundException {
-        doctorService.update(userId, updateDoctorProfileDTO);
+        doctorService.update(IDExtractor.getUserID(), updateDoctorProfileDTO);
         return ResponseEntity.ok("Doctor profile updated successfully");
     }
 

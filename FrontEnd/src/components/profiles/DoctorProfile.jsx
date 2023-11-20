@@ -12,14 +12,16 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const [doctorData, setDoctorData] = useState(doctorProfileData);
 
+  console.log(doctorId);
+
   const userId = localStorage.getItem("userId")
     ? localStorage.getItem("userId")
     : null;
-  if (doctorId === ":doctorId" && userId && userId[0] === "D") {
-    doctorId = userId;
-  } else {
-    doctorId = null;
+  if (doctorId === ":doctorId") {
+    if (userId && userId[0] === "D") doctorId = userId;
+    else doctorId = null;
   }
+  console.log(doctorId);
   useEffect(() => {
     if (doctorId === null) {
       return navigate("/");
@@ -51,7 +53,9 @@ const DoctorProfile = () => {
           <Container className="d-flex align-items-center" fluid>
             <Row>
               <Col lg="7" md="10">
-                <h1 className="display-2 text-white">Dr. Meherab Hasan</h1>
+                <h1 className="display-2 text-white">
+                  {doctorData.firstName + " " + doctorData.lastName}
+                </h1>
                 <p className="text-white mt-0 mb-5">
                   Explore our doctor's extensive profile, bio, specialization,
                   years of experience, and convenient telemedicine services.

@@ -23,7 +23,7 @@ public class CreateDoctorAccountDTO {
     private String nid;
     private String password;
     private String phoneNumber;
-    private MultipartFile photo;
+    private String photo;
     private List<Qualification> qualifications;
     private String residence;
     private String specialization;

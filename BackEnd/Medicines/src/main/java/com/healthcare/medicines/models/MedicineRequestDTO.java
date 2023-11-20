@@ -19,5 +19,5 @@ public class MedicineRequestDTO {
     private String manufacturer;
     private String nationalDrugCode;
     private String expirationDate;
-    private MultipartFile photo;
+    private String photo;
 }

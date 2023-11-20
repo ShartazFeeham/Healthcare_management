@@ -11,4 +11,5 @@ public interface DoctorService {
     public void update(String userId, UpdateDoctorProfileDTO updateDoctorProfileDTO) throws AccessMismatchException, ItemNotFoundException;
     public void delete(String userId) throws ItemNotFoundException;
     UserMinimalInfoDTO getUserMinimalInfo(String userId) throws ItemNotFoundException;
+    DoctorEditExistingDTO editExisting() throws ItemNotFoundException;
 }

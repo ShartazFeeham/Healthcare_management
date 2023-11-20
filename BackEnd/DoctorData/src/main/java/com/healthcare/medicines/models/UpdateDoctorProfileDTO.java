@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -19,7 +20,7 @@ public class UpdateDoctorProfileDTO {
     private String residence;
     private String bio;
     private Integer experience;
-    private File photo;
+    private String photo;
     private List<Qualification> qualifications;
     private List<Certification> certifications;
 }

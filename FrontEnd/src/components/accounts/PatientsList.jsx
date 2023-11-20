@@ -63,7 +63,7 @@ const PatientsList = () => {
         style={{
           minHeight: "150px",
           backgroundImage:
-            "url(" + require("../../assets/img/cover/patient1.png") + ")",
+            "url(" + require("../../assets/img/cover/patient3.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Row,
@@ -23,9 +23,14 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { medicineData } from "assets/data/medicine/editMedData";
+import AxiosInstance from "scripts/axioInstance";
+import PhotoUpload from "scripts/PhotoUpload";
 
 const UpdateMedicine = () => {
   const { medId } = useParams();
+  const navigate = useNavigate();
+
+  const [data, setData] = useState({});
 
   const [medicineId, setMedicineId] = useState("");
   const [commercialName, setCommercialName] = useState("");
@@ -40,10 +45,12 @@ const UpdateMedicine = () => {
   const [manufacturer, setManufacturer] = useState("");
   const [nationalDrugCode, setNationalDrugCode] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
   const [existingPhoto, setExistingPhoto] = useState(null);
-  const [alertMessage, setAlertMessage] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -53,25 +60,36 @@ const UpdateMedicine = () => {
   useEffect(() => {
     // Fetch and set the medicine data based on medId (in this case, we're using the provided medicineData)
     const fetchData = async () => {
-      const data = medicineData;
-      setMedicineId(medId);
-      setCommercialName(data.commercialName);
-      setMedicineName(data.medicineName);
-      setClassification(data.classification);
-      setDescription(data.description);
-      setDosageForm(data.dosageForm);
-      setStrengthVolume(data.strengthVolume);
-      setStrengthWeight(data.strengthWeight);
-      setWarnings(data.warnings);
-      setAdverseEffects(data.adverseEffects);
-      setManufacturer(data.manufacturer);
-      setNationalDrugCode(data.nationalDrugCode);
-      setExpirationDate(data.expirationDate);
-      setExistingPhoto(data.photo);
+      const url = `http://localhost:7300/medicines/${medId}`;
+      AxiosInstance.get(url)
+        .then((result) => {
+          console.log(result);
+          setData(result.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     fetchData();
   }, [medId]);
+
+  useEffect(() => {
+    setMedicineId(medId);
+    setCommercialName(data.commercialName);
+    setMedicineName(data.medicineName);
+    setClassification(data.classification);
+    setDescription(data.description);
+    setDosageForm(data.dosageForm);
+    setStrengthVolume(data.strengthVolume);
+    setStrengthWeight(data.strengthWeight);
+    setWarnings(data.warnings);
+    setAdverseEffects(data.adverseEffects);
+    setManufacturer(data.manufacturer);
+    setNationalDrugCode(data.nationalDrugCode);
+    setExpirationDate(data.expirationDate);
+    setExistingPhoto(data.photo);
+  }, [data]);
 
   const validate = () => {
     if (
@@ -104,9 +122,25 @@ const UpdateMedicine = () => {
     setIsDeleteModalOpen(!isDeleteModalOpen);
   };
 
-  function handleDeleteMedicine() {}
+  function handleDeleteMedicine() {
+    const url = `http://localhost:7300/medicines/${medId}`;
+    AxiosInstance.delete(url)
+      .then((result) => {
+        console.log(result);
+        setSuccess(result.data);
+        navigate("/common/medicines");
+      })
+      .catch((error) => {
+        console.log(error);
+        setAlertMessage(
+          "Failed to delete medicine, try again after some times."
+        );
+      });
+  }
 
   const handleupdateMedicine = () => {
+    setAlertMessage("");
+    setSuccess("");
     if (validate()) {
       const medicineData = {
         commercialName,
@@ -123,7 +157,18 @@ const UpdateMedicine = () => {
         expirationDate,
         photo: !photo ? null : photo,
       };
-      console.log("Medicine Data:", medicineData);
+      const url = `http://localhost:7300/medicines/${medId}`;
+      AxiosInstance.put(url, medicineData)
+        .then((result) => {
+          console.log(result);
+          setSuccess(result.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          setAlertMessage(
+            "Failed to update medicine, try again after some times."
+          );
+        });
     }
   };
 
@@ -170,6 +215,14 @@ const UpdateMedicine = () => {
               </CardHeader>
               <CardBody>
                 <Form>
+                  {alertMessage && (
+                    <div className="alert alert-danger" role="alert">
+                      {alertMessage}
+                    </div>
+                  )}
+                  {success && (
+                    <div className="alert alert-success">{success}</div>
+                  )}
                   <h6 className="heading-small text-muted mb-4">
                     Medicine Info
                   </h6>
@@ -457,81 +510,8 @@ const UpdateMedicine = () => {
                       </InputGroup>
                     </Col>
                   </FormGroup>
-                  <FormGroup row>
-                    <Label sm={4} for="photo">
-                      Medicine Photo:
-                    </Label>
-                    <Col sm={8}>
-                      {photo ? (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={URL.createObjectURL(photo)}
-                            alt="Selected Photo"
-                            style={{
-                              width: "150px",
-                              height: "auto",
-                              border: "1px solid #ccc",
-                              padding: "2px",
-                              marginBottom: "10px",
-                              borderRadius: "20px",
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={existingPhoto}
-                            alt="Selected Photo"
-                            style={{
-                              width: "150px",
-                              height: "auto",
-                              border: "1px solid #ccc",
-                              padding: "2px",
-                              marginBottom: "10px",
-                              borderRadius: "20px",
-                            }}
-                          />
-                        </div>
-                      )}
-                      <InputGroup className="input-group-alternative">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="ni ni-image" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="file"
-                          id="photo"
-                          accept="image/*"
-                          onChange={handlePhotoUpload}
-                          style={{ display: "none" }}
-                        />
-
-                        <label
-                          htmlFor="photo"
-                          style={{
-                            border: "1px solid #ccc",
-                            display: "inline-block",
-                            padding: "6px 12px",
-                            cursor: "pointer",
-                            backgroundColor: "#f9f9f9",
-                            borderRadius: "4px",
-                            transition: "background-color 0.3s",
-                          }}
-                        >
-                          {photo ? "Change Photo" : "Upload your photo"}
-                        </label>
-                        <div
-                          className="file-name"
-                          style={{
-                            marginLeft: "5px",
-                            marginTop: "5px",
-                            color: "#555",
-                            fontSize: "14px",
-                          }}
-                        ></div>
-                      </InputGroup>
-                    </Col>
+                  <FormGroup row className="justify-content-center">
+                    <PhotoUpload url={photo} setUrl={setPhoto} />
                   </FormGroup>
                 </Form>
                 <CardFooter

@@ -66,6 +66,7 @@ public class MedicineServiceImpl implements MedicineService {
         medicine.setAdverseEffects(medicineRequestDTO.getAdverseEffects());
         medicine.setManufacturer(medicineRequestDTO.getManufacturer());
         medicine.setNationalDrugCode(medicineRequestDTO.getNationalDrugCode());
+        medicine.setPhotoUrl(medicineRequestDTO.getPhoto());
 
         // Expected expiration date format is in "yyyy-MM-dd"
         if (medicineRequestDTO.getExpirationDate() != null) {

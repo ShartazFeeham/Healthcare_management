@@ -7,8 +7,5 @@ import java.util.List;
 
 public interface DoctorRepository extends JpaRepository<Doctor, String> {
     List<Doctor> findBySpecializationsContainingIgnoreCase(String specialization);
-
-    List<Doctor> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrDoctorIdContainingIgnoreCase(String key, String key1, String key2);
-
     long countByUserIdStartingWith(String idPattern);
 }

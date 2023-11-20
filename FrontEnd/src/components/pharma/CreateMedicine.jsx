@@ -15,9 +15,10 @@ import {
   InputGroupText,
   Button,
   CustomInput,
-  Modal,
   Label,
 } from "reactstrap";
+import PhotoUpload from "scripts/PhotoUpload";
+import AxiosInstance from "scripts/axioInstance";
 
 const CreateMedicine = () => {
   const [commercialName, setCommercialName] = useState("");
@@ -32,8 +33,9 @@ const CreateMedicine = () => {
   const [manufacturer, setManufacturer] = useState("");
   const [nationalDrugCode, setNationalDrugCode] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
@@ -57,10 +59,6 @@ const CreateMedicine = () => {
       !photo
     ) {
       setAlertMessage("Please fill in all fields.");
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
       return false;
     }
     setAlertMessage(null);
@@ -68,6 +66,12 @@ const CreateMedicine = () => {
   };
 
   const handleCreateMedicine = () => {
+    setSuccess("");
+    setAlertMessage("");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     if (validate()) {
       const medicineData = {
         commercialName,
@@ -84,7 +88,17 @@ const CreateMedicine = () => {
         expirationDate,
         photo,
       };
-      console.log("Medicine Data:", medicineData);
+
+      const url = "http://localhost:7300/medicines";
+      AxiosInstance.post(url, medicineData)
+        .then((result) => {
+          setSuccess(
+            "Medicine created! Go back to medicine list to see details."
+          );
+        })
+        .catch((error) => {
+          setAlertMessage(error.response.data.message);
+        });
     }
   };
 
@@ -112,7 +126,7 @@ const CreateMedicine = () => {
                     <h3 className="mb-0">
                       <b>CREATE A NEW MEDICINE</b>
                     </h3>
-                    <Link to={"/health/medicines"}>
+                    <Link to={"/common/medicines"}>
                       <b>Go back to medicines list</b>
                     </Link>
                   </Col>
@@ -127,6 +141,9 @@ const CreateMedicine = () => {
                     <div className="alert alert-danger" role="alert">
                       {alertMessage}
                     </div>
+                  )}
+                  {success && (
+                    <div className="alert alert-success">{success}</div>
                   )}
                   <FormGroup row>
                     <Label sm={4} for="commercialName">
@@ -376,66 +393,8 @@ const CreateMedicine = () => {
                       </InputGroup>
                     </Col>
                   </FormGroup>
-                  <FormGroup row>
-                    <Label sm={4} for="photo">
-                      Medicine Photo:
-                    </Label>
-                    <Col sm={8}>
-                      {photo ? (
-                        <div style={{ textAlign: "center" }}>
-                          <img
-                            src={URL.createObjectURL(photo)}
-                            alt="Selected Photo"
-                            style={{
-                              width: "150px",
-                              height: "auto",
-                              border: "1px solid #ccc",
-                              padding: "2px",
-                              marginBottom: "10px",
-                              borderRadius: "20px",
-                            }}
-                          />
-                        </div>
-                      ) : null}
-                      <InputGroup className="input-group-alternative">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="ni ni-image" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="file"
-                          id="photo"
-                          accept="image/*"
-                          onChange={handlePhotoUpload}
-                          style={{ display: "none" }}
-                        />
-
-                        <label
-                          htmlFor="photo"
-                          style={{
-                            border: "1px solid #ccc",
-                            display: "inline-block",
-                            padding: "6px 12px",
-                            cursor: "pointer",
-                            backgroundColor: "#f9f9f9",
-                            borderRadius: "4px",
-                            transition: "background-color 0.3s",
-                          }}
-                        >
-                          {photo ? "Change Photo" : "Upload your photo"}
-                        </label>
-                        <div
-                          className="file-name"
-                          style={{
-                            marginLeft: "5px",
-                            marginTop: "5px",
-                            color: "#555",
-                            fontSize: "14px",
-                          }}
-                        ></div>
-                      </InputGroup>
-                    </Col>
+                  <FormGroup className="justify-content-center">
+                    <PhotoUpload url={photo} setUrl={setPhoto} />
                   </FormGroup>
                   <Button color="primary" onClick={handleCreateMedicine}>
                     Create Medicine

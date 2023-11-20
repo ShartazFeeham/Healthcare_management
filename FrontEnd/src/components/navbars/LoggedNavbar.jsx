@@ -35,6 +35,7 @@ const LoggedNavbar = (props) => {
   useEffect(() => {
     let url;
     const userId = localStorage.getItem("userId");
+    if (userId === null) return;
     if (userId[0] === "P")
       url = "http://localhost:7100/patients/minimal-info/" + userId;
     else if (userId[0] === "D")

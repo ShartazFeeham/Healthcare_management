@@ -20,9 +20,10 @@ import {
 } from "reactstrap";
 import { medicinesList } from "assets/data/medicine/medInfoList";
 import { Link } from "react-router-dom";
+import AxiosInstance from "scripts/axioInstance";
 
 const MedicineList = () => {
-  const [medicines, setMedicines] = useState(medicinesList.data);
+  const [medicines, setMedicines] = useState([]);
   const [totalItems] = useState(medicinesList.size);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterPath, setFilterPath] = useState("");
@@ -33,17 +34,31 @@ const MedicineList = () => {
   const [manufacturerFilter, setManufacturerFilter] = useState("");
 
   const itemsPerPage = 10;
+  const url = "http://localhost:7300/";
 
   useEffect(() => {
-    const path = `medicines/filter?sort=${sortType}&expiration=${expirationFilter}&manufacturer=${
+    setSortType("none");
+    setExpirationFilter("all");
+  }, []);
+
+  useEffect(() => {
+    const path = `medicines?sort=${sortType.toUpperCase()}&expiration=${expirationFilter.toUpperCase()}&manufacturer=${
       manufacturerFilter || "null"
     }`;
-    setFilterPath(path);
+    setFilterPath(url + path);
   }, [sortType, expirationFilter, manufacturerFilter]);
 
-  const handleFilter = () => {
+  useEffect(() => {
     console.log(filterPath);
-  };
+    AxiosInstance.get(filterPath)
+      .then((result) => {
+        console.log(result);
+        setMedicines(result.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [filterPath]);
 
   const handleSearch = (e) => {
     if (e.key !== "Enter") {
@@ -149,8 +164,8 @@ const MedicineList = () => {
                       type="radio"
                       name="sortType"
                       value="medicineName"
-                      onChange={() => setSortType("medicineName")}
-                      checked={sortType === "medicineName"}
+                      onChange={() => setSortType("medicine_Name")}
+                      checked={sortType === "medicine_Name"}
                     />
                     Medicine Name
                   </Label>
@@ -161,8 +176,8 @@ const MedicineList = () => {
                       type="radio"
                       name="sortType"
                       value="dosageForm"
-                      onChange={() => setSortType("dosageForm")}
-                      checked={sortType === "dosageForm"}
+                      onChange={() => setSortType("dosage_Form")}
+                      checked={sortType === "dosage_Form"}
                     />
                     Dosage Form
                   </Label>
@@ -173,8 +188,8 @@ const MedicineList = () => {
                       type="radio"
                       name="sortType"
                       value="expirationDate"
-                      onChange={() => setSortType("expirationDate")}
-                      checked={sortType === "expirationDate"}
+                      onChange={() => setSortType("expiration_Date")}
+                      checked={sortType === "expiration_Date"}
                     />
                     Expiration Date
                   </Label>
@@ -225,8 +240,8 @@ const MedicineList = () => {
                       type="radio"
                       name="expirationFilter"
                       value="non-expired"
-                      onChange={() => setExpirationFilter("non-expired")}
-                      checked={expirationFilter === "non-expired"}
+                      onChange={() => setExpirationFilter("non_expired")}
+                      checked={expirationFilter === "non_expired"}
                     />
                     Non-Expired
                   </Label>
@@ -249,48 +264,48 @@ const MedicineList = () => {
                   textAlign: "center",
                   marginBottom: "15px",
                 }}
-              >
-                <Button color="primary" onClick={handleFilter}>
-                  Filter
-                </Button>
-              </div>
-              <Table striped responsive>
-                <tbody style={{ color: "white" }}>
-                  <tr>
-                    <th>Med ID</th>
-                    <th>C. Name</th>
-                    <th>M. Name</th>
-                    <th>Type</th>
-                    <th>Strength</th>
-                    <th>Manufacturer</th>
-                    <th>Exp. date</th>
-                  </tr>
-                  {medicines
-                    .slice(
-                      (currentPage - 1) * itemsPerPage,
-                      currentPage * itemsPerPage
-                    )
-                    .map((medicine) => (
-                      <tr key={medicine.medicineId}>
-                        <td>
-                          <i class="fa-solid fa-capsules"></i>{" "}
-                          <Link
-                            to={"/common/medicines/" + medicine.medicineId}
-                            style={{ color: "white", fontWeight: "bold" }}
-                          >
-                            {medicine.medicineId}
-                          </Link>
-                        </td>
-                        <td>{medicine.commercialName}</td>
-                        <td>{medicine.medicineName}</td>
-                        <td>{medicine.dosageForm}</td>
-                        <td>{medicine.strengthVolume}</td>
-                        <td>{medicine.manufacturer}</td>
-                        <td>{medicine.expirationDate}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
+              ></div>
+              {medicines !== null && medicines.length !== 0 ? (
+                <Table striped responsive>
+                  <tbody style={{ color: "white" }}>
+                    <tr>
+                      <th>Med ID</th>
+                      <th>C. Name</th>
+                      <th>M. Name</th>
+                      <th>Type</th>
+                      <th>Strength</th>
+                      <th>Manufacturer</th>
+                      <th>Exp. date</th>
+                    </tr>
+                    {medicines
+                      .slice(
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
+                      )
+                      .map((medicine) => (
+                        <tr key={medicine.medicineId}>
+                          <td>
+                            <i class="fa-solid fa-capsules"></i>{" "}
+                            <Link
+                              to={"/common/medicines/" + medicine.medicineId}
+                              style={{ color: "white", fontWeight: "bold" }}
+                            >
+                              {medicine.medicineId}
+                            </Link>
+                          </td>
+                          <td>{medicine.commercialName}</td>
+                          <td>{medicine.medicineName}</td>
+                          <td>{medicine.dosageForm}</td>
+                          <td>{medicine.strengthVolume}</td>
+                          <td>{medicine.manufacturer}</td>
+                          <td>{medicine.expirationDate}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              ) : (
+                ""
+              )}
               <Pagination>
                 <PaginationItem disabled={currentPage === 1}>
                   <PaginationLink
@@ -299,7 +314,7 @@ const MedicineList = () => {
                   />
                 </PaginationItem>
                 {Array.from(
-                  { length: Math.ceil(totalItems / itemsPerPage) },
+                  { length: Math.ceil(medicines.length / itemsPerPage) },
                   (_, i) => (
                     <PaginationItem key={i} active={i + 1 === currentPage}>
                       <PaginationLink onClick={() => setCurrentPage(i + 1)}>
@@ -310,7 +325,7 @@ const MedicineList = () => {
                 )}
                 <PaginationItem
                   disabled={
-                    currentPage === Math.ceil(totalItems / itemsPerPage)
+                    currentPage === Math.ceil(medicines.length / itemsPerPage)
                   }
                 >
                   <PaginationLink

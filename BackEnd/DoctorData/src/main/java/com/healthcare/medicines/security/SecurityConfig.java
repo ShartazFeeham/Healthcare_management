@@ -51,6 +51,7 @@ public class SecurityConfig {
                     auth
                             // Require authentication for these endpoints with specific HTTP methods.
                             .requestMatchers(HttpMethod.PUT, "/doctors/**").authenticated()
+                            .requestMatchers(HttpMethod.GET, "/doctors/existing-edit-data").hasRole("DOCTOR")
                             .requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN")
                             // Set any other requests to authentication.
                             .anyRequest().permitAll();

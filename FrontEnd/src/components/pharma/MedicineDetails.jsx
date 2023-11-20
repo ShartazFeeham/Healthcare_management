@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -7,6 +7,7 @@ import {
   CardBody,
   CardTitle,
   CardText,
+  Button,
 } from "reactstrap";
 import {
   FaMedkit,
@@ -19,11 +20,32 @@ import {
   FaBarcode,
   FaCalendar,
   FaImage,
+  FaWeightHanging,
+  FaFlask,
+  FaFingerprint,
+  FaKey,
 } from "react-icons/fa";
-import { medicineDetails } from "assets/data/medicine/medicineDetails";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import AxiosInstance from "scripts/axioInstance";
+import { isAdmin } from "scripts/accountInfo";
+import { isDoctor } from "scripts/accountInfo";
 
 const MedicineDetails = () => {
+  const navigate = useNavigate();
+  const [medicineDetails, setMedicineDetails] = useState({});
+  let { medId } = useParams();
+  const url = `http://localhost:7300/medicines/${medId}`;
+
+  useEffect(() => {
+    AxiosInstance.get(url)
+      .then((result) => {
+        console.log(result);
+        setMedicineDetails(result.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [medId]);
   return (
     <>
       <div>
@@ -64,7 +86,11 @@ const MedicineDetails = () => {
             >
               <CardBody>
                 <img
-                  src={medicineDetails.photo}
+                  src={
+                    medicineDetails.photoUrl !== null
+                      ? medicineDetails.photoUrl
+                      : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Medicine_Drugs.svg/2560px-Medicine_Drugs.svg.png"
+                  }
                   alt={medicineDetails.commercialName}
                   style={{
                     borderRadius: "15px",
@@ -84,9 +110,26 @@ const MedicineDetails = () => {
             >
               <CardBody>
                 <CardTitle tag="h1" style={{ color: "white" }}>
-                  Medicine Details
+                  <Row>
+                    <Col>Medicine Details</Col>
+                    <Col>
+                      {(isAdmin() || isDoctor()) && (
+                        <Button
+                          color="info"
+                          onClick={() => {
+                            navigate("/health/medicines/update/" + medId);
+                          }}
+                        >
+                          Edit Medicine
+                        </Button>
+                      )}
+                    </Col>
+                  </Row>
                 </CardTitle>
                 <CardText>
+                  <CardText>
+                    <FaKey /> <strong>Med ID:</strong> {medicineDetails.id}
+                  </CardText>
                   <CardText>
                     <FaMedkit /> <strong>Commercial Name:</strong>{" "}
                     {medicineDetails.commercialName}
@@ -101,6 +144,19 @@ const MedicineDetails = () => {
                 <CardText>
                   <FaInfo /> <strong>Description:</strong>{" "}
                   {medicineDetails.description}
+                </CardText>
+                <CardText>
+                  <FaPrescriptionBottle /> <strong>Dosage Form:</strong>{" "}
+                  {medicineDetails.dosageForm}
+                </CardText>
+                <CardText>
+                  <FaFlask /> <strong>Strength in Volume:</strong>{" "}
+                  {medicineDetails.strengthVolume}
+                </CardText>
+
+                <CardText>
+                  <FaWeightHanging /> <strong>Strength in Weight:</strong>{" "}
+                  {medicineDetails.strengthWeight}
                 </CardText>
                 <CardText>
                   <FaExclamationTriangle /> <strong>Warnings:</strong>{" "}
@@ -121,10 +177,6 @@ const MedicineDetails = () => {
                 <CardText>
                   <FaCalendar /> <strong>Expiration Date:</strong>{" "}
                   {medicineDetails.expirationDate}
-                </CardText>
-                <CardText>
-                  <FaImage /> <strong>Alert Message:</strong>{" "}
-                  {medicineDetails.alertMessage}
                 </CardText>
               </CardBody>
             </Card>

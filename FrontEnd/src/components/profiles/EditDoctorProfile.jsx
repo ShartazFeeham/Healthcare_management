@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Row,
@@ -18,8 +18,16 @@ import {
 } from "reactstrap";
 import specializationList from "assets/data/enums/specializations";
 import editDoctorProfileData from "assets/data/doctorprofile/editDoctorProfile";
+import { isDoctor } from "scripts/accountInfo";
+import AxiosInstance from "scripts/axioInstance";
+import PhotoUpload from "scripts/PhotoUpload";
 
 const EditDoctorProfile = () => {
+  const navigate = useNavigate();
+  if (!isDoctor()) navigate("/");
+  const doctorId = localStorage.getItem("userId");
+  console.log(doctorId);
+
   const textColor = {
     color: "#555",
   };
@@ -28,8 +36,7 @@ const EditDoctorProfile = () => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [specialization, setSpecialization] = useState("");
-  const [photo, setPhoto] = useState(null);
-  const [existingPhoto, setExistingPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
   const [residence, setResidence] = useState("");
   const [bio, setBio] = useState("");
   const [experience, setExperience] = useState(null);
@@ -46,9 +53,24 @@ const EditDoctorProfile = () => {
 
   const [existing, setExisting] = useState();
   const [spectList, setSpectList] = useState([]);
+  const [success, setSuccess] = useState("");
+  const [warning, setWarning] = useState("");
 
   useEffect(() => {
-    setExisting(editDoctorProfileData);
+    if (doctorId === null) {
+      return navigate("/");
+    }
+    AxiosInstance.get(`http://localhost:7200/doctors/existing-edit-data`)
+      .then((response) => {
+        console.log(response);
+        setExisting(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, [doctorId]);
+
+  useEffect(() => {
     setSpectList(specializationList);
   }, []);
 
@@ -67,7 +89,7 @@ const EditDoctorProfile = () => {
         setSpecialization(existing.specialization);
       }
       if (existing.photo !== null) {
-        setExistingPhoto(existing.photo);
+        setPhoto(existing.photo);
       }
       if (existing.residence !== null) {
         setResidence(existing.residence);
@@ -85,8 +107,8 @@ const EditDoctorProfile = () => {
         setExperience(existing.experience);
       }
       if (existing.specialistList !== null) {
-        setSpecialistList(existing.specialization);
-        const count = existing.specialization
+        setSpecialistList(existing.specializations);
+        const count = existing.specializations
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s.length > 0).length;
@@ -95,12 +117,6 @@ const EditDoctorProfile = () => {
       }
     }
   }, [existing]);
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    console.log(photo);
-    setPhoto(file);
-  };
 
   const handleAddQualification = () => {
     setQualifications([
@@ -266,6 +282,8 @@ const EditDoctorProfile = () => {
   };
 
   function handleUpdateProfile() {
+    setWarning("");
+    setSuccess("");
     let updatedProfileData = {
       firstName,
       lastName,
@@ -290,7 +308,18 @@ const EditDoctorProfile = () => {
         );
       }),
     };
-    console.log("Updated Profile Data:", updatedProfileData);
+    console.log(updatedProfileData);
+    AxiosInstance.put(
+      `http://localhost:7200/doctors/edit-profile`,
+      updatedProfileData
+    )
+      .then((response) => {
+        console.log(response);
+        setSuccess(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -312,7 +341,7 @@ const EditDoctorProfile = () => {
               <Container className="d-flex align-items-center" fluid>
                 <Row>
                   <Col lg="7" md="10">
-                    <h1 className="display-2 text-white">Dr. Meherab Hasan</h1>
+                    <h1 className="display-2 text-white"></h1>
                     <p className="text-white mt-0 mb-5">
                       Explore our doctor's extensive profile, bio,
                       specialization, years of experience, and convenient
@@ -335,7 +364,7 @@ const EditDoctorProfile = () => {
                         <h3 className="mb-0">
                           <b>EDIT YOUR PROFILE INFO</b>
                         </h3>
-                        <Link to={"/health/doctors/profile"}>
+                        <Link to={"/health/doctors/" + doctorId}>
                           <b>Go back to profile</b>
                         </Link>
                       </Col>
@@ -348,14 +377,29 @@ const EditDoctorProfile = () => {
                   </CardHeader>
                   <CardBody>
                     <Form>
-                      <h6 className="heading-small text-muted mb-4">
-                        Personal info
-                      </h6>
+                      {warning && (
+                        <div className="alert alert-danger">{warning}</div>
+                      )}
+                      {success && (
+                        <div className="alert alert-success">{success}</div>
+                      )}
+
                       {alertMessage && (
                         <div className="alert alert-danger" role="alert">
                           {alertMessage}
                         </div>
                       )}
+                      <h6 className="heading-small text-muted mb-4">
+                        Profile photo
+                      </h6>
+                      <Row className="justify-content-center">
+                        <FormGroup>
+                          <PhotoUpload url={photo} setUrl={setPhoto} />
+                        </FormGroup>
+                      </Row>
+                      <h6 className="heading-small text-muted mb-4">
+                        Personal info
+                      </h6>
                       <Row>
                         <Col md="6">
                           <FormGroup>
@@ -444,79 +488,7 @@ const EditDoctorProfile = () => {
                           </FormGroup>
                         </Col>
                       </Row>
-                      <FormGroup>
-                        {photo ? (
-                          <div style={{ textAlign: "center" }}>
-                            <img
-                              src={URL.createObjectURL(photo)}
-                              alt="Selected Photo"
-                              style={{
-                                width: "150px",
-                                height: "auto",
-                                border: "1px solid #ccc",
-                                padding: "2px",
-                                marginBottom: "10px",
-                                borderRadius: "20px",
-                              }}
-                            />
-                          </div>
-                        ) : (
-                          <div style={{ textAlign: "center" }}>
-                            <img
-                              src={existingPhoto}
-                              alt="Selected Photo"
-                              style={{
-                                width: "150px",
-                                height: "auto",
-                                border: "1px solid #ccc",
-                                padding: "2px",
-                                marginBottom: "10px",
-                                borderRadius: "20px",
-                              }}
-                            />
-                          </div>
-                        )}
-                        <InputGroup className="input-group-alternative">
-                          <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                              <i className="ni ni-image" style={textColor} />
-                            </InputGroupText>
-                          </InputGroupAddon>
-                          <Input
-                            type="file"
-                            id="photo"
-                            accept="image/*"
-                            onChange={handlePhotoUpload}
-                            style={{ display: "none" }}
-                          />
 
-                          <label
-                            htmlFor="photo"
-                            style={{
-                              border: "1px solid #ccc",
-                              display: "inline-block",
-                              padding: "6px 12px",
-                              cursor: "pointer",
-                              backgroundColor: "#f9f9f9",
-                              borderRadius: "4px",
-                              transition: "background-color 0.3s",
-                            }}
-                          >
-                            {photo
-                              ? "Change picture"
-                              : "Update profile picture"}
-                          </label>
-                          <div
-                            className="file-name"
-                            style={{
-                              marginLeft: "5px",
-                              marginTop: "5px",
-                              color: "#555",
-                              fontSize: "14px",
-                            }}
-                          ></div>
-                        </InputGroup>
-                      </FormGroup>
                       <Row>
                         <Col md="6">
                           <FormGroup>

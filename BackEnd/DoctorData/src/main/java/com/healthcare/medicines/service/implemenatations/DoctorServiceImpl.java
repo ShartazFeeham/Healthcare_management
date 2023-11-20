@@ -37,7 +37,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setEmail(createDoctorAccountDTO.getEmail());
         doctor.setPassword(createDoctorAccountDTO.getPassword());
         doctor.setGender(createDoctorAccountDTO.getGender());
-//        doctor.setProfilePhoto(createDoctorAccountDTO.getProfilePhoto());
+        doctor.setProfilePhoto(createDoctorAccountDTO.getPhoto());
         doctor.setBio(createDoctorAccountDTO.getBio());
         doctor.setExperience(createDoctorAccountDTO.getExperience());
         doctor.setLicense(createDoctorAccountDTO.getLicense());
@@ -103,8 +103,7 @@ public class DoctorServiceImpl implements DoctorService {
         ReadDoctorProfileDTO profileDTO = new ReadDoctorProfileDTO();
 
         // Mapping fields from Doctor entity to ReadDoctorProfileDTO
-        profileDTO.setDoctorId(doctor.getDoctorId());
-        profileDTO.setDoctorId(doctor.getDoctorId());
+        profileDTO.setDoctorId(doctor.getUserId());
         profileDTO.setFirstName(doctor.getFirstName());
         profileDTO.setLastName(doctor.getLastName());
         profileDTO.setEmail(doctor.getEmail());
@@ -136,7 +135,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctor.setResidence(updateDoctorProfileDTO.getResidence());
         doctor.setBio(updateDoctorProfileDTO.getBio());
         doctor.setExperience(updateDoctorProfileDTO.getExperience());
-        //doctor.setPhoto(updateDoctorProfileDTO.getPhoto());
+        doctor.setProfilePhoto(updateDoctorProfileDTO.getPhoto());
         doctor.getQualifications().clear();
         doctor.getCertifications().clear();
         doctor.getQualifications().addAll(updateDoctorProfileDTO.getQualifications());
@@ -160,5 +159,32 @@ public class DoctorServiceImpl implements DoctorService {
         return UserMinimalInfoDTO.builder().photoURL(patient.getProfilePhoto())
                 .firstName(patient.getFirstName()).lastName(patient.getLastName())
                 .build();
+    }
+
+    @Override
+    public DoctorEditExistingDTO editExisting() throws ItemNotFoundException {
+        String userId = IDExtractor.getUserID();
+        Doctor doctor = doctorRepository.findById(userId)
+                .orElseThrow(() -> new ItemNotFoundException("Doctor", userId));
+
+        DoctorEditExistingDTO profileDTO = new DoctorEditExistingDTO();
+
+        // Mapping fields from Doctor entity to ReadDoctorProfileDTO
+        profileDTO.setDoctorId(doctor.getUserId());
+        profileDTO.setFirstName(doctor.getFirstName());
+        profileDTO.setLastName(doctor.getLastName());
+        profileDTO.setEmail(doctor.getEmail());
+        profileDTO.setGender(doctor.getGender());
+        profileDTO.setBio(doctor.getBio());
+        profileDTO.setExperience(doctor.getExperience());
+        profileDTO.setLicense(doctor.getLicense());
+        profileDTO.setSpecializations(doctor.getSpecializations());
+        profileDTO.setQualifications(doctor.getQualifications());
+        profileDTO.setCertifications(doctor.getCertifications());
+        profileDTO.setPhoneNumber(doctor.getPhoneNumber());
+        profileDTO.setResidence(doctor.getResidence());
+        profileDTO.setPhoto(doctor.getProfilePhoto());
+
+        return profileDTO;
     }
 }

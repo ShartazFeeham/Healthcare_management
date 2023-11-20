@@ -19,14 +19,20 @@ export const DoctorProfileDetails = ({ doctorData }) => {
                 <b>DOCTOR PROFILE</b>
               </h3>
             </Col>
-            <Col className="text-right" xs="4">
-              <Link
-                to={"/health/doctors/edit-profile"}
-                className="btn btn-primary"
-              >
-                Edit profile
-              </Link>
-            </Col>
+            {doctorData &&
+            localStorage.getItem("userId") &&
+            doctorData.doctorId === localStorage.getItem("userId") ? (
+              <Col className="text-right" xs="4">
+                <Link
+                  to={"/health/doctors/edit-profile"}
+                  className="btn btn-primary"
+                >
+                  Edit profile
+                </Link>
+              </Col>
+            ) : (
+              ""
+            )}
           </Row>
         </CardHeader>
         <CardBody>
@@ -68,12 +74,12 @@ export const DoctorProfileDetails = ({ doctorData }) => {
             {doctorData.qualifications.map((qualification) => {
               return (
                 <>
-                  <i className="ni ni-hat-3" /> <b>{qualification.degree}</b>{" "}
+                  <i className="ni ni-hat-3" /> <b>{qualification.name}</b>{" "}
                   <br></br>
                   <Row>
                     <Col lg="6">
                       <i className="ni ni-building" /> Institute:{" "}
-                      {qualification.institute} <br></br>
+                      {qualification.institution} <br></br>
                     </Col>
                     <Col lg="6">
                       <i className="ni ni-calendar-grid-58" /> Year:{" "}
@@ -87,12 +93,12 @@ export const DoctorProfileDetails = ({ doctorData }) => {
             {doctorData.certifications.map((certification) => {
               return (
                 <>
-                  <i className="ni ni-badge" /> <b>{certification.degree}</b>{" "}
+                  <i className="ni ni-badge" /> <b>{certification.name}</b>{" "}
                   <br></br>
                   <Row>
                     <Col lg="6">
                       <i className="ni ni-building" /> Institute:{" "}
-                      {certification.institute} <br></br>
+                      {certification.institution} <br></br>
                     </Col>
                     <Col lg="6">
                       <i className="ni ni-calendar-grid-58" /> Year:{" "}

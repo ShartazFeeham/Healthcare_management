@@ -9,6 +9,8 @@ const getRole = () => {
 
 const isAdmin = () => {
   const role = localStorage.getItem("role");
+  console.log(role);
+  console.log(role === "ADMIN");
   return role === "ADMIN";
 };
 

@@ -1,8 +1,4 @@
 import Index from "components/examples/Index";
-import Profile from "components/examples/Profile";
-import Maps from "components/examples/Maps";
-import Tables from "components/examples/Tables";
-import Icons from "components/examples/Icons";
 import Login from "components/accounts/Login";
 import ForgottenPassword from "components/accounts/ForgottenPassword";
 import VerifyAccount from "components/accounts/VerifyAccount";
@@ -18,10 +14,10 @@ import UpdateMedicine from "components/pharma/UpdateMedicine";
 import MedicineList from "components/pharma/MedicineList";
 import MedicineDetails from "components/pharma/MedicineDetails";
 import Community from "components/community/Community";
-import CreateDisease from "components/disease/CreateDisease";
 import DoctorsList from "components/accounts/DoctorList";
 import PatientsList from "components/accounts/PatientsList";
 import Logout from "components/accounts/Logout";
+import PhotoUpload from "scripts/PhotoUpload";
 
 var routes = [
   {
@@ -123,7 +119,7 @@ var routes = [
   {
     path: "/doctors/edit-profile",
     name: "Edic Profile",
-    icon: "fas fa-user-edit text-gray",
+    icon: "fas fa-user-edit text-info",
     component: <EditDoctorProfile />,
     layout: "/health",
     role: "DOCTOR",
@@ -150,7 +146,7 @@ var routes = [
     icon: "fa-solid fa-pills text-pink",
     component: <UpdateMedicine />,
     layout: "/health",
-    role: "ADMIN DOCTOR",
+    role: "",
   },
   {
     path: "/medicines",
@@ -166,7 +162,7 @@ var routes = [
     icon: "fa-solid fa-file-prescription text-info",
     component: <MedicineDetails />,
     layout: "/common",
-    role: "ADMIN PATIENT DOCTOR PUBLIC",
+    role: "",
   },
   {
     path: "/community",
@@ -175,14 +171,6 @@ var routes = [
     component: <Community />,
     layout: "/health",
     role: "ADMIN PATIENT DOCTOR",
-  },
-  {
-    path: "/diseases/create",
-    name: "Diseases",
-    icon: "fa-solid fa-disease text-warning",
-    component: <CreateDisease />,
-    layout: "/health",
-    role: "ADMIN DOCTOR",
   },
   {
     path: "/doctors",

@@ -67,7 +67,11 @@ const FloatingImages = () => {
   `;
 
   return (
-    <div id="floating-container" className="floating-container">
+    <div
+      id="floating-container"
+      className="floating-container"
+      style={{ backgroundColor: "your-color-here" }}
+    >
       <style>{internalCSS}</style>
     </div>
   );

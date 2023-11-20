@@ -110,9 +110,7 @@ const RegisterAdmin = () => {
                     <div className="alert alert-danger">{warning}</div>
                   )}
                   {success && (
-                    <div className="alert alert-success">
-                      Account created successfully!
-                    </div>
+                    <div className="alert alert-success">{success}</div>
                   )}
                   <FormGroup>
                     <InputGroup className="input-group-alternative mb-3">
