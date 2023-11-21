@@ -18,6 +18,7 @@ import {
 } from "reactstrap";
 import specializationList from "assets/data/enums/specializations";
 import AxiosInstance from "scripts/axioInstance";
+import PhotoUpload from "scripts/PhotoUpload";
 
 const textColor = {
   color: "#555",
@@ -34,7 +35,7 @@ const RegisterDoctor = () => {
   const [gender, setGender] = useState("");
   const [specialization, setSpecialization] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date()); // Initialize with a default date
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
   const [nid, setNid] = useState("");
   const [residence, setResidence] = useState("");
   const [bio, setBio] = useState("");
@@ -130,12 +131,6 @@ const RegisterDoctor = () => {
     const selectedDate = e.target.value;
     console.log(selectedDate);
     setDateOfBirth(selectedDate);
-  };
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    console.log(photo);
-    setPhoto(file);
   };
 
   const validate = () => {
@@ -314,7 +309,7 @@ const RegisterDoctor = () => {
       bio,
       qualifications,
       certifications,
-      // photo,
+      photo,
       experience,
       license,
     };
@@ -512,60 +507,7 @@ const RegisterDoctor = () => {
                 </InputGroup>
               </FormGroup>
               <FormGroup>
-                {photo ? (
-                  <div style={{ textAlign: "center" }}>
-                    <img
-                      src={URL.createObjectURL(photo)}
-                      alt="Selected Photo"
-                      style={{
-                        width: "150px",
-                        height: "auto",
-                        border: "1px solid #ccc",
-                        padding: "2px",
-                        marginBottom: "10px",
-                        borderRadius: "20px",
-                      }}
-                    />
-                  </div>
-                ) : null}
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-image" style={textColor} />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    type="file"
-                    id="photo"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    style={{ display: "none" }}
-                  />
-
-                  <label
-                    htmlFor="photo"
-                    style={{
-                      border: "1px solid #ccc",
-                      display: "inline-block",
-                      padding: "6px 12px",
-                      cursor: "pointer",
-                      backgroundColor: "#f9f9f9",
-                      borderRadius: "4px",
-                      transition: "background-color 0.3s",
-                    }}
-                  >
-                    {photo ? "Change Photo" : "Upload your photo"}
-                  </label>
-                  <div
-                    className="file-name"
-                    style={{
-                      marginLeft: "5px",
-                      marginTop: "5px",
-                      color: "#555",
-                      fontSize: "14px",
-                    }}
-                  ></div>
-                </InputGroup>
+                <PhotoUpload url={photo} setUrl={setPhoto} />
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">

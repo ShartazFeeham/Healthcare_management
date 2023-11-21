@@ -6,7 +6,7 @@ import com.healthcare.notification.exceptions.ItemNotFoundException;
 import java.util.List;
 
 public interface NotificationService {
-    void create(Notification notification);
+    void create(Notification notification) throws ItemNotFoundException;
     List<Notification> getAllByUserId(String userId, int itemCount, int pageNo);
     void setSeen(Long notificationId, String userId) throws ItemNotFoundException, IllegalAccessException, AccessMismatchException;
     void delete(Long notificationId, String userId) throws ItemNotFoundException, AccessMismatchException;

@@ -7,6 +7,8 @@ import com.healthcare.medicines.models.MedicineRequestDTO;
 import com.healthcare.medicines.models.MedicineResponseDTO;
 import com.healthcare.medicines.repository.MedicineRepository;
 import com.healthcare.medicines.service.interfaces.FilterService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -80,17 +82,32 @@ public class FilterServiceImpl implements FilterService {
     }
 
     private List<Medicine> searchMedicines(List<Medicine> medicines, String searchText) {
-
         // Searched words set
         Set<String> words = stringToSet(searchText);
-        // Use a priority queue to maintain the order based on word matches
-        PriorityQueue<Medicine> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(medicine -> getMatchingWordCount(medicine, words)));
+
+        // Create a list to store the results
+        List<Result> results = new ArrayList<>();
+
         // Iterate through the medicines list and prioritize based on word matches
-        for (Medicine medicine : medicines) priorityQueue.offer(medicine);
-        // Convert the priority queue to a list and reverse the order to get the highest matching medicines first
-        List<Medicine> sortedMedicines = new ArrayList<>(priorityQueue);
-        Collections.reverse(sortedMedicines);
-        return sortedMedicines;
+        for (Medicine medicine : medicines) {
+            int matches = getMatchingWordCount(medicine, words);
+            if (matches > 0) {
+                results.add(new Result(matches, medicine));
+            }
+        }
+
+        // Sort the results based on match count in descending order
+        results.sort(Comparator.comparingInt(Result::getMatch).reversed());
+
+        // Create a list to store the sorted medicines
+        return results.stream().map(Result::getMedicine).collect(Collectors.toList());
+    }
+
+
+    @AllArgsConstructor @Getter
+    static class Result{
+        int match = 0;
+        Medicine medicine;
     }
 
     private Set<String> stringToSet(String text) {

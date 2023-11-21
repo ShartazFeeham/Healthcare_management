@@ -49,6 +49,7 @@ public class SecurityConfig {
                     auth
                             .requestMatchers(HttpMethod.POST, "/access/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/access/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/access//getEmail/{userId}").hasRole("INTERNAL")
 
                             .requestMatchers(HttpMethod.GET, "/account/**").authenticated()
                             .requestMatchers(HttpMethod.POST, "/account/create-account").hasRole("INTERNAL")

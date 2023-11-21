@@ -19,6 +19,7 @@ const PublicNavbar = () => {
           <NavbarBrand to="/" tag={Link}>
             <img
               alt="..."
+              style={{height: "120px"}}
               src={require("../../assets/img/brand/argon-react-white.png")}
             />
           </NavbarBrand>

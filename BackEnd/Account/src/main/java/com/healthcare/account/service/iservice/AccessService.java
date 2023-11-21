@@ -21,4 +21,5 @@ public interface AccessService {
     public List<ReadForListDTO> getDoctors(int page, int size);
     public List<ReadForListDTO> getPatients(int page, int size);
     UserMinimalInfoDTO getMinimalInfo(String userId);
+    String getEmail(String userId);
 }

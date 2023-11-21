@@ -17,7 +17,7 @@ import Community from "components/community/Community";
 import DoctorsList from "components/accounts/DoctorList";
 import PatientsList from "components/accounts/PatientsList";
 import Logout from "components/accounts/Logout";
-import PhotoUpload from "scripts/PhotoUpload";
+import DoctorDashboard from "components/doctor-dashboard/Dashboard";
 
 var routes = [
   {
@@ -32,7 +32,7 @@ var routes = [
     path: "/doctor",
     name: "Dashboard",
     icon: "fa fa-list-alt text-warning",
-    component: <Index />,
+    component: <DoctorDashboard />,
     layout: "/health",
     role: "DOCTOR",
   },

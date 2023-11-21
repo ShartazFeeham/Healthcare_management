@@ -33,7 +33,7 @@ const MedicineList = () => {
   const [expirationFilter, setExpirationFilter] = useState("all");
   const [manufacturerFilter, setManufacturerFilter] = useState("");
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 1000;
   const url = "http://localhost:7300/";
 
   useEffect(() => {
@@ -45,8 +45,14 @@ const MedicineList = () => {
     const path = `medicines?sort=${sortType.toUpperCase()}&expiration=${expirationFilter.toUpperCase()}&manufacturer=${
       manufacturerFilter || "null"
     }`;
+    setSearch("")
     setFilterPath(url + path);
-  }, [sortType, expirationFilter, manufacturerFilter]);
+  }, [sortType, expirationFilter, manufacturerFilter, currentPage]);
+
+  useEffect(() => {
+    const path = `medicines?sort=NONE&expiration=NON_EXPIRED&searchTerm=${search}`
+    setFilterPath(url + path);
+  }, [search])
 
   useEffect(() => {
     console.log(filterPath);
@@ -59,13 +65,6 @@ const MedicineList = () => {
         console.log(error);
       });
   }, [filterPath]);
-
-  const handleSearch = (e) => {
-    if (e.key !== "Enter") {
-      return;
-    }
-    console.log("Searching...");
-  };
 
   const rbcss = {
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
@@ -122,7 +121,6 @@ const MedicineList = () => {
                       }}
                       onChange={(e) => setSearch(e.target.value)}
                       value={search}
-                      onKeyDown={handleSearch}
                     />
                   </InputGroup>
                 </Col>
@@ -247,17 +245,7 @@ const MedicineList = () => {
                   </Label>
                 </div>
               </FormGroup>
-              <Row className="mb-3 justify-content-center">
-                <Col sm={8}>
-                  <Input
-                    style={{ color: "black" }}
-                    type="text"
-                    placeholder="Write a manufacturer name"
-                    onChange={(e) => setManufacturerFilter(e.target.value)}
-                    value={manufacturerFilter}
-                  />
-                </Col>
-              </Row>
+              
               <div
                 style={{
                   width: "100%",
@@ -313,16 +301,7 @@ const MedicineList = () => {
                     onClick={() => setCurrentPage(currentPage - 1)}
                   />
                 </PaginationItem>
-                {Array.from(
-                  { length: Math.ceil(medicines.length / itemsPerPage) },
-                  (_, i) => (
-                    <PaginationItem key={i} active={i + 1 === currentPage}>
-                      <PaginationLink onClick={() => setCurrentPage(i + 1)}>
-                        {i + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  )
-                )}
+              
                 <PaginationItem
                   disabled={
                     currentPage === Math.ceil(medicines.length / itemsPerPage)

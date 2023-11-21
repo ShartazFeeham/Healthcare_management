@@ -177,6 +177,12 @@ public class AccessServiceImpl implements AccessService, UserDetailsService {
         return minimalInfo;
     }
 
+    @Override
+    public String getEmail(String userId) {
+        Optional<Account> accountOp = accountRepository.findById(userId);
+        return accountOp.map(Account::getEmail).orElse(null);
+    }
+
     private ReadForListDTO convertToDoctorsReadDTO(Account account) {
         return ReadForListDTO.builder()
                 .userId(account.getUserId())

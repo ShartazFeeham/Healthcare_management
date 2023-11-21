@@ -62,4 +62,9 @@ public class AccessController {
     public ResponseEntity<UserMinimalInfoDTO> readMinimalInfo(@PathVariable String userId){
         return ResponseEntity.ok(accessService.getMinimalInfo(userId));
     }
+
+    @GetMapping("/getEmail/{userId}")
+    public ResponseEntity<String> getEmail(@PathVariable String userId){
+        return ResponseEntity.ok(accessService.getEmail(userId));
+    }
 }

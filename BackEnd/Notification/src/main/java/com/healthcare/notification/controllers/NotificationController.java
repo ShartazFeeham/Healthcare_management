@@ -21,7 +21,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @PostMapping
-    public ResponseEntity<String> createNotification(@RequestBody Notification notification) {
+    public ResponseEntity<String> createNotification(@RequestBody Notification notification) throws ItemNotFoundException {
         notificationService.create(notification);
         return new ResponseEntity<String>("Notification created", HttpStatus.CREATED);
     }

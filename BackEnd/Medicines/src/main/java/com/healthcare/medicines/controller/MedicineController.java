@@ -25,7 +25,7 @@ public class MedicineController {
     public ResponseEntity<MedicineListResponseDTO> filterMedicines(
             @RequestParam(value = "searchTerm", required = false) String searchTerm,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "size", defaultValue = "100") int size,
             @RequestParam FilterTerms sort, @RequestParam FilterTerms expiration) {
 
         MedicineListResponseDTO medicines = filterService.filter(searchTerm, sort, expiration, page, size);

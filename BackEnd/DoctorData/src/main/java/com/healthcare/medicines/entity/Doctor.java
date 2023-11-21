@@ -18,6 +18,7 @@ public class Doctor {
     private String password;
     private String gender;
     private String profilePhoto;
+    @Column(length = 1000)
     private String bio;
     private Integer experience;
     private String license;

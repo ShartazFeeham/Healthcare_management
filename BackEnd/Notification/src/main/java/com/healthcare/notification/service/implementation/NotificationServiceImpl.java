@@ -1,8 +1,10 @@
 package com.healthcare.notification.service.implementation;
 
 import com.healthcare.notification.entities.Notification;
+import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.exceptions.AccessMismatchException;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.network.EmailGetter;
 import com.healthcare.notification.repository.NotificationRepository;
 import com.healthcare.notification.service.interfaces.NotificationService;
 import com.healthcare.notification.service.interfaces.NotifyService;
@@ -25,10 +27,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final PreferenceService preferenceService;
     private final NotifyService notifyService;
+    private final EmailGetter emailGetter;
 
     @Override
-    public void create(Notification notification) {
+    public void create(Notification notification) throws ItemNotFoundException {
         notification.setTimeCreate(LocalDateTime.now());
+        verifyUser(notification.getUserId());
         notificationRepository.save(notification);
         notifyService.send(notification);
     }
@@ -89,6 +93,16 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         notificationRepository.saveAll(unseenNotifications);
+    }
+
+    private void verifyUser(String userId) throws ItemNotFoundException {
+        Preference preference = preferenceService.getByUserId(userId);
+        if(preference.getEmail() == null || preference.getEmail().isEmpty()){
+            String email = emailGetter.get(userId);
+            if(email == null) throw new ItemNotFoundException("user", userId);
+            preference.setEmail(email);
+            preferenceService.update(userId, preference);
+        }
     }
 
 }
