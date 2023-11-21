@@ -1,5 +1,6 @@
-package com.healthapp.communityservice.config;
+package com.healtcare.appointments.config;
 
+import com.healtcare.appointments.config.SpringApplicationContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

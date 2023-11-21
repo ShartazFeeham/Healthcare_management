@@ -18,6 +18,7 @@ import DoctorsList from "components/accounts/DoctorList";
 import PatientsList from "components/accounts/PatientsList";
 import Logout from "components/accounts/Logout";
 import DoctorDashboard from "components/doctor-dashboard/Dashboard";
+import CreateCall from "components/telemedicine/CreateCall";
 
 var routes = [
   {
@@ -195,6 +196,14 @@ var routes = [
     component: <Logout />,
     layout: "/health",
     role: "ADMIN PATIENT DOCTOR",
+  },
+  {
+    path: "/call/:roomId",
+    name: "Sign out",
+    icon: "fa fa-sign-out text-black",
+    component: <CreateCall />,
+    layout: "/tele",
+    role: "PATIENT DOCTOR",
   },
 ];
 export default routes;

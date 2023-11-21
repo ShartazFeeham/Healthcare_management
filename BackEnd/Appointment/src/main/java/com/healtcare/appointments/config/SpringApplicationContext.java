@@ -1,4 +1,4 @@
-package com.healthapp.communityservice.config;
+package com.healtcare.appointments.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

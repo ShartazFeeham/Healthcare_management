@@ -119,7 +119,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment getAppointment(String appointmentId) {
-        Optional<Appointment> appointment = appointmentRepository.findById(Long.valueOf(appointmentId));
+        Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
         if(appointment.isEmpty()) throw new ItemNotFoundException("appointment", appointmentId);
         return appointment.get();
     }
@@ -184,6 +184,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     // Check if an appointment with the given ID exists
     public boolean checkAppointmentValidity(String appointmentId) {
-        return appointmentRepository.existsById(Long.valueOf(appointmentId));
+        return appointmentRepository.existsById(appointmentId);
     }
 }

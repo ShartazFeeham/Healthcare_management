@@ -9,6 +9,7 @@ import Logged from "layouts/Logged";
 import Public from "layouts/Public";
 import Common from "layouts/Common";
 import { Authenticate } from "scripts/authenticate";
+import TeleBG from "layouts/TeleBG";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -20,6 +21,7 @@ root.render(
       </Route>
       <Route path="/public/*" element={<Public />} />
       <Route path="/common/*" element={<Common />} />
+      <Route path="/tele/*" element={<TeleBG />} />
       <Route path="/" element={<Navigate to="/health/index" replace />} />
       {/* I can add page not found page here! */}
       {/* <Route path="*" element={<Navigate to="/health/index" replace />} /> */}
