@@ -14,12 +14,13 @@ import {
   Col,
 } from "reactstrap";
 import { useState } from "react";
-import { endPoints } from "scripts/constants";
-import getDeviceCode from "scripts/firebasesetup";
 import AxiosInstance from "scripts/axioInstance";
+import useI18N from "components/internationalization/i18n";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { text, isBaseReady } = useI18N();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -95,21 +96,25 @@ const Login = () => {
           <CardHeader className="bg-transparent">
             <div className="text-muted text-center mt-2">
               <h3 style={{ textTransform: "uppercase" }}>
-                Login in to your account
+                {text("login-title", "Login in to your account")}
               </h3>
             </div>
           </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">
             {verified ? (
               <div className="alert alert-warning">
-                Your account needs to be verified.{" "}
+                {text("login-verify", "Your account needs to be verified")}
+                {". "}
                 <Link
                   style={{ fontWeight: "bold" }}
                   to={`/public/verify-email?email=${email}`}
                 >
-                  Click here{" "}
+                  {text(
+                    "click-here-to-verify",
+                    "click here to verify your account"
+                  )}
+                  {". "}
                 </Link>
-                to verify your account.
               </div>
             ) : null}
             <Form role="form">
@@ -123,7 +128,7 @@ const Login = () => {
                   </InputGroupAddon>
                   <Input
                     style={{ color: "#777" }}
-                    placeholder="Email or Username"
+                    placeholder={text("login-identity", "Email or User ID")}
                     type="email"
                     autoComplete="new-email"
                     value={email}
@@ -144,7 +149,7 @@ const Login = () => {
                   </InputGroupAddon>
                   <Input
                     style={{ color: "#777" }}
-                    placeholder="Password"
+                    placeholder={text("login-password", "Password")}
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     value={password}
@@ -168,7 +173,9 @@ const Login = () => {
                   className="custom-control-label"
                   htmlFor="customCheckRegister"
                 >
-                  <span className="text-muted">Show password</span>
+                  <span className="text-muted">
+                    {text("login-password-check", "Show password")}
+                  </span>
                 </label>
               </div>
               {showOtp && (
@@ -195,7 +202,8 @@ const Login = () => {
                       disabled={isOtpSent}
                     >
                       {isOtpSent
-                        ? `OTP Sent. Resend OTP in ${timer}s`
+                        ? text("login-resend-otp", "OTP Sent. Resend OTP.") +
+                          { timer }
                         : "Send OTP"}
                     </Button>
                   </div>
@@ -209,25 +217,26 @@ const Login = () => {
                   type="button"
                   onClick={handleLogin}
                 >
-                  Login
+                  {text("login", "Login")}
                 </Button>
               </div>
             </Form>
             <Link to="/public/forgotten-password">
               <small>
-                <b>Forgotten password</b>
+                <b>{text("login-forgotten", "Forgotten password")}</b>
               </small>
             </Link>
             <br></br>
             <small>
-              Not registered yet?{" "}
+              {text("login-not-registered", "Not registered yet")}
+              {" ? "}
               <Link to="/public/register-patient">
-                <b>Create patient account</b>{" "}
+                <b>{text("login-create-patient", "Create patient account")}</b>{" "}
               </Link>
-              or{" "}
+              {text("or", "or")}{" "}
               <Link to="/public/register-doctor">
                 {" "}
-                <b>Join as a doctor</b>
+                <b>{text("login-create-doctor", "Join as a doctor")}</b>
               </Link>
             </small>
           </CardBody>

@@ -3,6 +3,7 @@ import DoctorProfileAvailability from "./DoctorProfileAvailability";
 import { useEffect, useState } from "react";
 import doctorTreatmentsCount from "assets/data/doctorprofile/doctorTreatmentCount";
 import doctoReviewCount from "assets/data/doctorprofile/doctorReviewsCount";
+import Translate from "components/internationalization/Translate";
 
 export const DoctorProfileBio = ({ doctorData }) => {
   const [reviewCount, setReviewCount] = useState();
@@ -65,9 +66,10 @@ export const DoctorProfileBio = ({ doctorData }) => {
               {doctorData.qualifications[0].institution}
             </div>
             <hr className="my-4" />
-            <p>{doctorData.bio}</p>
+            <p>
+              <Translate text={doctorData.bio} />
+            </p>
           </div>
-
         </CardBody>
       </Card>
     </>

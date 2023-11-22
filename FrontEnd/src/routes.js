@@ -199,11 +199,11 @@ var routes = [
   },
   {
     path: "/call/:roomId",
-    name: "Sign out",
+    name: "Call",
     icon: "fa fa-sign-out text-black",
     component: <CreateCall />,
     layout: "/tele",
-    role: "PATIENT DOCTOR",
+    role: "",
   },
 ];
 export default routes;
