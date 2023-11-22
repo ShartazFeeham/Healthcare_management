@@ -16,7 +16,7 @@ export const DoctorProfileDetails = ({ doctorData }) => {
           <Row className="align-items-center">
             <Col xs="8">
               <h3 className="mb-0">
-                <b>DOCTOR PROFILE</b>
+                <b className="text-uppercase">Dr. {" "+doctorData.firstName + " " + doctorData.lastName} </b>
               </h3>
             </Col>
             {doctorData &&

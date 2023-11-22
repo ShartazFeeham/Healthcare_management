@@ -327,32 +327,18 @@ const EditDoctorProfile = () => {
       {existing && (
         <>
           <>
-            <div
-              className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-              style={{
-                minHeight: "400px",
-                backgroundImage:
-                  "url(" + require("../../assets/img/cover/health5.jpg") + ")",
-                backgroundSize: "cover",
-                backgroundPosition: "center top",
-              }}
-            >
-              <span className="mask bg-gradient-default opacity-6" />
-              <Container className="d-flex align-items-center" fluid>
-                <Row>
-                  <Col lg="7" md="10">
-                    <h1 className="display-2 text-white"></h1>
-                    <p className="text-white mt-0 mb-5">
-                      Explore our doctor's extensive profile, bio,
-                      specialization, years of experience, and convenient
-                      telemedicine services. Schedule an appointment and receive
-                      the finest healthcare on-site or remotely. Your well-being
-                      is our priority.
-                    </p>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
+          <div
+          className="header pb-7 pt-5 pt-lg-8 d-flex align-items-center"
+          style={{
+            backgroundImage:
+              "url(" + require("../../assets/img/cover/health5.jpg") + ")",
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            width: "100%"
+          }}
+        >
+          <span className="mask bg-gradient-default opacity-6" />
+        </div>
           </>
           <Container className="mt--7" fluid>
             <Row>

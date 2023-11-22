@@ -9,4 +9,7 @@ import lombok.Setter;
 public class AppointmentListDTO {
     String appointmentId;
     String time;
+    String userId;
+    String patientId;
+    String type;
 }

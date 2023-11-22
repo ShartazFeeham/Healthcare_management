@@ -34,17 +34,27 @@ public class AppointmentController {
         return ResponseEntity.ok("Appointment canceled successfully");
     }
 
-    @GetMapping("/complete/{patientId}")
+    @GetMapping("/complete/patient/{patientId}")
     public ResponseEntity<List<AppointmentListDTO>> getCompleteAppointmentsByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(appointmentService.getCompleteAppointmentsByPatient(patientId));
     }
 
-    @GetMapping("/upcoming/{patientId}")
+    @GetMapping("/upcoming/patient/{patientId}")
     public ResponseEntity<List<AppointmentListDTO>> getUpcomingAppointmentsByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(appointmentService.getUpcomingAppointmentsByPatient(patientId));
     }
 
-    @GetMapping("/count/{doctorId}/{date}/{shift}")
+    @GetMapping("/complete/doctor/{doctorId}")
+    public ResponseEntity<List<AppointmentListDTO>> getCompleteAppointmentsByDoctor(@PathVariable String doctorId) {
+        return ResponseEntity.ok(appointmentService.getCompleteAppointmentsByDoctor(doctorId));
+    }
+
+    @GetMapping("/upcoming/doctor/{doctorId}")
+    public ResponseEntity<List<AppointmentListDTO>> getUpcomingAppointmentsByDoctor(@PathVariable String doctorId) {
+        return ResponseEntity.ok(appointmentService.getUpcomingAppointmentsByDoctor(doctorId));
+    }
+
+    @GetMapping("/booked/{doctorId}/{date}/{shift}")
     public ResponseEntity<Integer> countBookedAppointments(@PathVariable String doctorId, @PathVariable String date, @PathVariable String shift) {
         LocalDate parsedDate = LocalDate.parse(date);
         return ResponseEntity.ok(appointmentService.countBookedAppointments(doctorId, parsedDate, shift));

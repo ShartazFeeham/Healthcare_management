@@ -46,10 +46,29 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         Optional<Schedule> scheduleOp = scheduleRepository.findByDateAndDoctorId(scheduleDate, IDExtractor.getUserID());
+
         if (scheduleOp.isEmpty()) {
             createSchedule(scheduleDTO);
         } else {
             updateSchedule(scheduleDTO, scheduleOp.get());
+        }
+    }
+
+    private void checkCapacityCap(ScheduleSetDTO scheduleDTO){
+        if(scheduleDTO.getMorningCapacity() < AppointmentConstants.MIN_CAPACITY_LIMIT
+                || scheduleDTO.getMorningCapacity() > AppointmentConstants.MAX_CAPACITY_LIMIT){
+            throw new AccessDeniedException("The allowed number of capacity per slot is " + AppointmentConstants.MIN_CAPACITY_LIMIT
+                    +" to " + AppointmentConstants.MAX_CAPACITY_LIMIT + ". You attempted " + scheduleDTO.getMorningCapacity());
+        }
+        if(scheduleDTO.getAfterNoonCapacity() < AppointmentConstants.MIN_CAPACITY_LIMIT
+                || scheduleDTO.getAfterNoonCapacity() > AppointmentConstants.MAX_CAPACITY_LIMIT){
+            throw new AccessDeniedException("The allowed number of capacity per slot is " + AppointmentConstants.MIN_CAPACITY_LIMIT
+                    +" to " + AppointmentConstants.MAX_CAPACITY_LIMIT + ". You attempted " + scheduleDTO.getAfterNoonCapacity());
+        }
+        if(scheduleDTO.getEveningCapacity() < AppointmentConstants.MIN_CAPACITY_LIMIT
+                || scheduleDTO.getEveningCapacity() > AppointmentConstants.MAX_CAPACITY_LIMIT){
+            throw new AccessDeniedException("The allowed number of capacity per slot is " + AppointmentConstants.MIN_CAPACITY_LIMIT
+                    +" to " + AppointmentConstants.MAX_CAPACITY_LIMIT + ". You attempted " + scheduleDTO.getEveningCapacity());
         }
     }
 

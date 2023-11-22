@@ -64,4 +64,8 @@ public class TimeFormatter {
         // Format the LocalDate using the formatter and return
         return date.format(formatter);
     }
+    public String getReadableDateTime(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma, d MMMM yyyy");
+        return localDateTime.format(formatter);
+    }
 }

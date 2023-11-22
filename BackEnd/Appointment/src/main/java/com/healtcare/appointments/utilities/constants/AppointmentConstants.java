@@ -9,6 +9,9 @@ public class AppointmentConstants {
     public static final long CANCEL_TIME_LIMIT_BEFORE_APPOINTMENT = 6;
     // Time (in minutes) after an appointment is placed can be cancelled.
     public static final long CANCEL_TIME_LIMIT_AFTER_REQUEST = 6;
+    // Capacity limit
+    public static final int MAX_CAPACITY_LIMIT = 25;
+    public static final int MIN_CAPACITY_LIMIT = 1;
 
     // Appointment shift names
     public static final String SHIFT1 = "morning";

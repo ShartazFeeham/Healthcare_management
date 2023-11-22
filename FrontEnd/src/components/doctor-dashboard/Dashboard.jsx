@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import { isDoctor } from "scripts/accountInfo";
 import AxiosInstance from "scripts/axioInstance";
+import Upcoming from "./Upcoming";
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -94,9 +95,9 @@ const DoctorDashboard = () => {
   return (
     <>
       <div
-        className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+        className="header pb-0 pt-5 pt-lg-8 d-flex align-items-center"
         style={{
-          minHeight: "250px",
+          minHeight: "50px",
           backgroundImage:
             "url(" + require("../../assets/img/cover/health5.jpg") + ")",
           backgroundSize: "cover",
@@ -104,16 +105,17 @@ const DoctorDashboard = () => {
         }}
       >
         <span className="mask bg-gradient-default opacity-6" />
-        <Container className="d-flex align-items-center" fluid>
-          <Row>
-            <Col lg="7" md="10">
-              <h1 className="display-2 text-white">Doctors Dashboard</h1>
-            </Col>
-          </Row>
-        </Container>
       </div>
-      <Container className="mt--7" fluid>
+      <Container className="mt--5" fluid>
+        
+      <Row className="mb-4 m-1" style={{backgroundColor: "#eee", border: "2px solid #ccc", borderRadius: "15px"}}><Upcoming /></Row>
         <Row>
+          <Col style={{backgroundColor: "#111155", borderRadius: "14px", margin: "10px"}}>
+            <h2 className="m-4 text-white">Manage your schedules</h2>
+          </Col>
+        </Row>
+        <Row>
+          
           <Col xl="4">
             <Card className="shadow">
               <CardHeader className="bg-transparent">

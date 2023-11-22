@@ -14,8 +14,10 @@ public interface AppointmentService {
     public void cancelAppointment(String appointmentId) throws AccessDeniedException;
     public List<AppointmentListDTO> getCompleteAppointmentsByPatient(String patientId);
     public List<AppointmentListDTO> getUpcomingAppointmentsByPatient(String patientId);
+    public List<AppointmentListDTO> getUpcomingAppointmentsByDoctor(String doctorId);
     public Integer countBookedAppointments(String doctorId, LocalDate date, String shift);
     public Integer countAppointmentCapacity(String doctorId, LocalDate date, String shift);
     public Integer countTotalAppointmentByDoctorId(String doctorId);
     public boolean checkAppointmentValidity(String appointmentId);
+    List<AppointmentListDTO> getCompleteAppointmentsByDoctor(String doctorId);
 }

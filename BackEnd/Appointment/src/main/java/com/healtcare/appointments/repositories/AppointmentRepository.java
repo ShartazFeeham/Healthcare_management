@@ -10,7 +10,9 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, String> {
     List<Appointment> findByDoctorIdAndDateAndShift(String doctorId, LocalDate date, String shift);
     List<Appointment> findByPatientIdAndCancelled(String patientId, boolean cancelled);
+    List<Appointment> findByDoctorIdAndCancelled(String doctorId, boolean cancelled);
     List<Appointment> findByPatientIdAndCancelledAndAppointmentTimeAfter(String patientId, boolean cancelled, LocalDateTime appointmentTime);
+    List<Appointment> findByDoctorIdAndCancelledAndAppointmentTimeAfter(String patientId, boolean cancelled, LocalDateTime appointmentTime);
     int countByDoctorIdAndDateAndShift(String doctorId, LocalDate date, String shift);
     int countByDoctorIdAndDateAndShiftAndCancelled(String doctorId, LocalDate date, String shift, boolean cancelled);
     int countByDoctorId(String doctorId);

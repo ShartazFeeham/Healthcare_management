@@ -9,6 +9,7 @@ import com.healtcare.appointments.models.AppointmentRequestDTO;
 import com.healtcare.appointments.repositories.AppointmentRepository;
 import com.healtcare.appointments.repositories.ScheduleRepository;
 import com.healtcare.appointments.services.interfaces.AppointmentService;
+import com.healtcare.appointments.services.interfaces.DelayService;
 import com.healtcare.appointments.utilities.TimeFormatter;
 import com.healtcare.appointments.utilities.constants.AppointmentConstants;
 import com.healtcare.appointments.utilities.token.IDExtractor;
@@ -18,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final ScheduleRepository scheduleRepository;
     private final TimeFormatter timeFormatter;
+    private final DelayService delayService;
 
     @Override
     public Appointment createAppointment(AppointmentRequestDTO appReq) {
@@ -46,28 +49,60 @@ public class AppointmentServiceImpl implements AppointmentService {
         Integer capacity = getCapacity(appReq.getShift(), schedule);
         // Get the type of the appointment based on slot-type(in-person/telemedicine/NA) from the schedule set by doctor
         String type = getType(schedule, appReq.getShift());
+        // Admins can only create appointment for un-registered user, as an unregistered user can not join video call
+        // so, they can only get in-person appointment, as a result, admins should be prohibited for telemedicine requests
+        if(IDExtractor.getUserID().startsWith("A") && type.equals(AppointmentConstants.TYPE3)){
+            throw new AccessDeniedException("As an admin you can only request in-person appointments for un-registered users.");
+        }
         // Find the first available slot from the appointments list.
         // Filter appointments based on cancellation status
-        List<Integer> activeSerials = appointments.stream()
-                .filter(appointment -> !appointment.isCancelled()).map(Appointment::getSerialNo).toList();
-        // Find the first missing serial ID
-        int availableSerial = IntStream.rangeClosed(1, activeSerials.size() + 1)
-                .filter(serial -> !activeSerials.contains(serial)).findFirst().orElse(activeSerials.size() + 1);
-        // If slot is full then there can be no appointments placed.
-        if(availableSerial > capacity) throw new AccessDeniedException("The requested slot is already full, try another slot or date or doctor");
-        // Get the appointment time based on serial no and time set per visit (delay is ignored)
+        List<Integer> activeSerials = appointments.stream().filter(appointment -> !appointment.isCancelled()).map(Appointment::getSerialNo).toList();
+        // Passing that list in a method and attempting changes on it will result in Immutable collection exception so need a new list.
+        List<Integer> activeSerialsCopy = new ArrayList<>(activeSerials);
+        // Get a correctly calculated serial that is not in the time already past.
+        int availableSerial = getCalculatedSerial(appReq, activeSerialsCopy, capacity);
         LocalDateTime appointmentTime = getAppointmentTime(appReq.getShift(), appReq.getDate(), availableSerial, capacity);
-
         // Create appointment, save and return
-        Appointment appointment = new Appointment(generateAppointmentId(appReq.getDoctorId(), IDExtractor.getUserID()),
-                appReq.getDoctorId(), IDExtractor.getUserID(), appReq.getDate(), shiftNoToShift(appReq.getShift()),
-                type, availableSerial, appointmentTime, LocalDateTime.now(), false);
+        String appointmentId = generateAppointmentId(IDExtractor.getUserID(), appReq.getDoctorId());
+        Appointment appointment = new Appointment(appointmentId,
+                appReq.getDoctorId(), IDExtractor.getUserID().startsWith("A") ?
+                appointmentId.substring(appointmentId.indexOf("-") + 1) : IDExtractor.getUserID(),
+                appReq.getDate(), shiftNoToShift(appReq.getShift()), type, availableSerial,
+                appointmentTime, LocalDateTime.now(), false);
+
         appointmentRepository.save(appointment);
         return appointment;
     }
 
+    // If someone asks an appointment while the slot is running (not over yet) and there are available early seals in that slot
+    // then the system may assign appointment with time that is already passed,
+    // Here is an example response
+    // "appointmentTime": "2023-11-22T08:48:00",
+    // "schedulingTime": "2023-11-22T10:09:52.2466131",
+    // to address this issue, the following method populates the serial list until the assigned serial is in correct time.
+    private int getCalculatedSerial(AppointmentRequestDTO appReq, List<Integer> activeSerials, int capacity){
+        // Find the first missing serial ID
+        int availableSerial = IntStream.rangeClosed(1, activeSerials.size() + 1)
+                .filter(serial -> !activeSerials.contains(serial)).findFirst().orElse(activeSerials.size() + 1);
+
+        // If slot is full then there can be no appointments placed.
+        if(availableSerial > capacity) throw new AccessDeniedException("The requested slot is already full, try another slot or date or doctor");
+
+        // Get the appointment time based on serial no and validate the time, if okay then return.
+        // But if the time is already passed then generate a new time with the next slot.
+        LocalDateTime appointmentTime = getAppointmentTime(appReq.getShift(), appReq.getDate(), availableSerial, capacity);
+        if(appointmentTime.isBefore(LocalDateTime.now())) {
+            activeSerials.add(availableSerial);
+            return getCalculatedSerial(appReq, activeSerials, capacity);
+        }
+        return availableSerial;
+    }
+
     private String generateAppointmentId(String patientId, String docId){
         String idPattern = docId + "-" + patientId + "-";
+        if(patientId.startsWith("A")){
+            idPattern = docId + "-" + "ExP";
+        }
         long count = appointmentRepository.countByIdStartingWith(idPattern) + 1;
         return  idPattern + count;
     }
@@ -148,8 +183,31 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         // Convert entities to DTOs
         return appointments.stream()
-                .map(appointment -> new AppointmentListDTO(appointment.getId().toString(), appointment.getAppointmentTime().toString()))
+                .filter(this::isAppointmentComplete)
+                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentListDTO> getCompleteAppointmentsByDoctor(String doctorId) {
+        // Retrieve complete (not cancelled) appointments for the patient
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndCancelled(doctorId, false);
+
+        // Convert entities to DTOs
+        return appointments.stream()
+                .filter(this::isAppointmentComplete)
+                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
+                .collect(Collectors.toList());
+    }
+
+    // Helper method to check if the appointment is before (now + delay + 20 minutes)
+    private boolean isAppointmentComplete(Appointment appointment) {
+        // Get the delay time
+        int delayTime = delayService.getDelayInMinutes(appointment.getDoctorId(), appointment.getShift(), appointment.getAppointmentTime());
+        // Calculate the threshold time (appointment time + delay time + 20 minutes)
+        LocalDateTime thresholdTime = appointment.getAppointmentTime().plusMinutes(delayTime).plusMinutes(20);
+        // Check if the appointment is before the threshold time
+        return thresholdTime.isBefore(LocalDateTime.now());
     }
 
     @Override
@@ -160,7 +218,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         // Convert entities to DTOs
         return appointments.stream()
-                .map(appointment -> new AppointmentListDTO(appointment.getId().toString(), appointment.getAppointmentTime().toString()))
+                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentListDTO> getUpcomingAppointmentsByDoctor(String doctorId) {
+        // Retrieve upcoming (not cancelled) appointments for the doctor
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndCancelledAndAppointmentTimeAfter(doctorId, false, currentDateTime);
+
+        // Convert entities to DTOs
+        return appointments.stream()
+                .map(appointment -> new AppointmentListDTO(appointment.getId(),
+                        timeFormatter.getReadableDateTime(appointment.getAppointmentTime()),
+                        appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
                 .collect(Collectors.toList());
     }
 
