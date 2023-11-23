@@ -44,7 +44,7 @@ const CreateCall = () => {
         setErrorMessage(error.response.data.message);
 
         // REMOVE THE NEXT LINE! Added for testing purpose.
-        setLoading(false);
+        // setLoading(false);
       });
   }, []);
 

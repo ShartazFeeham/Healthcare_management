@@ -15,6 +15,8 @@ import {
 import { isDoctor } from "scripts/accountInfo";
 import AxiosInstance from "scripts/axioInstance";
 import Upcoming from "./Upcoming";
+import Completed from "./Completed";
+import Delay from "./Delay";
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -109,6 +111,7 @@ const DoctorDashboard = () => {
       <Container className="mt--5" fluid>
         
       <Row className="mb-4 m-1" style={{backgroundColor: "#eee", border: "2px solid #ccc", borderRadius: "15px"}}><Upcoming /></Row>
+      <Row className="mb-4 m-1" style={{backgroundColor: "#eee", border: "2px solid #ccc", borderRadius: "15px"}}><Completed /></Row>
         <Row>
           <Col style={{backgroundColor: "#111155", borderRadius: "14px", margin: "10px"}}>
             <h2 className="m-4 text-white">Manage your schedules</h2>
@@ -366,6 +369,7 @@ const DoctorDashboard = () => {
             </Card>
           </Col>
         </Row>
+        <Row className="mb-4 m-1" style={{backgroundColor: "#eee", border: "2px solid #ccc", borderRadius: "15px"}}><Delay /></Row>
       </Container>
     </>
   );
