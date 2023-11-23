@@ -93,9 +93,34 @@ public class DelayServiceImpl implements DelayService {
         } else throw new ItemNotFoundException("shift ", shift);
 
         // If the entry time is not within the specified shift, return 0.
-        if (entryTime.toLocalTime().isBefore(shiftStartTime) || entryTime.toLocalTime().isAfter(shiftEndTime)) return 0;
+        if (entryTime.toLocalTime().isBefore(shiftStartTime) && entryTime.toLocalTime().isAfter(shiftEndTime)) return 0;
         // Return the delay in minutes.
         return delay.getDelayMinutes();
+    }
+
+    @Override
+    public Integer getCurrentDelayInMinutes(String doctorId) {
+        String shift = getShift();
+        if(shift.equals("unknown")) return 0;
+        return getDelayInMinutes(doctorId, shift, LocalDateTime.now());
+    }
+
+    private String getShift() {
+        LocalDateTime time = LocalDateTime.now();
+        if (isBetween(AppointmentConstants.MORNING_START_TIME, AppointmentConstants.MORNING_END_TIME)) {
+            return AppointmentConstants.SHIFT1;
+        } else if (isBetween(AppointmentConstants.AFTERNOON_START_TIME, AppointmentConstants.AFTERNOON_END_TIME)) {
+            return AppointmentConstants.SHIFT2;
+        } else if (isBetween(AppointmentConstants.EVENING_START_TIME, AppointmentConstants.EVENING_END_TIME)) {
+            return AppointmentConstants.SHIFT3;
+        } else {
+            return "unknown";
+        }
+    }
+
+    private boolean isBetween(LocalTime startTime, LocalTime endTime) {
+        LocalTime time = LocalTime.now();
+        return !time.isBefore(startTime) && !time.isAfter(endTime);
     }
 
     /**

@@ -28,4 +28,9 @@ public class DelayController {
     public ResponseEntity<Integer> getDelayInMinutes(@PathVariable String doctorId, @PathVariable String shift, @PathVariable LocalDateTime appointmentTime) {
         return ResponseEntity.ok(delayService.getDelayInMinutes(doctorId, shift, appointmentTime));
     }
+
+    @GetMapping("/get/{doctorId}")
+    public ResponseEntity<Integer> getDelayByDoctor(@PathVariable String doctorId){
+        return ResponseEntity.ok(delayService.getCurrentDelayInMinutes(doctorId));
+    }
 }

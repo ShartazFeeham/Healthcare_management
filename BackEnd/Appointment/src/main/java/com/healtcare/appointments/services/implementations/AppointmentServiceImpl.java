@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -175,63 +176,49 @@ public class AppointmentServiceImpl implements AppointmentService {
                 + AppointmentConstants.CANCEL_TIME_LIMIT_AFTER_REQUEST + " minutes after placing it");
     }
 
-
     @Override
     public List<AppointmentListDTO> getCompleteAppointmentsByPatient(String patientId) {
-        // Retrieve complete (not cancelled) appointments for the patient
         List<Appointment> appointments = appointmentRepository.findByPatientIdAndCancelled(patientId, false);
-
-        // Convert entities to DTOs
-        return appointments.stream()
-                .filter(this::isAppointmentComplete)
-                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
-                .collect(Collectors.toList());
+        return appointmentListToAppointmentListRead(appointments.stream()
+                .filter(this::isAppointmentComplete).toList());
     }
 
     @Override
     public List<AppointmentListDTO> getCompleteAppointmentsByDoctor(String doctorId) {
-        // Retrieve complete (not cancelled) appointments for the patient
         List<Appointment> appointments = appointmentRepository.findByDoctorIdAndCancelled(doctorId, false);
-
-        // Convert entities to DTOs
-        return appointments.stream()
-                .filter(this::isAppointmentComplete)
-                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
-                .collect(Collectors.toList());
+        return appointmentListToAppointmentListRead(appointments.stream()
+                .filter(this::isAppointmentComplete).toList());
     }
 
     // Helper method to check if the appointment is before (now + delay + 20 minutes)
     private boolean isAppointmentComplete(Appointment appointment) {
-        // Get the delay time
+        return getDelayedAdjustedTIme(appointment).plusMinutes(20).isBefore(LocalDateTime.now());
+    }
+
+    private LocalDateTime getDelayedAdjustedTIme(Appointment appointment){
         int delayTime = delayService.getDelayInMinutes(appointment.getDoctorId(), appointment.getShift(), appointment.getAppointmentTime());
-        // Calculate the threshold time (appointment time + delay time + 20 minutes)
-        LocalDateTime thresholdTime = appointment.getAppointmentTime().plusMinutes(delayTime).plusMinutes(20);
-        // Check if the appointment is before the threshold time
-        return thresholdTime.isBefore(LocalDateTime.now());
+        return appointment.getAppointmentTime().plusMinutes(delayTime);
     }
 
     @Override
     public List<AppointmentListDTO> getUpcomingAppointmentsByPatient(String patientId) {
-        // Retrieve upcoming (not cancelled) appointments for the patient
         LocalDateTime currentDateTime = LocalDateTime.now();
         List<Appointment> appointments = appointmentRepository.findByPatientIdAndCancelledAndAppointmentTimeAfter(patientId, false, currentDateTime);
-
-        // Convert entities to DTOs
-        return appointments.stream()
-                .map(appointment -> new AppointmentListDTO(appointment.getId(), timeFormatter.getReadableDateTime(appointment.getAppointmentTime()), appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
-                .collect(Collectors.toList());
+        return appointmentListToAppointmentListRead(appointments);
     }
 
     @Override
     public List<AppointmentListDTO> getUpcomingAppointmentsByDoctor(String doctorId) {
-        // Retrieve upcoming (not cancelled) appointments for the doctor
         LocalDateTime currentDateTime = LocalDateTime.now();
         List<Appointment> appointments = appointmentRepository.findByDoctorIdAndCancelledAndAppointmentTimeAfter(doctorId, false, currentDateTime);
+        return appointmentListToAppointmentListRead(appointments);
+    }
 
-        // Convert entities to DTOs
+    private List<AppointmentListDTO> appointmentListToAppointmentListRead(List<Appointment> appointments){
         return appointments.stream()
+                .sorted(Comparator.comparing(Appointment::getAppointmentTime))
                 .map(appointment -> new AppointmentListDTO(appointment.getId(),
-                        timeFormatter.getReadableDateTime(appointment.getAppointmentTime()),
+                        timeFormatter.getReadableDateTime(getDelayedAdjustedTIme(appointment)),
                         appointment.getPatientId(), appointment.getDoctorId(), appointment.getType()))
                 .collect(Collectors.toList());
     }
