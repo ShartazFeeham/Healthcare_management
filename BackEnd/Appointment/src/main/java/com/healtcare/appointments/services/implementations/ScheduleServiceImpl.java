@@ -46,6 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         Optional<Schedule> scheduleOp = scheduleRepository.findByDateAndDoctorId(scheduleDate, IDExtractor.getUserID());
+        checkCapacityCap(scheduleDTO);
 
         if (scheduleOp.isEmpty()) {
             createSchedule(scheduleDTO);

@@ -16,4 +16,5 @@ public class PostReadDTO {
     private String photo;
     private int commentsCount;
     private List<Integer> reactions;
+    private int reactionsCount;
 }

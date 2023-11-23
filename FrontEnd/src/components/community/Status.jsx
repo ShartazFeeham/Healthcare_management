@@ -1,24 +1,38 @@
 import { useEffect, useState } from "react";
-import { statusData } from "assets/data/community/status";
 import StatusItem from "./StatusItem";
 import { Row } from "reactstrap";
+import AxiosInstance from "scripts/axioInstance";
 
 const Status = () => {
   const [status, setStatus] = useState([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState([]);
+  const [isEnded, setIsEnded] = useState(false);
+  const size = 7;
+  const sortedReverse = true;
 
   useEffect(() => {
-    setTotal(10);
     setPage(0);
   }, []);
 
   useEffect(() => {
-    let data = [...status];
-    for (let i = 0; i < 5 && page * 5 + i < statusData.length; i++) {
-      data[page * 5 + i] = statusData[page * 5 + i];
-    }
-    setStatus(data);
+    AxiosInstance.get(
+      `http://localhost:7500/posts/list/Status/${page}/${size}/${sortedReverse}`, status
+    )
+      .then((response) => {
+        let list = response.data;
+        let data = [...status]
+        console.log(list);
+        let loaded = 0;
+        for (let i = 0; i < list.length; i++) {
+          data[page * size + i] = list[i];
+          loaded++;
+        }
+        if(loaded < size) setIsEnded(true)
+        setStatus(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [page]);
 
   return (
@@ -26,7 +40,7 @@ const Status = () => {
       {status.map((st) => {
         return <StatusItem st={st} />;
       })}
-      {page * 5 + 5 >= total ? (
+      {isEnded ? (
         <Row
           style={{
             justifyContent: "center",

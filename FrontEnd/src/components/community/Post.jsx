@@ -11,6 +11,11 @@ import {
   InputGroupText,
   Row,
 } from "reactstrap";
+import PhotoUpload2 from "scripts/PhotoUpload2";
+import { isDoctor } from "scripts/accountInfo";
+import { isAdmin } from "scripts/accountInfo";
+import { isPatient } from "scripts/accountInfo";
+import AxiosInstance from "scripts/axioInstance";
 
 const Post = () => {
   const [type, setType] = useState("status");
@@ -18,9 +23,12 @@ const Post = () => {
   const [content, setContent] = useState("");
   const [photo, setPhoto] = useState("");
   const [alert, setAlert] = useState(false);
+  const [success, setSuccess] = useState("");
   const textColor = { color: "#555" };
 
   const sharePost = () => {
+    setAlert("");
+    setSuccess("");
     setAlert("");
     const status = {
       title,
@@ -29,7 +37,17 @@ const Post = () => {
         photo === null || photo === undefined || photo === "" ? null : photo,
       type,
     };
-    console.log(status);
+    AxiosInstance.post(
+      `http://localhost:7500/posts`, status
+    )
+      .then((response) => {
+        setSuccess(response.data)
+        console.log(response);
+      })
+      .catch((error) => {
+        setAlert(error.response.data.message)
+        console.error(error);
+      });
   };
 
   return (
@@ -57,7 +75,7 @@ const Post = () => {
           {photo && (
             <div style={{ textAlign: "center" }}>
               <img
-                src={URL.createObjectURL(photo)}
+                src={photo}
                 alt="Selected Photo"
                 style={{
                   width: "150px",
@@ -81,7 +99,7 @@ const Post = () => {
               placeholder={"Write your " + type.toLowerCase() + " here."}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              maxLength={300}
+              maxLength={10000}
               style={{
                 minHeight: "100px",
                 ...textColor,
@@ -89,47 +107,14 @@ const Post = () => {
             />
           </InputGroup>
         </FormGroup>
+        <Row>
+          <Col>
+              
+          </Col>
+        </Row>
         <Row className="mb-3">
           <Col>
-            <FormGroup>
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="ni ni-image" style={textColor} />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  type="file"
-                  id="photo"
-                  accept="image/*"
-                  onChange={(e) => setPhoto(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-
-                <label
-                  htmlFor="photo"
-                  style={{
-                    display: "inline-block",
-                    padding: "6px 12px",
-                    cursor: "pointer",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "4px",
-                    transition: "background-color 0.3s",
-                  }}
-                >
-                  {photo ? "Change picture" : "Select a photo"}
-                </label>
-                <div
-                  className="file-name"
-                  style={{
-                    marginLeft: "5px",
-                    marginTop: "5px",
-                    color: "#555",
-                    fontSize: "14px",
-                  }}
-                ></div>
-              </InputGroup>
-            </FormGroup>
+            <PhotoUpload2 url={photo} setUrl={setPhoto} />
           </Col>
           <Col>
             <InputGroup className="input-group-alternative">
@@ -146,16 +131,18 @@ const Post = () => {
                 style={textColor}
               >
                 <option value="status">Status</option>
-                <option value="feedback">Feedback</option>
-                <option value="article">Article</option>
-                <option value="firstaid">First Aid</option>
-                <option value="faq">FAQ</option>
+                {isPatient() && <option value="feedback">Feedback</option>}
+                {(isDoctor() || isAdmin()) && <>
+                  <option value="article">Article</option>
+                <option value="firstaid">First Aid</option></>}
+                {isAdmin() && <option value="faq">FAQ</option>}
               </CustomInput>
             </InputGroup>
           </Col>
         </Row>
+        {success && <div className="alert alert-success">{success}</div>}
         {alert && (
-          <div className="alert alert-danger">You must wirte a title</div>
+          <div className="alert alert-danger">{alert}</div>
         )}
         <Button style={{ width: "100%" }} color="primary" onClick={sharePost}>
           Post your {type}

@@ -19,6 +19,7 @@ import PatientsList from "components/accounts/PatientsList";
 import Logout from "components/accounts/Logout";
 import DoctorDashboard from "components/doctor-dashboard/Dashboard";
 import CreateCall from "components/telemedicine/CreateCall";
+import PostDisplay from "components/community/PostDisplay";
 
 var routes = [
   {
@@ -203,6 +204,14 @@ var routes = [
     icon: "fa fa-sign-out text-black",
     component: <CreateCall />,
     layout: "/tele",
+    role: "",
+  },
+  {
+    path: "/posts/:postId",
+    name: "Post",
+    icon: "fa fa-sign-out text-black",
+    component: <PostDisplay />,
+    layout: "/health",
     role: "",
   },
 ];

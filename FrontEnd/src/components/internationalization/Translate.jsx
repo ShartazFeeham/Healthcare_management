@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AxiosInstance from "scripts/axioInstance";
 
 const Translate = ({ text }) => {
+
   let language = localStorage.getItem("language");
   if (!language) {
     language = "Bengali";

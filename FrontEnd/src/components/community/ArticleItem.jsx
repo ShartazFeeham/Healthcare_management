@@ -2,30 +2,62 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import "./article-items.css";
+import AxiosInstance from "scripts/axioInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 const ArticleItem = ({ st }) => {
   const [status, setStatus] = useState(st);
-  const authorName = "Anonymous user";
+  const [name, setName] = useState('Not Available')
+  const [photo, setPhoto] = useState('')
 
-  const getUser = (authorId) => {
-    let link = "/health/";
+  const getUser = () => {
+  const authorId = st.authorId;
+  const adminUrl = `http://localhost:5100/access/minimal-info/${authorId}`;
+  const patientUrl = `http://localhost:7100/patients/minimal-info/${authorId}`;
+  const doctorUrl = `http://localhost:7200/doctors/minimal-info/${authorId}`;
+  
+  let link = "/health/";
 
-    if (authorId[0] === "P") {
-      link += "patients/" + authorId;
-    } else if ((authorId[0] === "P") === "D") {
-      link += "doctors/" + authorId;
-    } else {
-      link = "#";
-    }
+  let apiUrl = "";
+  if (authorId[0] === "P") {
+    link += "patients/" + authorId;
+    apiUrl = patientUrl;
+  } else if (authorId[0] === "D") {
+    link += "doctors/" + authorId;
+    apiUrl = doctorUrl;
+  } else if (authorId[0] === "A") {
+    link = "#";
+    apiUrl = adminUrl;
+  } else {
+    link = "#";
+   }
+   
+  AxiosInstance.get(apiUrl)
+    .then((response) => {
+      const fullName = response.data.firstName + " " + response.data.lastName;
+      setName(fullName);
+      setPhoto(response.data.photoURL)
+    })
+    .catch((error) => {
+      
+    });
+   
 
-    return (
-      <div className="user-info">
-        <Link to={link} className="user-link">
-          <i className="fa-solid fa-pen"></i> {status.authorName}
-        </Link>
-      </div>
-    );
-  };
+  return (
+  <div className="container" style={{ margin: "10px" }}>
+  <div className="row no-gutters">
+    <div className="col">
+      <Link to={link} style={{ fontWeight: "bold" }}>
+       <i className="fa-solid fa-pen"></i> {name}
+      </Link>
+    </div>
+  </div>
+</div>
+
+
+  );
+};
 
   if (status !== null) {
     return (

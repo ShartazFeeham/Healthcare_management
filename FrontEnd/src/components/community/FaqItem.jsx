@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const FaqItem = ({ st }) => {
   const [status, setStatus] = useState(st);
+  console.log('faq', status);
   const getTitle = () => {
     return (
       <div

@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
         post.setContent(postCreateDTO.getContent());
         post.setUserId(userId);
         post.setType(postCreateDTO.getType());
-        // Handle photo
+        post.setPhotoURL(postCreateDTO.getPhoto());
         post.setTimeCreated(LocalDateTime.now());
 
         postRepository.save(post);
@@ -63,10 +63,14 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-
     @Override
-    public List<PostReadDTO> getByType(String type, int page, int size) {
-        Page<Post> postsPage = postRepository.findByTypeOrderByTimeCreatedDesc(type, PageRequest.of(page, size));
+    public List<PostReadDTO> getByType(String type, int page, int size, boolean sortType) {
+        Page<Post> postsPage;
+        if (sortType) {
+            postsPage = postRepository.findByTypeOrderByTimeCreatedDesc(type, PageRequest.of(page, size));
+        } else {
+            postsPage = postRepository.findByTypeOrderByTimeCreatedAsc(type, PageRequest.of(page, size));
+        }
         List<Post> posts = postsPage.getContent();
         return posts.stream().map(this::convertToReadDTO).toList();
     }
@@ -81,7 +85,7 @@ public class PostServiceImpl implements PostService {
         postReadDTO.setPhoto(post.getPhotoURL());
         postReadDTO.setCommentsCount(post.getComments().size());
         postReadDTO.setReactions(post.getSortedReactionsByFrequency());
-        //Write code here
+        postReadDTO.setReactionsCount(post.getReactions().size());
         return postReadDTO;
     }
 

@@ -17,6 +17,7 @@ import AxiosInstance from "scripts/axioInstance";
 import Upcoming from "./Upcoming";
 import Completed from "./Completed";
 import Delay from "./Delay";
+import { ToastContainer, toast } from "react-toastify";
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ const DoctorDashboard = () => {
   const [upcomingDates, setUpcomingDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const doctorId = localStorage.getItem("userId");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [scheduleData, setScheduleData] = useState({
     date: '',
     morning: 0,
@@ -41,17 +45,23 @@ const DoctorDashboard = () => {
 
 
   const handleSaveSchedule = () => {
+    setSuccessMessage("");
+    setErrorMessage("")
     AxiosInstance.post(`http://localhost:7400/schedule/set`, scheduleData)
       .then((response) => {
         console.log(response);
+        setSuccessMessage(response.data)
       })
       .catch((error) => {
         console.log("No previous data exist.");
-        console.log(error);
+        setErrorMessage(error.response.data.message)
+        console.log(error.response.data.message);
       });
   };
 
   useEffect(() => {
+    setSuccessMessage("");
+    setErrorMessage("")
     AxiosInstance.get(`http://localhost:7400/schedule/get/${selectedDate}/${doctorId}`)
       .then((response) => {
         const data = response.data;
@@ -354,6 +364,8 @@ const DoctorDashboard = () => {
                     </Row>
                     </div>
 
+                    <div className="bg-danger text-white m-3" style={{borderRadius: "10px", textAlign: "center"}}>{errorMessage}</div>
+                    <div className="bg-success text-white m-3" style={{borderRadius: "10px", textAlign: "center"}}>{successMessage}</div>
 
                     <Button
                       color="primary"

@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class TimeFormatter {
     public String format(LocalDateTime localDateTime) {
-        if(localDateTime.isBefore(LocalDateTime.now())) return getUpcomingTimeFormat(localDateTime);
+        if(localDateTime.isAfter(LocalDateTime.now())) return getUpcomingTimeFormat(localDateTime);
         else return getPastTimeFormat(localDateTime);
     }
 

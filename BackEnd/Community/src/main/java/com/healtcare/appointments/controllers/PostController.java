@@ -25,11 +25,10 @@ public class PostController {
         return ResponseEntity.ok("Post created successfully");
     }
 
-    @GetMapping("/list/{type}")
-    public ResponseEntity<List<PostReadDTO>> getPostsByType(@PathVariable String type,
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "10") int size) {
-        List<PostReadDTO> posts = postService.getByType(type, page, size);
+    @GetMapping("/list/{type}/{page}/{size}/{sortType}")
+    public ResponseEntity<List<PostReadDTO>> getPostsByType(@PathVariable String type, @PathVariable int page,
+                                                            @PathVariable int size, @PathVariable boolean sortType) {
+        List<PostReadDTO> posts = postService.getByType(type, page, size, sortType);
         return ResponseEntity.ok(posts);
     }
 
