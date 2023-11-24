@@ -1,13 +1,11 @@
 package com.healtcare.appointments.services.implementations;
 
+import com.healtcare.appointments.entities.Comment;
 import com.healtcare.appointments.entities.Post;
 import com.healtcare.appointments.enums.PostType;
 import com.healtcare.appointments.exception.AccessDeniedException;
 import com.healtcare.appointments.exception.ItemNotFoundException;
-import com.healtcare.appointments.models.PostDetailDTO;
-import com.healtcare.appointments.models.PostReadDTO;
-import com.healtcare.appointments.models.PostCreateDTO;
-import com.healtcare.appointments.models.PostUpdateDTO;
+import com.healtcare.appointments.models.*;
 import com.healtcare.appointments.repositories.PostRepository;
 import com.healtcare.appointments.services.interfaces.PostService;
 import com.healtcare.appointments.utilities.TimeFormatter;
@@ -17,8 +15,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -108,7 +108,11 @@ public class PostServiceImpl implements PostService {
         postDetailDTO.setPhotoURL(post.getPhotoURL());
         postDetailDTO.setTimeCreated(timeFormatter.format(post.getTimeCreated()));
         postDetailDTO.setType(post.getType());
-        postDetailDTO.setComments(post.getComments());
+        postDetailDTO.setComments(post.getComments().stream()
+                .filter(c -> c.getParentComment() == null)
+                .sorted(Comparator.comparing(Comment::getTimeCreated).reversed())
+                .map(CommentReadDTO::new)
+                .collect(Collectors.toList()));
         postDetailDTO.setReactions(post.getReactions());
         return postDetailDTO;
     }

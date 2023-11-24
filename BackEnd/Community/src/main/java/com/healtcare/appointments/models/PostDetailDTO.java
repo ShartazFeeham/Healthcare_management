@@ -18,6 +18,6 @@ public class PostDetailDTO {
     private String photoURL;
     private String timeCreated;
     private String type;
-    private List<Comment> comments;
+    private List<CommentReadDTO> comments;
     private List<Interact> reactions;
 }

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Card, CardBody, CardText } from "reactstrap";
 import AxiosInstance from "scripts/axioInstance";
 import Comm from "./Comment";
+import Translate from "components/internationalization/Translate";
 
 const CommentBox = ({ comment, postId }) => {
   const [name, setName] = useState("Not Available");
@@ -77,7 +78,7 @@ const CommentBox = ({ comment, postId }) => {
     <>
       {getUser(comment.userId)}
       <CardBody>
-        {comment.content}
+        <Translate text={comment.content} />
         <CardText>
           <Comm
             postId={postId}

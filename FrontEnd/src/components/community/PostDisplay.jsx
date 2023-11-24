@@ -84,7 +84,7 @@ const PostDisplay = () => {
             )}
           </div>
           <div className="col m-2">
-            <Link to={link} style={{ fontWeight: "bold" }}>
+            <Link to={link} style={{ fontWeight: "bold", cursor: "pointer" }}>
               {name}
             </Link>
           </div>
@@ -104,92 +104,119 @@ const PostDisplay = () => {
   };
 
   return (
-    <Container>
-      {post ? (
-        <div
-          style={{
-            border: "1px solid #ddf",
-            margin: "5px",
-            padding: "5px",
-            borderRadius: "5px",
-            boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
-            backgroundColor: "white",
-          }}
-        >
-          {getUser(post.userId)}
-          <hr></hr>
-          {photo && (
-            <img
-              src={photo}
-              alt="Status Photo"
-              style={{
-                maxWidth: "98%",
-                display: "block",
-                margin: "0 auto",
-                maxHeight: "600px",
-                borderRadius: "5px",
-              }}
-            />
-          )}
+    <>
+      <div
+        className="header pb-5 pt-2 pt-lg-8 d-flex align-items-center"
+        style={{
+          height: "100px",
+          backgroundImage:
+            "url(" + require("../../assets/img/cover/community1.png") + ")",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+        }}
+      >
+        <span className="mask bg-gradient-default opacity-6" />
+        <Container className="d-flex align-items-center" fluid>
+          <Row>
+            <Link to={"/health/community"}>
+              <h1 className="display-2 opacity-7" style={{ color: "white" }}>
+                <i class="fa-solid fa-chevron-left"></i> Community
+              </h1>
+            </Link>
+          </Row>
+        </Container>
+      </div>
+      <Container>
+        {post ? (
           <div
             style={{
-              padding: "10px",
-              borderBottom: "1px solid #eee",
+              border: "1px solid #ddf",
+              margin: "5px",
+              padding: "5px",
+              borderRadius: "5px",
+              boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+              backgroundColor: "white",
             }}
           >
-            {post.content.length > 200 ? (
-              <>
-                <Translate text={post.content} />
-              </>
-            ) : (
-              <Translate text={post.content} />
+            {getUser(post.userId)}
+            <hr></hr>
+            {post.type !== "status" && (
+              <div style={{ textAlign: "center" }} className="h1">
+                {post.title}
+              </div>
             )}
-            <div style={{ marginTop: "10px" }}>{post.date}</div>
-          </div>
-          <div style={{ marginLeft: "10px" }}></div>
-          <Row
-            style={{
-              borderBottom: "1px solid #eee",
-              marginLeft: "5px",
-              marginRight: "5px",
-            }}
-          >
-            <Col style={{ textAlign: "right" }}></Col>
-          </Row>
-          <Row>
-            <Col
+            {post.photoURL && (
+              <img
+                src={post.photoURL}
+                alt="Status Photo"
+                style={{
+                  maxWidth: "98%",
+                  display: "block",
+                  margin: "0 auto",
+                  maxHeight: "600px",
+                  borderRadius: "5px",
+                }}
+              />
+            )}
+            <div
               style={{
                 padding: "10px",
-                fontWeight: "bold",
-                marginLeft: "20px",
+                borderBottom: "1px solid #eee",
+                color: "#555", // Set text color to #555
+                textAlign: "justify", // Justify the text
               }}
             >
-              <Row>
-                <Col>
-                  <div>
-                    {post.comments.length === 0
-                      ? "No comments yet"
-                      : post.comments.length + " comments"}
-                  </div>
-                </Col>
-                <Col className="mr-4">
-                  <Comm postId={post.postId} commentId={0} text={"Comment"} />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-            {post.comments.length > 0 && (
-              <CardBody>
-                <div className="mb-2">{renderComments(post.comments)}</div>
-              </CardBody>
-            )}
-          </Row>
-        </div>
-      ) : (
-        "Loading..."
-      )}
-    </Container>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: post.content.replace(/\n/g, "<br>"),
+                }}
+              />
+              <div style={{ marginTop: "10px" }}>{post.date}</div>
+            </div>
+            <Row
+              style={{
+                borderBottom: "1px solid #eee",
+                marginLeft: "5px",
+                marginRight: "5px",
+              }}
+            >
+              <Col style={{ textAlign: "right" }}></Col>
+            </Row>
+            <Row>
+              <Col
+                style={{
+                  padding: "10px",
+                  fontWeight: "bold",
+                  marginLeft: "20px",
+                }}
+              >
+                <Row>
+                  <Col>
+                    <div>
+                      {post.comments.length === 0
+                        ? "No comments yet"
+                        : post.comments.length + " comments"}
+                    </div>
+                  </Col>
+                  <Col className="mr-4">
+                    <Comm postId={post.postId} commentId={0} text={"Comment"} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+              {post.comments.length > 0 && (
+                <CardBody>
+                  <div className="mb-2">{renderComments(post.comments)}</div>
+                </CardBody>
+              )}
+            </Row>
+          </div>
+        ) : (
+          "Loading..."
+        )}
+      </Container>
+    </>
   );
 };
 

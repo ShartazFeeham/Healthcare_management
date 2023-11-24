@@ -8,65 +8,60 @@ import AxiosInstance from "scripts/axioInstance";
 
 const StatusItem = ({ st }) => {
   const [status, setStatus] = useState(st);
-  const [name, setName] = useState('Not Available')
-  const [photo, setPhoto] = useState('')
+  const [name, setName] = useState("Not Available");
+  const [photo, setPhoto] = useState("");
 
- const getUser = () => {
-  const authorId = st.authorId;
-  const adminUrl = `http://localhost:5100/access/minimal-info/${authorId}`;
-  const patientUrl = `http://localhost:7100/patients/minimal-info/${authorId}`;
-  const doctorUrl = `http://localhost:7200/doctors/minimal-info/${authorId}`;
-  
-  let link = "/health/";
+  const getUser = () => {
+    const authorId = st.authorId;
+    const adminUrl = `http://localhost:5100/access/minimal-info/${authorId}`;
+    const patientUrl = `http://localhost:7100/patients/minimal-info/${authorId}`;
+    const doctorUrl = `http://localhost:7200/doctors/minimal-info/${authorId}`;
 
-  let apiUrl = "";
-  if (authorId[0] === "P") {
-    link += "patients/" + authorId;
-    apiUrl = patientUrl;
-  } else if (authorId[0] === "D") {
-    link += "doctors/" + authorId;
-    apiUrl = doctorUrl;
-  } else if (authorId[0] === "A") {
-    link = "#";
-    apiUrl = adminUrl;
-  } else {
-    link = "#";
-   }
-   
-  AxiosInstance.get(apiUrl)
-    .then((response) => {
-      const fullName = response.data.firstName + " " + response.data.lastName;
-      setName(fullName);
-      setPhoto(response.data.photoURL)
-    })
-    .catch((error) => {
-      
-    });
-   
+    let link = "/health/";
 
-  return (
-  <div className="container" style={{ margin: "10px" }}>
-  <div className="row no-gutters">
-    <div className="col-auto">
-      {photo ? (
-        <span className="avatar avatar-sm rounded-circle">
-          <img alt="User" src={photo} />
-        </span>
-      ) : (
-        <FontAwesomeIcon icon={faUserCircle} size="lg" className="mr-2" />
-      )}
-    </div>
-    <div className="col m-2">
-      <Link to={link} style={{ fontWeight: "bold" }}>
-        {name}
-      </Link>
-    </div>
-  </div>
-</div>
+    let apiUrl = "";
+    if (authorId[0] === "P") {
+      link += "patients/" + authorId;
+      apiUrl = patientUrl;
+    } else if (authorId[0] === "D") {
+      link += "doctors/" + authorId;
+      apiUrl = doctorUrl;
+    } else if (authorId[0] === "A") {
+      link = "#";
+      apiUrl = adminUrl;
+    } else {
+      link = "#";
+    }
 
+    AxiosInstance.get(apiUrl)
+      .then((response) => {
+        const fullName = response.data.firstName + " " + response.data.lastName;
+        setName(fullName);
+        setPhoto(response.data.photoURL);
+      })
+      .catch((error) => {});
 
-  );
-};
+    return (
+      <div className="container" style={{ margin: "10px" }}>
+        <div className="row no-gutters">
+          <div className="col-auto">
+            {photo ? (
+              <span className="avatar avatar-sm rounded-circle">
+                <img alt="User" src={photo} />
+              </span>
+            ) : (
+              <FontAwesomeIcon icon={faUserCircle} size="lg" className="mr-2" />
+            )}
+          </div>
+          <div className="col m-2">
+            <Link to={link} style={{ fontWeight: "bold" }}>
+              {name}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   function getReaction(r) {
     // Like default
@@ -171,17 +166,19 @@ const StatusItem = ({ st }) => {
       >
         {getUser()}
         {status.photo && (
-          <img
-            src={status.photo}
-            alt="Status Photo"
-            style={{
-              maxWidth: "98%",
-              display: "block",
-              margin: "0 auto",
-              maxHeight: "600px",
-              borderRadius: "5px",
-            }}
-          />
+          <Link to={`/health/posts/${status.postId}`}>
+            <img
+              src={status.photo}
+              alt="Status Photo"
+              style={{
+                maxWidth: "98%",
+                display: "block",
+                margin: "0 auto",
+                maxHeight: "600px",
+                borderRadius: "5px",
+              }}
+            />
+          </Link>
         )}
         <div
           style={{
@@ -189,13 +186,20 @@ const StatusItem = ({ st }) => {
             borderBottom: "1px solid #eee",
           }}
         >
-          {status.content.length > 200 ? (
-            <>
-              <Translate text={status.content.substring(0, 200)+"...See more"} />
+          <Link
+            style={{ color: "#555", cursor: "text" }}
+            to={`/health/posts/${status.postId}`}
+          >
+            {status.content.length > 200 ? (
+              <>
+                <Translate
+                  text={status.content.substring(0, 200) + "...See more"}
+                />
               </>
-          ) : (
-            <Translate text={status.content} />
-          )}
+            ) : (
+              <Translate text={status.content} />
+            )}
+          </Link>
           <div style={{ marginTop: "10px" }}>{status.date}</div>
         </div>
         <div style={{ marginLeft: "10px" }}></div>
@@ -239,7 +243,7 @@ const StatusItem = ({ st }) => {
           <Col
             style={{ padding: "10px", fontWeight: "bold", cursor: "pointer" }}
           >
-            Comment
+            <Link to={`/health/posts/${status.postId}`}>Comment</Link>
           </Col>
         </Row>
       </div>
