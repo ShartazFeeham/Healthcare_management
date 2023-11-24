@@ -25,6 +25,8 @@ public class Doctor {
     private String specializations;
     private String phoneNumber;
     private String residence;
+    // Placement
+    private String room;
 
     // Doctor Personal Info
     private String dateOfBirth;

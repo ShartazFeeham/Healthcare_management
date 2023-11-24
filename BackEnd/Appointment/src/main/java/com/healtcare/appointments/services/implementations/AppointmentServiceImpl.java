@@ -164,6 +164,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void cancelAppointment(String appointmentId) throws AccessDeniedException {
         Appointment appointment = getAppointment(appointmentId);
 
+        if(!(appointment.getId().contains(IDExtractor.getUserID()) ||
+                (appointment.getId().startsWith("Ex") && IDExtractor.getUserID().startsWith("A")))){
+            throw new AccessDeniedException("You can not cancel someone else's appointment!");
+        }
+
         Duration appointmentRemainingTime = Duration.between(LocalDateTime.now(), appointment.getAppointmentTime());
         Duration appointmentRequestTime = Duration.between(LocalDateTime.now(), appointment.getSchedulingTime());
 

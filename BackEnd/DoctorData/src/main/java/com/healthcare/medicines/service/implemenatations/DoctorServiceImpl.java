@@ -112,6 +112,7 @@ public class DoctorServiceImpl implements DoctorService {
         profileDTO.setBio(doctor.getBio());
         profileDTO.setExperience(doctor.getExperience());
         profileDTO.setLicense(doctor.getLicense());
+        profileDTO.setRoom(doctor.getRoom());
         profileDTO.setSpecializations(doctor.getSpecializations());
         profileDTO.setQualifications(doctor.getQualifications());
         profileDTO.setCertifications(doctor.getCertifications());

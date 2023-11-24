@@ -10,5 +10,5 @@ public interface ReviewService {
     void delete(String appointmentId);
     Review getReviewById(String appointmentId);
     List<Review> getAllReviewsByDoctor(String doctorId);
-
+    Integer getReviewCount(String doctorId);
 }

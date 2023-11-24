@@ -52,11 +52,6 @@ const UpdateMedicine = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-  };
-
   useEffect(() => {
     // Fetch and set the medicine data based on medId (in this case, we're using the provided medicineData)
     const fetchData = async () => {
@@ -175,17 +170,17 @@ const UpdateMedicine = () => {
   return (
     <>
       <div
-          className="header pb-7 pt-5 pt-lg-8 d-flex align-items-center"
-          style={{
-            backgroundImage:
-              "url(" + require("../../assets/img/cover/health1.jpg") + ")",
-            backgroundSize: "cover",
-            backgroundPosition: "center top",
-            width: "100%"
-          }}
-        >
-          <span className="mask bg-gradient-default opacity-6" />
-        </div>
+        className="header pb-7 pt-5 pt-lg-8 d-flex align-items-center"
+        style={{
+          backgroundImage:
+            "url(" + require("../../assets/img/cover/health1.jpg") + ")",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          width: "100%",
+        }}
+      >
+        <span className="mask bg-gradient-default opacity-6" />
+      </div>
       <Container className="mt--7" fluid>
         <Row>
           <Col className="order-xl-1 center" xl="8">

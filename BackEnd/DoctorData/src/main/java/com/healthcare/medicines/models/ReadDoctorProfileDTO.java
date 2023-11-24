@@ -14,6 +14,7 @@ public class ReadDoctorProfileDTO {
     private String firstName;
     private String lastName;
     private String email;
+    private String room;
     private String gender;
     private String profilePhoto;
     private String bio;

@@ -20,6 +20,11 @@ import Logout from "components/accounts/Logout";
 import DoctorDashboard from "components/doctor-dashboard/Dashboard";
 import CreateCall from "components/telemedicine/CreateCall";
 import PostDisplay from "components/community/PostDisplay";
+import RoomAllocation from "components/accounts/RoomAllocation";
+import CreateEquipment from "components/equipments/Create";
+import EquipmentUpdate from "components/equipments/Update";
+import EquipmentList from "components/equipments/List";
+import EquipmentDetails from "components/equipments/Details";
 
 var routes = [
   {
@@ -137,7 +142,7 @@ var routes = [
   {
     path: "/medicines/create",
     name: "Create new medicine",
-    icon: "fa-solid fa-capsules text-pink",
+    icon: "fa-solid fa-capsules text-info",
     component: <CreateMedicine />,
     layout: "/health",
     role: "ADMIN DOCTOR",
@@ -145,7 +150,7 @@ var routes = [
   {
     path: "/medicines/update/:medId",
     name: "Update a medicine",
-    icon: "fa-solid fa-pills text-pink",
+    icon: "fa-solid fa-pills text-info",
     component: <UpdateMedicine />,
     layout: "/health",
     role: "",
@@ -161,8 +166,40 @@ var routes = [
   {
     path: "/medicines/:medId",
     name: "Medicine details",
-    icon: "fa-solid fa-file-prescription text-info",
+    icon: "fa-solid fa-file-prescription text-pink",
     component: <MedicineDetails />,
+    layout: "/common",
+    role: "",
+  },
+  {
+    path: "/create-equipments",
+    name: "Create new equipment",
+    icon: "fa-solid fa-capsules text-pink",
+    component: <CreateEquipment />,
+    layout: "/health",
+    role: "ADMIN",
+  },
+  {
+    path: "/equipments/update/:equId",
+    name: "Update an equipment",
+    icon: "fa-solid fa-pills text-pink",
+    component: <EquipmentUpdate />,
+    layout: "/health",
+    role: "",
+  },
+  {
+    path: "/equipments",
+    name: "Equipments list",
+    icon: "fa-solid fa-tablets text-pink",
+    component: <EquipmentList />,
+    layout: "/common",
+    role: "ADMIN PATIENT DOCTOR PUBLIC",
+  },
+  {
+    path: "/equipments/:equId",
+    name: "Equipment details",
+    icon: "fa-solid fa-file-prescription text-info",
+    component: <EquipmentDetails />,
     layout: "/common",
     role: "",
   },
@@ -187,6 +224,14 @@ var routes = [
     name: "Patients List",
     icon: "fa-solid fa-users-rays text-gray",
     component: <PatientsList />,
+    layout: "/health",
+    role: "ADMIN",
+  },
+  {
+    path: "/rooms",
+    name: "Room allocation",
+    icon: "fa-solid fa-hotel text-warning",
+    component: <RoomAllocation />,
     layout: "/health",
     role: "ADMIN",
   },

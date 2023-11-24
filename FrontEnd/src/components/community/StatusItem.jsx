@@ -39,7 +39,9 @@ const StatusItem = ({ st }) => {
         setName(fullName);
         setPhoto(response.data.photoURL);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
 
     return (
       <div className="container" style={{ margin: "10px" }}>

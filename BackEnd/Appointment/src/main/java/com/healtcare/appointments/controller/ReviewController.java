@@ -45,4 +45,9 @@ public class ReviewController {
         List<Review> reviews = reviewService.getAllReviewsByDoctor(doctorId);
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
+
+    @GetMapping("/doctor/count/{doctorId}")
+    public ResponseEntity<Integer> getReviewsCount(@PathVariable String doctorId){
+        return ResponseEntity.ok(reviewService.getReviewCount(doctorId));
+    }
 }

@@ -4,15 +4,32 @@ import { useEffect, useState } from "react";
 import doctorTreatmentsCount from "assets/data/doctorprofile/doctorTreatmentCount";
 import doctoReviewCount from "assets/data/doctorprofile/doctorReviewsCount";
 import Translate from "components/internationalization/Translate";
+import AxiosInstance from "scripts/axioInstance";
 
 export const DoctorProfileBio = ({ doctorData }) => {
-  const [reviewCount, setReviewCount] = useState();
-  const [treatmentsCount, setTreatmentsCount] = useState();
+  const [reviewCount, setReviewCount] = useState(0);
+  const [treatmentsCount, setTreatmentsCount] = useState(0);
 
   useEffect(() => {
-    setTreatmentsCount(doctorTreatmentsCount);
-    setReviewCount(doctoReviewCount);
-  }, [reviewCount, treatmentsCount]);
+    AxiosInstance.get(
+      `http://localhost:7400/reviews/doctor/count/${doctorData.doctorId}`
+    )
+      .then((response) => {
+        setReviewCount(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    AxiosInstance.get(
+      `http://localhost:7400/appointments/total/${doctorData.doctorId}`
+    )
+      .then((response) => {
+        setTreatmentsCount(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>
@@ -57,6 +74,9 @@ export const DoctorProfileBio = ({ doctorData }) => {
           </Row>
           <div className="text-center">
             <h3>{`Dr. ${doctorData.firstName} ${doctorData.lastName}`}</h3>
+            <div>
+              <i className="fa-solid fa-hotel" /> {doctorData.room}
+            </div>
             <div className="h5 mt-4">
               <i className="ni business_briefcase-24 mr-2" />
               {doctorData.specializations} specialist

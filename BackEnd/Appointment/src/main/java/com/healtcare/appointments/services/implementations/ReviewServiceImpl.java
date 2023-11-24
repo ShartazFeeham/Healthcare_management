@@ -71,4 +71,9 @@ public class ReviewServiceImpl implements ReviewService {
     public List<Review> getAllReviewsByDoctor(String doctorId) {
         return reviewRepository.findAllByDoctorId(doctorId);
     }
+
+    @Override
+    public Integer getReviewCount(String doctorId) {
+        return reviewRepository.countByDoctorId(doctorId);
+    }
 }

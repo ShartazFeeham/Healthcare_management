@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, String> {
     List<Review> findAllByDoctorId(String doctorId);
+    Integer countByDoctorId(String doctorId);
 }

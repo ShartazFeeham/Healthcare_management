@@ -53,6 +53,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/doctors/**").authenticated()
                             .requestMatchers(HttpMethod.GET, "/doctors/existing-edit-data").hasRole("DOCTOR")
                             .requestMatchers(HttpMethod.DELETE, "/doctors/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.POST, "/rooms/**").hasRole("ADMIN")
                             // Set any other requests to authentication.
                             .anyRequest().permitAll();
                 })
