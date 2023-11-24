@@ -1,12 +1,19 @@
 package com.healthcare.cdss.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.healthcare.cdss.entity.Report;
 import com.healthcare.cdss.entity.Treatment;
+import com.healthcare.cdss.exceptions.AccessDeniedException;
 import com.healthcare.cdss.exceptions.InvalidRequestException;
+import com.healthcare.cdss.network.GPTRequester;
+import com.healthcare.cdss.repository.ReportRepository;
 import com.healthcare.cdss.repository.TreatmentRepository;
+import com.healthcare.cdss.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +24,9 @@ import java.util.stream.Collectors;
 public class CDSSServiceImpl implements CDSSService{
 
     private final TreatmentRepository treatmentRepository;
+    private final TreatmentService treatmentService;
+    private final ReportRepository reportRepository;
+    private final GPTRequester gptRequester;
 
     @Override
     public List<Treatment> getSimilar(String patientId) throws InvalidRequestException {
@@ -62,7 +72,47 @@ public class CDSSServiceImpl implements CDSSService{
     }
 
     @Override
-    public String getReport(String patientId) {
-        return null;
+    public String getReport(String patientId) throws InvalidRequestException {
+        List<Treatment> similar = getSimilar(patientId);
+        List<Treatment> patientData = treatmentRepository.findByPatientId(patientId);
+        String similarPatientString;
+        String patientString;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            similarPatientString = objectMapper.writeValueAsString(similar);
+            patientString = objectMapper.writeValueAsString(patientData);
+        } catch (Exception e) {
+            throw new RuntimeException("Error converting object to JSON string", e);
+        }
+        String message = "This is a tough request, listen very carefully. I'm giving you a patients' treatment/illness " +
+                "data then I'll give you two other most matching patients' data. You'll have to do some analysis on these. " +
+                "The analysis will be of 3 steps, each steps with proper detailed description. 1. Analysis on target parents' " +
+                "treatment info, kind of an overview. 2. Analysis on those two similar patients' data, do not mention similar " +
+                "patients data directly, rather say like: patients who has similar health tract also suffered... like this, " +
+                "this section must be bit larger (at least 150 words). 3. Last section is feedback for the patient, what may " +
+                "happen in future based on your perception and the data analysis too, what treatments he/she may need, what " +
+                "specialized doctor is preferred, what kind of diagnoses may need. 3rd section also should be around 200 words. " +
+                "That's it, also note that you should not write anything additional like: Certainly here is the... or Understood here is..." +
+                "Just straight to the point and detailed analysis. Here is patient data - " + patientString + "Here is similar profile patient" +
+                "data - " + similarPatientString;
+
+        String result = gptRequester.send(message);
+        if(IDExtractor.getUserID().equals(patientId)){
+            Report report = new Report();
+            report.setContent(result);
+            report.setPatientId(patientId);
+            report.setGenerationTime(LocalDateTime.now());
+
+            reportRepository.save(report);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Report> getReports(String patientId) throws AccessDeniedException {
+        if(IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().equals(patientId)){
+            return reportRepository.findByPatientId(patientId);
+        }
+        throw new AccessDeniedException("You can not see others' personal data analysis!");
     }
 }

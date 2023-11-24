@@ -19,42 +19,60 @@ import java.util.Set;
 
 @Entity
 @Setter
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Treatment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @Size(min = 5, message = "Condition must have a minimum length of 5 characters")
     @Column(name = "condition_name")
+    @Getter
     private String condition;
 
     @NotNull(message = "Issue date cannot be null")
     @PastOrPresent(message = "Issue date must be in the past or present")
+    @Getter
     private LocalDate issueDate;
 
     @NotNull(message = "Closing date cannot be null")
     @PastOrPresent(message = "Closing date must be in the past or present")
+    @Getter
     private LocalDate closingDate;
 
     @Size(min = 5, message = "Medicines must have a minimum length of 5 characters")
+    @Getter
     private String medicines;
 
+    @Getter
     private String diagnoses;
 
     @Size(min = 5, message = "Progression must have a minimum length of 5 characters")
+    @Getter
     private String progression;
 
     @Size(min = 5, message = "Doctor comment must have a minimum length of 5 characters")
+    @Getter
     private String doctorComment;
 
+    @Getter
     private String patientId;
+    @Getter
     private String authorId;
 
     @JsonIgnore
+    @Getter
     private String keywords;
+
+    public String getIssueDate(){
+        return issueDate.toString();
+    }
+
+    public String getClosingDate(){
+        return closingDate.toString();
+    }
 
     public void generateKeywords() {
         String combinedText = condition + " " + medicines + " " + diagnoses;
@@ -84,6 +102,7 @@ public class Treatment {
         return wordSet;
     }
 
+//    @Getter
     public int getSimilarityValue(Treatment otherTreatment) {
         int commonKeywords = 0;
         for (String keyword : getKeywordsSet()) {
