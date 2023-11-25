@@ -16,7 +16,8 @@ public class SMSController {
     private final SMSService smsService;
     @PostMapping("/send")
     public ResponseEntity<String> processSMS(@RequestBody SMSRequest smsRequest){
-        String status = smsService.sendSms(smsRequest);
+//        String status = smsService.sendSms(smsRequest);
+        String status = "Reached, but not sent to save credit...";
         return ResponseEntity.ok(status);
     }
 }

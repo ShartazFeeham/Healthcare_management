@@ -12,7 +12,7 @@ const DoctorProfile = () => {
   const navigate = useNavigate();
   const [doctorData, setDoctorData] = useState(doctorProfileData);
 
-  console.log(doctorId);
+  // console.log(doctorId);
 
   const userId = localStorage.getItem("userId")
     ? localStorage.getItem("userId")
@@ -46,7 +46,7 @@ const DoctorProfile = () => {
               "url(" + require("../../assets/img/cover/health5.jpg") + ")",
             backgroundSize: "cover",
             backgroundPosition: "center top",
-            width: "100%"
+            width: "100%",
           }}
         >
           <span className="mask bg-gradient-default opacity-6" />

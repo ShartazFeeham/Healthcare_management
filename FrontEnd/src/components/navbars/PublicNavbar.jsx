@@ -19,8 +19,8 @@ const PublicNavbar = () => {
           <NavbarBrand to="/" tag={Link}>
             <img
               alt="..."
-              style={{height: "120px"}}
-              src={require("../../assets/img/brand/argon-react-white.png")}
+              style={{ height: "120px" }}
+              src={require("../../assets/img/brand/logo1.png")}
             />
           </NavbarBrand>
           <button className="navbar-toggler" id="navbar-collapse-main">
@@ -33,7 +33,7 @@ const PublicNavbar = () => {
                   <Link to="/">
                     <img
                       alt="..."
-                      src={require("../../assets/img/brand/argon-react.png")}
+                      src={require("../../assets/img/brand/logo1.png")}
                     />
                   </Link>
                 </Col>

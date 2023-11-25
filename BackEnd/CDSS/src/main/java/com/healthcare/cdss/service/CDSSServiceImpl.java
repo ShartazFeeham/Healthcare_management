@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.cdss.entity.Report;
 import com.healthcare.cdss.entity.Treatment;
 import com.healthcare.cdss.exceptions.AccessDeniedException;
+import com.healthcare.cdss.exceptions.CustomException;
 import com.healthcare.cdss.exceptions.InvalidRequestException;
 import com.healthcare.cdss.network.GPTRequester;
 import com.healthcare.cdss.repository.ReportRepository;
@@ -11,6 +12,7 @@ import com.healthcare.cdss.repository.TreatmentRepository;
 import com.healthcare.cdss.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -72,7 +74,7 @@ public class CDSSServiceImpl implements CDSSService{
     }
 
     @Override
-    public String getReport(String patientId) throws InvalidRequestException {
+    public String getReport(String patientId) throws CustomException {
         List<Treatment> similar = getSimilar(patientId);
         List<Treatment> patientData = treatmentRepository.findByPatientId(patientId);
         String similarPatientString;
@@ -96,16 +98,21 @@ public class CDSSServiceImpl implements CDSSService{
                 "Just straight to the point and detailed analysis. Here is patient data - " + patientString + "Here is similar profile patient" +
                 "data - " + similarPatientString;
 
-        String result = gptRequester.send(message);
-        if(IDExtractor.getUserID().equals(patientId)){
-            Report report = new Report();
-            report.setContent(result);
-            report.setPatientId(patientId);
-            report.setGenerationTime(LocalDateTime.now());
+        try{
+            String result = gptRequester.send(message);
+            if(IDExtractor.getUserID().equals(patientId)){
+                Report report = new Report();
+                report.setContent(result);
+                report.setPatientId(patientId);
+                report.setGenerationTime(LocalDateTime.now());
 
-            reportRepository.save(report);
+                reportRepository.save(report);
+            }
+            return result;
         }
-        return result;
+        catch (Exception e) {
+            throw new CustomException("InternalCallException", "Internal call to AI analysis failed.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

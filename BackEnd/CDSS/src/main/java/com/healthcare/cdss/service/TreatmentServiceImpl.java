@@ -33,7 +33,10 @@ public class TreatmentServiceImpl implements TreatmentService{
 
     @Override
     public void update(Long treatmentId, Treatment treatment) throws ItemNotFoundException, InvalidRequestException, AccessDeniedException {
-        Treatment existing = getById(treatmentId);
+        Optional<Treatment> treatmentOp = treatmentRepository.findById(treatmentId);
+        if(treatmentOp.isEmpty()) throw new ItemNotFoundException("treatment", treatmentId.toString());
+        Treatment existing = treatmentOp.get();
+
         if(!existing.getAuthorId().equals(IDExtractor.getUserID()))
             throw new AccessDeniedException("You don't have permission to update a treatment that is created by someone else.");
         treatment.setId(treatmentId);
@@ -44,26 +47,44 @@ public class TreatmentServiceImpl implements TreatmentService{
 
     @Override
     public void delete(Long treatmentId) throws ItemNotFoundException, AccessDeniedException {
-        Treatment existing = getById(treatmentId);
+        Optional<Treatment> treatmentOp = treatmentRepository.findById(treatmentId);
+        if(treatmentOp.isEmpty()) throw new ItemNotFoundException("treatment", treatmentId.toString());
+        Treatment existing = treatmentOp.get();
+
         if(!existing.getAuthorId().equals(IDExtractor.getUserID()))
             throw new AccessDeniedException("You don't have permission to delete a treatment that is created by someone else.");
         treatmentRepository.delete(existing);
     }
 
     @Override
-    public Treatment getById(Long treatmentId) throws ItemNotFoundException {
+    public Treatment getById(Long treatmentId) throws ItemNotFoundException, AccessDeniedException {
         Optional<Treatment> treatmentOp = treatmentRepository.findById(treatmentId);
         if(treatmentOp.isEmpty()) throw new ItemNotFoundException("treatment", treatmentId.toString());
-        return treatmentOp.get();
+
+        if(IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().startsWith("A")
+                || IDExtractor.getUserID().equals(treatmentOp.get().getPatientId())){
+            return treatmentOp.get();
+        }
+        else throw new AccessDeniedException("You don't have permission to see other patients treatment info");
     }
 
     @Override
-    public List<Treatment> getByPatientId(String patientId) {
-        return treatmentRepository.findByPatientId(patientId);
+    public List<Treatment> getByPatientId(String patientId) throws AccessDeniedException {
+        if(IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().startsWith("A")
+                || IDExtractor.getUserID().equals(patientId)){
+            return treatmentRepository.findByPatientId(patientId);
+        }
+        else throw new AccessDeniedException("You don't have permission to see other patients treatment info");
     }
 
     @Override
-    public List<Treatment> getByDoctorId(String doctorId) {
-        return treatmentRepository.findByAuthorId(doctorId);
+    public List<Treatment> getByAuthorId(String authorId) throws AccessDeniedException {
+        if(IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().startsWith("A")
+                || IDExtractor.getUserID().equals(authorId)){
+            return treatmentRepository.findByAuthorId(authorId).stream()
+                    .sorted(Comparator.comparing(Treatment::getId).reversed())
+                    .collect(Collectors.toList());
+        }
+        else throw new AccessDeniedException("You don't have permission to see other patients treatment info");
     }
 }

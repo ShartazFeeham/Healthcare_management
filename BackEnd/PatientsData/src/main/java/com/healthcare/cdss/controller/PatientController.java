@@ -1,5 +1,6 @@
 package com.healthcare.cdss.controller;
 
+import com.healthcare.cdss.exceptions.CustomException;
 import com.healthcare.cdss.exceptions.InternalCommunicationException;
 import com.healthcare.cdss.exceptions.ItemNotFoundException;
 import com.healthcare.cdss.models.*;
@@ -32,7 +33,7 @@ public class PatientController {
     }
 
     @GetMapping("/{userId}/health")
-    public ResponseEntity<PatientHealthDTO> getPatientHealth(@PathVariable String userId) throws ItemNotFoundException {
+    public ResponseEntity<PatientHealthDTO> getPatientHealth(@PathVariable String userId) throws CustomException {
         PatientHealthDTO healthDTO = patientService.getPatientHealth(userId);
         return ResponseEntity.ok(healthDTO);
     }

@@ -3,6 +3,7 @@ package com.healthcare.cdss.controller;
 import com.healthcare.cdss.entity.Report;
 import com.healthcare.cdss.entity.Treatment;
 import com.healthcare.cdss.exceptions.AccessDeniedException;
+import com.healthcare.cdss.exceptions.CustomException;
 import com.healthcare.cdss.exceptions.InvalidRequestException;
 import com.healthcare.cdss.service.CDSSService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,8 @@ public class CDSSController {
         return ResponseEntity.ok(similarTreatments);
     }
 
-    @GetMapping("/report/{patientId}")
-    public ResponseEntity<String> getReport(@PathVariable String patientId) throws InvalidRequestException {
+    @GetMapping("/report/generate/{patientId}")
+    public ResponseEntity<String> getReport(@PathVariable String patientId) throws CustomException {
         return ResponseEntity.ok(cdssService.getReport(patientId));
     }
 

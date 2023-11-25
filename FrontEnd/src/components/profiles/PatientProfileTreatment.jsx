@@ -10,25 +10,32 @@ import {
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 
-import patientDataTreatments from "assets/data/patientprofile/patientTreatments";
-import { Link } from "react-router-dom";
+import AxiosInstance from "scripts/axioInstance";
 
-export const PatientProfileTreatment = () => {
+export const PatientProfileTreatment = ({ patientId }) => {
   const [treatmentData, setTreatmentData] = useState(null);
   useEffect(() => {
-    setTreatmentData(patientDataTreatments);
-  }, [treatmentData]);
+    AxiosInstance.get(`http://localhost:7800/treatments/patient/${patientId}`)
+      .then((response) => {
+        console.log(response);
+        setTreatmentData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, []);
 
   const renderTreatmentCard = (treatment, index) => (
     <Card className="mb-2" key={index}>
       <CardBody>
-        <Row className="mb-2">
+        <Row className="mb--4">
           <Col lg="12">
-            <h4>
-              <FontAwesomeIcon icon={faStethoscope} /> {treatment.diseaseName}
+            <h4 style={{ textTransform: "uppercase" }}>
+              <FontAwesomeIcon icon={faStethoscope} /> {treatment.condition}
             </h4>
           </Col>
         </Row>
+        <hr></hr>
         <Row>
           <Col lg="6">
             <p>
@@ -56,21 +63,21 @@ export const PatientProfileTreatment = () => {
             <p>
               <FontAwesomeIcon icon={faPills} /> Medicines:{" "}
               <b>
-                {treatment.medicines.map((medicine, index) => {
+                {treatment.medicines.split(",").map((medicine, index) => {
                   return (
                     <>
-                      <Link
+                      <b
                         style={{
-                          backgroundColor: "red",
                           padding: "5px",
                           margin: "2px",
                           borderRadius: "5px",
                           backgroundColor: "#eee",
+                          fontWeight: "normal",
+                          color: "#0384fc",
                         }}
-                        to={"/medicines/" + medicine.id}
                       >
-                        {medicine.name}
-                      </Link>{" "}
+                        {medicine}
+                      </b>{" "}
                     </>
                   );
                 })}
@@ -83,21 +90,21 @@ export const PatientProfileTreatment = () => {
             <p>
               <FontAwesomeIcon icon={faDiagnoses} /> Diagnoses:{" "}
               <b>
-                {treatment.diagnoses.map((diag, index) => {
+                {treatment.diagnoses.split(",").map((diag, index) => {
                   return (
                     <>
-                      <Link
+                      <b
                         style={{
-                          backgroundColor: "red",
                           padding: "5px",
                           margin: "2px",
                           borderRadius: "5px",
                           backgroundColor: "#eee",
+                          fontWeight: "normal",
+                          color: "#a30083",
                         }}
-                        to={"/medicines/" + diag.id}
                       >
-                        {diag.name}
-                      </Link>{" "}
+                        {diag}
+                      </b>{" "}
                     </>
                   );
                 })}
@@ -119,20 +126,22 @@ export const PatientProfileTreatment = () => {
 
   return (
     <>
-      <Card className="bg-secondary shadow mt-2">
-        <CardBody>
-          <div className="pl-lg-4">
-            <h6 className="heading-small text-muted mb-4">Treatment Info</h6>
-          </div>
-          {treatmentData && (
-            <div>
-              {treatmentData.map((treatment, index) =>
-                renderTreatmentCard(treatment, index)
-              )}
+      {treatmentData && (
+        <Card className="bg-secondary shadow mt-2">
+          <CardBody>
+            <div className="pl-lg-4">
+              <h6 className="heading-small text-muted mb-4">Treatment Info</h6>
             </div>
-          )}
-        </CardBody>
-      </Card>
+            {treatmentData && (
+              <div>
+                {treatmentData.map((treatment, index) =>
+                  renderTreatmentCard(treatment, index)
+                )}
+              </div>
+            )}
+          </CardBody>
+        </Card>
+      )}
     </>
   );
 };

@@ -1,12 +1,21 @@
 import { Card, CardHeader, CardBody, Row, Col, CardTitle } from "reactstrap";
 import { useEffect, useState } from "react";
 import patientDataAchievements from "assets/data/patientprofile/patientAchievements";
+import AxiosInstance from "scripts/axioInstance";
 
 export const PatientProfileAchievements = ({ patientId }) => {
   const [patientData, setPatientData] = useState(null);
+
   useEffect(() => {
-    setPatientData(patientDataAchievements);
-  }, [patientData]);
+    AxiosInstance.get(`http://localhost:7100/progress/${patientId}`)
+      .then((response) => {
+        console.log(response);
+        setPatientData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, []);
 
   function getLevel(dif) {
     const lowerDif = dif.toLowerCase();
@@ -45,7 +54,13 @@ export const PatientProfileAchievements = ({ patientId }) => {
               </h2>
             </CardHeader>
             <CardBody className="pt-0 pt-md-4">
-              {patientData.achievements.map((achievement, index) => {
+              {patientData.length === 0 && (
+                <div className="container" style={{ textAlign: "center" }}>
+                  This patient does not have any achievements yet.
+                </div>
+              )}
+              {patientData.map((achievement, index) => {
+                console.log(achievement);
                 return (
                   <Card className="card-stats mt-2 mb-xl-0">
                     <CardBody>
@@ -61,7 +76,7 @@ export const PatientProfileAchievements = ({ patientId }) => {
                             Completed in <b>{achievement.completedIn}</b> days
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            {achievement.title}
+                            {achievement.achievement.title}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -73,13 +88,13 @@ export const PatientProfileAchievements = ({ patientId }) => {
                           >
                             <img
                               className="rounded-circle"
-                              src={achievement.logoUrl}
+                              src={achievement.achievement.logoUrl}
                             />
                           </a>
                         </Col>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
-                        {getLevel(achievement.difficulty)}{" "}
+                        {getLevel(achievement.achievement.difficulty)}{" "}
                         <span className="text-nowrap">
                           Achievement date: {achievement.completionDate}
                         </span>

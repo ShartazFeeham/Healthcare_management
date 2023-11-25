@@ -1,5 +1,6 @@
 package com.healthcare.cdss.service.implemenatations;
 import com.healthcare.cdss.entity.Patient;
+import com.healthcare.cdss.exceptions.CustomException;
 import com.healthcare.cdss.exceptions.InternalCommunicationException;
 import com.healthcare.cdss.exceptions.ItemNotFoundException;
 import com.healthcare.cdss.models.*;
@@ -8,7 +9,9 @@ import com.healthcare.cdss.network.AccountCreateRequester;
 import com.healthcare.cdss.network.PhoneNoUpdateRequester;
 import com.healthcare.cdss.repository.PatientRepository;
 import com.healthcare.cdss.service.interfaces.PatientService;
+import com.healthcare.cdss.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,6 +65,7 @@ public class PatientServiceImpl implements PatientService {
 
         PatientBioDTO bioDTO = new PatientBioDTO();
         // Set properties from the patient entity
+        bioDTO.setPatientId(patient.getUserId());
         bioDTO.setFirstName(patient.getFirstName());
         bioDTO.setLastName(patient.getLastName());
         bioDTO.setEmail(patient.getEmail());
@@ -75,12 +79,16 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientHealthDTO getPatientHealth(String userId) throws ItemNotFoundException {
+    public PatientHealthDTO getPatientHealth(String userId) throws CustomException {
         Patient patient = patientRepository.findById(userId)
                 .orElseThrow(() -> new ItemNotFoundException("patient", userId));
 
+        if(!(IDExtractor.getUserID().equals(userId) || IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().startsWith("A")))
+            throw new CustomException("AccessDeniedException", "You can not see other patients personal healt info.", HttpStatus.BAD_REQUEST);
+
         PatientHealthDTO healthDTO = new PatientHealthDTO();
         // Set properties from the patient entity
+        healthDTO.setPatientId(patient.getUserId());
         healthDTO.setWeight(patient.getWeight());
         healthDTO.setAge(patient.getAge());
         healthDTO.setBloodPressure(patient.getBloodPressure());

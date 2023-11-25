@@ -1,64 +1,67 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
 import { PatientProfileAchievements } from "./PatientProfileAchievements";
 import { PatientProfileBio } from "./PatientProfileBio";
 import { PatientProfilePhoto } from "./PatientProfilePhoto";
-import patientDataBio from "assets/data/patientprofile/patientBio";
 import { PatientProfileHealth } from "./PatientProfileHealth";
 import { PatientProfileTreatment } from "./PatientProfileTreatment";
+import AxiosInstance from "scripts/axioInstance";
 
 const PatientProfile = () => {
-  const { patientId } = useParams();
-  const [patientData, setPatientData] = useState(null);
-  useEffect(() => {
-    setPatientData(patientDataBio);
-  }, [patientData]);
+  let { patientId } = useParams();
+  const navigate = useNavigate();
+
+  const [patientBio, setPatientBio] = useState(null);
+  const [patientHealth, setPatientHealth] = useState(null);
+
+  const userId = localStorage.getItem("userId")
+    ? localStorage.getItem("userId")
+    : null;
+  if (patientId === ":patientId") {
+    if (userId && userId[0] === "P") patientId = userId;
+    else patientId = null;
+  }
 
   useEffect(() => {
-    console.log("Patient ID:", patientId);
+    if (patientId === null) {
+      return navigate("/");
+    }
+    AxiosInstance.get(
+      `http://localhost:7100/patients/minimal-info/${patientId}`
+    )
+      .then((response) => {
+        console.log(response);
+        setPatientBio(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
   }, [patientId]);
 
   return (
     <>
       <div
-        className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+        className="header pb-7 pt-5 pt-lg-8 d-flex align-items-center"
         style={{
-          minHeight: "400px",
           backgroundImage:
             "url(" + require("../../assets/img/cover/patient2.jpg") + ")",
           backgroundSize: "cover",
           backgroundPosition: "center top",
+          width: "100%",
         }}
       >
         <span className="mask bg-gradient-default opacity-6" />
-        <Container className="d-flex align-items-center" fluid>
-          <Row>
-            <Col lg="7" md="10">
-              {patientData && (
-                <h1 className="display-2 text-white">
-                  {patientData.firstName} {patientData.lastName}
-                </h1>
-              )}
-              <p className="text-white mt-0 mb-5">
-                Prioritize your health like never before. Our app empowers you
-                to effortlessly browse through doctor and patient profiles, take
-                charge of your health data, and secure appointments for your
-                well-being.
-              </p>
-            </Col>
-          </Row>
-        </Container>
       </div>
       <Container className="mt--7" fluid>
         <Row>
           <Col className="order-xl-2 mb-5 mb-xl-0" xl="4">
-            {patientData && (
+            {patientBio && (
               <PatientProfilePhoto
                 patientId={patientId}
-                photo={patientData.profilePhoto}
-                firstName={patientData.firstName}
-                lastName={patientData.lastName}
+                photo={patientBio.photoURL}
+                firstName={patientBio.firstName}
+                lastName={patientBio.lastName}
               />
             )}
           </Col>

@@ -319,13 +319,15 @@ const RegisterDoctor = () => {
     const url = "http://localhost:7200/doctors/register";
     AxiosInstance.post(url, doctorData)
       .then((response) => {
+        console.log(response);
         setSuccess(
           response.data +
             ". Go to login page to verify and sign into your account."
         );
       })
       .catch((error) => {
-        setWarning(error.response.data.message);
+        console.log(error);
+        // setWarning(error.response.data.message);
       });
   };
 

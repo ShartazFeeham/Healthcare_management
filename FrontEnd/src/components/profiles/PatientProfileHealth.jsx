@@ -1,12 +1,19 @@
-import patientDataHealth from "assets/data/patientprofile/patientHealth";
 import { useEffect, useState } from "react";
 import { Card, CardBody, Row, Col } from "reactstrap";
+import AxiosInstance from "scripts/axioInstance";
 
 export const PatientProfileHealth = ({ patientId }) => {
   const [patientData, setPatientData] = useState(null);
   useEffect(() => {
-    setPatientData(patientDataHealth);
-  }, [patientData]);
+    AxiosInstance.get(`http://localhost:7100/patients/${patientId}/health`)
+      .then((response) => {
+        console.log(response);
+        setPatientData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -44,7 +51,12 @@ export const PatientProfileHealth = ({ patientId }) => {
                   Asthma: <b>{patientData.asthma}</b>
                 </Col>
                 <Col lg="6">
-                  Allergies: <b>{patientData.allergies.join(", ")}</b>
+                  Allergies:{" "}
+                  <b>
+                    {patientData.allergies
+                      ? patientData.allergies.join(", ")
+                      : "No data"}
+                  </b>
                 </Col>
               </Row>
               <Row>

@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder
 public class PatientHealthDTO {
+    private String patientId;
     private int weight;
     private int age;
     private String bloodPressure;

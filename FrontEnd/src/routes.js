@@ -25,6 +25,7 @@ import CreateEquipment from "components/equipments/Create";
 import EquipmentUpdate from "components/equipments/Update";
 import EquipmentList from "components/equipments/List";
 import EquipmentDetails from "components/equipments/Details";
+import WriteCDSS from "components/cdss/WriteCDSS";
 
 var routes = [
   {
@@ -33,28 +34,28 @@ var routes = [
     icon: "fa fa-home text-info",
     component: <Index />,
     layout: "/health",
-    role: "ADMIN PATIENT DOCTOR PUBLIC",
+    role: "",
   },
   {
     path: "/doctor",
-    name: "Dashboard",
-    icon: "fa fa-list-alt text-warning",
+    name: "Home",
+    icon: "fa fa-home text-info",
     component: <DoctorDashboard />,
     layout: "/health",
     role: "DOCTOR",
   },
   {
     path: "/patient",
-    name: "Dashboard",
-    icon: "fa fa-list-alt text-warning",
+    name: "Home",
+    icon: "fa fa-home text-info",
     component: <Index />,
     layout: "/health",
     role: "PATIENT",
   },
   {
     path: "/admin",
-    name: "Dashboard",
-    icon: "fa fa-list-alt text-warning",
+    name: "Home",
+    icon: "fa fa-home text-info",
     component: <Index />,
     layout: "/health",
     role: "ADMIN",
@@ -234,6 +235,15 @@ var routes = [
     component: <RoomAllocation />,
     layout: "/health",
     role: "ADMIN",
+  },
+
+  {
+    path: "/write-treatment",
+    name: "Write Treatment",
+    icon: "fa-solid fa-hotel text-warning",
+    component: <WriteCDSS />,
+    layout: "/health",
+    role: "ADMIN PATIENT DOCTOR",
   },
   {
     path: "/logout",

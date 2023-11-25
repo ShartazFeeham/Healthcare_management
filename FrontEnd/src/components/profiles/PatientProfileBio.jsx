@@ -1,13 +1,21 @@
-import patientDataBio from "assets/data/patientprofile/patientBio";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+import AxiosInstance from "scripts/axioInstance";
 
 export const PatientProfileBio = ({ patientId }) => {
   const [patientData, setPatientData] = useState(null);
+
   useEffect(() => {
-    setPatientData(patientDataBio);
-  }, [patientData]);
+    AxiosInstance.get(`http://localhost:7100/patients/${patientId}/bio`)
+      .then((response) => {
+        console.log(response);
+        setPatientData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching doctors:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -19,14 +27,20 @@ export const PatientProfileBio = ({ patientId }) => {
                 <b>PATIENT PROFILE</b>
               </h3>
             </Col>
-            <Col className="text-right" xs="4">
-              <Link
-                to={"/health/patients/edit-profile"}
-                className="btn btn-primary"
-              >
-                Edit profile
-              </Link>
-            </Col>
+            {patientData &&
+            localStorage.getItem("userId") &&
+            patientData.patientId === localStorage.getItem("userId") ? (
+              <Col className="text-right" xs="4">
+                <Link
+                  to={"/health/patients/edit-profile"}
+                  className="btn btn-primary"
+                >
+                  Edit profile
+                </Link>
+              </Col>
+            ) : (
+              ""
+            )}
           </Row>
         </CardHeader>
         <CardBody>

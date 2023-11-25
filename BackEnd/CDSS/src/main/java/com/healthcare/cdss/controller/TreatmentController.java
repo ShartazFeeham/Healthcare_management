@@ -38,20 +38,19 @@ public class TreatmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long id) throws ItemNotFoundException {
-        Treatment treatment = treatmentService.getById(id);
-        return ResponseEntity.ok(treatment);
+    public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long id) throws ItemNotFoundException, AccessDeniedException {
+        return ResponseEntity.ok(treatmentService.getById(id));
     }
 
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Treatment>> getTreatmentsByPatientId(@PathVariable String patientId) {
+    public ResponseEntity<List<Treatment>> getTreatmentsByPatientId(@PathVariable String patientId) throws AccessDeniedException {
         List<Treatment> treatments = treatmentService.getByPatientId(patientId);
         return ResponseEntity.ok(treatments);
     }
 
-    @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<Treatment>> getTreatmentsByDoctorId(@PathVariable String doctorId) {
-        List<Treatment> treatments = treatmentService.getByDoctorId(doctorId);
+    @GetMapping("/author/{doctorId}")
+    public ResponseEntity<List<Treatment>> getTreatmentsByAuthorId(@PathVariable String doctorId) throws AccessDeniedException {
+        List<Treatment> treatments = treatmentService.getByAuthorId(doctorId);
         return ResponseEntity.ok(treatments);
     }
 }
