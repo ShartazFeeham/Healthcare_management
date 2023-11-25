@@ -45,9 +45,9 @@ const EditPatientProfile = () => {
   const [weight, setWeight] = useState();
   const [bloodGroup, setBloodGroup] = useState();
   const [bloodSugar, setBloodSugar] = useState();
-  const [asthma, setAsthma] = useState(false);
-  const [drinking, setDringking] = useState(false);
-  const [smoking, setSmoking] = useState(false);
+  const [asthma, setAsthma] = useState();
+  const [drinking, setDringking] = useState();
+  const [smoking, setSmoking] = useState();
   const [bloodPressure, setBloodPressure] = useState();
   const [occupation, setOccupation] = useState();
 
@@ -81,8 +81,9 @@ const EditPatientProfile = () => {
         setBloodPressure(data.bloodPressure);
         setHeight(data.height);
         setOccupation(data.occupation);
-        setSmoking(data.smoking);
-        setDringking(data.drinking);
+        setSmoking(data.smoking === "Yes");
+        setDringking(data.drinking === "Yes");
+        setAsthma(data.asthma === "Yes");
 
         let aler = "";
         for (let i = 0; i < data.allergies.length; i++) {
@@ -657,7 +658,7 @@ const EditPatientProfile = () => {
           </Button>
         </div>
       </Modal>
-      )}
+      )
     </>
   );
 };

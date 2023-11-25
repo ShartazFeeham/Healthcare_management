@@ -40,9 +40,6 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<AchievementProgress> achievementProgresses;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private List<Treatment> treatments;
-
     public void setAllergies(String allergies) {
         this.allergies = Arrays.stream(allergies.trim().replace(" ", "").split(",")).toList();
     }

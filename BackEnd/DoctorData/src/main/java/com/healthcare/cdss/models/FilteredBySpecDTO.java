@@ -13,4 +13,5 @@ public class FilteredBySpecDTO {
     String photoURL;
     String experience;
     String specializations;
+    String gender;
 }

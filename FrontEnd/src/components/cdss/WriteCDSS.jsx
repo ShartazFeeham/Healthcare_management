@@ -39,7 +39,6 @@ const WriteCDSS = () => {
   const [condition, setCondition] = useState("");
   const [patientId, setPatientId] = useState("");
   const [issueDate, setIssueDate] = useState("");
-  const [closingDate, setClosingDate] = useState("");
   const [medicines, setMedicines] = useState("");
   const [diagnoses, setDiagnoses] = useState("");
   const [progression, setProgression] = useState("");
@@ -69,7 +68,6 @@ const WriteCDSS = () => {
       setCondition("");
       setPatientId("");
       setIssueDate("");
-      setClosingDate("");
       setMedicines("");
       setDiagnoses("");
       setProgression("");
@@ -84,7 +82,6 @@ const WriteCDSS = () => {
       setCondition(selectedTreatment.condition || "");
       setPatientId(selectedTreatment.patientId || "");
       setIssueDate(selectedTreatment.issueDate || "");
-      setClosingDate(selectedTreatment.closingDate || "");
       setMedicines(selectedTreatment.medicines || "");
       setDiagnoses(selectedTreatment.diagnoses || "");
       setProgression(selectedTreatment.progression || "");
@@ -104,7 +101,6 @@ const WriteCDSS = () => {
       patientId,
       condition,
       issueDate,
-      closingDate,
       medicines,
       diagnoses,
       progression,
@@ -115,8 +111,8 @@ const WriteCDSS = () => {
       const url = `http://localhost:7800/treatments/${existing[id].id}`;
       AxiosInstance.put(url, data)
         .then((result) => {
-          console.log(result);
-          setSuccess(result.data.message);
+          console.log(result.data);
+          setSuccess(result.data);
           setId(-1);
         })
         .catch((error) => {
@@ -128,7 +124,14 @@ const WriteCDSS = () => {
       AxiosInstance.post(url, data)
         .then((result) => {
           console.log(result);
-          setSuccess(result.response.data.message);
+          setSuccess(result.data);
+          setCondition("");
+          setPatientId("");
+          setIssueDate("");
+          setMedicines("");
+          setDiagnoses("");
+          setProgression("");
+          setDoctorComment("");
           setId(-1);
         })
         .catch((error) => {
@@ -367,28 +370,6 @@ const WriteCDSS = () => {
                           value={progression}
                           placeholder="Write a progression status"
                           onChange={(e) => setProgression(e.target.value)}
-                          style={textColor}
-                        />
-                      </InputGroup>
-                    </Col>
-                  </FormGroup>
-
-                  <FormGroup row>
-                    <Label sm={4} for="closingDate">
-                      Closing date
-                    </Label>
-                    <Col sm={8}>
-                      <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText style={textColor}>
-                            <i className="ni ni-calendar-grid-58" />
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input
-                          type="date"
-                          id="closingDate"
-                          value={closingDate}
-                          onChange={(e) => setClosingDate(e.target.value)}
                           style={textColor}
                         />
                       </InputGroup>

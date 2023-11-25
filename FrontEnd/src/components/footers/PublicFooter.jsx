@@ -11,21 +11,18 @@ const Login = () => {
                 © {new Date().getFullYear()}{" "}
                 <a
                   className="font-weight-bold ml-1"
-                  href="https://www.creative-tim.com?ref=adr-auth-footer"
+                  href="http://localhost:3000"
                   target="_blank"
                 >
-                  Creative Tim
+                  EA Healthcare
                 </a>
               </div>
             </Col>
             <Col xl="6">
               <Nav className="nav-footer justify-content-center justify-content-xl-end">
                 <NavItem>
-                  <NavLink
-                    href="https://www.creative-tim.com?ref=adr-auth-footer"
-                    target="_blank"
-                  >
-                    Creative Tim
+                  <NavLink href="http://localhost:3000" target="_blank">
+                    EA Healthcare
                   </NavLink>
                 </NavItem>
                 <NavItem>
@@ -49,7 +46,7 @@ const Login = () => {
                     href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md?ref=adr-auth-footer"
                     target="_blank"
                   >
-                    MIT License
+                    Contact
                   </NavLink>
                 </NavItem>
               </Nav>

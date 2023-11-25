@@ -27,29 +27,24 @@ public class Treatment {
     @Getter
     private Long id;
 
-    @Size(min = 5, message = "Condition must have a minimum length of 5 characters")
+    @Size(min = 4, message = "Condition must have a minimum length of 4 characters")
     @Column(name = "condition_name")
     @Getter
     private String condition;
 
+    @Getter
     @NotNull(message = "Issue date cannot be null")
     @PastOrPresent(message = "Issue date must be in the past or present")
-    @Getter
     private LocalDate issueDate;
 
-    @NotNull(message = "Closing date cannot be null")
-    @PastOrPresent(message = "Closing date must be in the past or present")
-    @Getter
-    private LocalDate closingDate;
-
-    @Size(min = 5, message = "Medicines must have a minimum length of 5 characters")
+    @Size(min = 4, message = "Medicines must have a minimum length of 4 characters")
     @Getter
     private String medicines;
 
     @Getter
     private String diagnoses;
 
-    @Size(min = 5, message = "Progression must have a minimum length of 5 characters")
+    @Size(min = 4, message = "Progression must have a minimum length of 4 characters")
     @Getter
     private String progression;
 
@@ -68,10 +63,6 @@ public class Treatment {
 
     public String getIssueDate(){
         return issueDate.toString();
-    }
-
-    public String getClosingDate(){
-        return closingDate.toString();
     }
 
     public void generateKeywords() {

@@ -73,7 +73,19 @@ export const PatientProfileAchievements = ({ patientId }) => {
                             <b>
                               <i className="ni ni-user-run text-success" />
                             </b>{" "}
-                            Completed in <b>{achievement.completedIn}</b> days
+                            {achievement.achievementDate ? (
+                              <>
+                                Completed in <b>{achievement.completedIn}</b>{" "}
+                                days
+                              </>
+                            ) : (
+                              "In progress " +
+                              "(" +
+                              (achievement.totalScore /
+                                achievement.achievement.goalScore) *
+                                100 +
+                              "%)"
+                            )}
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
                             {achievement.achievement.title}
@@ -96,7 +108,10 @@ export const PatientProfileAchievements = ({ patientId }) => {
                       <p className="mt-3 mb-0 text-muted text-sm">
                         {getLevel(achievement.achievement.difficulty)}{" "}
                         <span className="text-nowrap">
-                          Achievement date: {achievement.completionDate}
+                          Achievement date:{" "}
+                          {achievement.completionDate
+                            ? achievement.completionDate
+                            : "Not achieved yet."}
                         </span>
                       </p>
                     </CardBody>

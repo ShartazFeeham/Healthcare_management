@@ -26,6 +26,8 @@ import EquipmentUpdate from "components/equipments/Update";
 import EquipmentList from "components/equipments/List";
 import EquipmentDetails from "components/equipments/Details";
 import WriteCDSS from "components/cdss/WriteCDSS";
+import PatientDashboard from "components/patient-dashboard/Dashboard";
+import CreateAppointment from "components/appointment/CreateAppointment";
 
 var routes = [
   {
@@ -48,7 +50,7 @@ var routes = [
     path: "/patient",
     name: "Home",
     icon: "fa fa-home text-info",
-    component: <Index />,
+    component: <PatientDashboard />,
     layout: "/health",
     role: "PATIENT",
   },
@@ -60,6 +62,15 @@ var routes = [
     layout: "/health",
     role: "ADMIN",
   },
+  {
+    path: "/appointment",
+    name: "Appointment",
+    icon: "fa-solid fa-clock text-primary",
+    component: <CreateAppointment />,
+    layout: "/health",
+    role: "ADMIN PATIENT",
+  },
+
   {
     path: "/login",
     name: "Login",

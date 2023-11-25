@@ -43,7 +43,7 @@ const UpdateRoom = ({ setWarning, setSuccess, doctorId, room }) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i style={{ color: "#777" }} className="ni ni-email-83" />
+                    <i style={{ color: "#777" }} className="fa fa-building" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
