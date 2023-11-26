@@ -56,14 +56,15 @@ public class PreferenceServiceImpl implements PreferenceService {
     public void update(String userId, Preference updatedPreference) {
         Preference preference = getByUserId(userId);
 
-        preference.setDoNotDisturb(updatedPreference.isDoNotDisturb());
-        preference.setGetCommunityUpdates(updatedPreference.isGetCommunityUpdates());
-        preference.setGetSiteUpdates(updatedPreference.isGetSiteUpdates());
-        preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
-        preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
         preference.setGetEmailNotifications(updatedPreference.isGetEmailNotifications());
-        preference.setGetPushNotifications(updatedPreference.isGetPushNotifications());
         preference.setGetSMSNotifications(updatedPreference.isGetSMSNotifications());
+        preference.setGetPushNotifications(updatedPreference.isGetPushNotifications());
+        preference.setDoNotDisturb(updatedPreference.isDoNotDisturb());
+
+        preference.setGetCommunityUpdates(updatedPreference.isGetCommunityUpdates());
+        preference.setGetAppointmentUpdates(updatedPreference.isGetAppointmentUpdates());
+        preference.setGetAppointmentUpdates(updatedPreference.isGetCommunityUpdates());
+        preference.setGetSiteUpdates(updatedPreference.isGetSiteUpdates());
 
         preferenceRepository.save(preference);
     }

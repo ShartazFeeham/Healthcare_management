@@ -4,21 +4,25 @@ import com.healthcare.notification.entities.Notification;
 import com.healthcare.notification.entities.Preference;
 import com.healthcare.notification.exceptions.AccessMismatchException;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.model.NotificationDTO;
 import com.healthcare.notification.network.EmailGetter;
 import com.healthcare.notification.repository.NotificationRepository;
 import com.healthcare.notification.service.interfaces.NotificationService;
 import com.healthcare.notification.service.interfaces.NotifyService;
 import com.healthcare.notification.service.interfaces.PreferenceService;
+import com.healthcare.notification.utilities.TimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final PreferenceService preferenceService;
+    private final TimeFormatter timeFormatter;
     private final NotifyService notifyService;
     private final EmailGetter emailGetter;
 
@@ -38,12 +43,19 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<Notification> getAllByUserId(String userId, int itemCount, int pageNo) {
-        int offset = pageNo - 1;
-        Pageable pageable = PageRequest.of(offset, itemCount);
-        Page<Notification> notificationPage = notificationRepository.findByUserId(userId, pageable);
-        return notificationPage.getContent();
+    public List<NotificationDTO> getAllByUserId(String userId, int itemCount, int pageNo) {
+        Page<Notification> notificationPage = notificationRepository.findByUserIdOrderByTimeCreateDesc(
+                userId,
+                PageRequest.of(pageNo, itemCount)
+        );
+        return notificationPage.getContent().stream()
+                .map(n -> new NotificationDTO(n.getNotificationId(),  n.getUserId(), n.getTitle(), n.getPrefix(), n.getText(),
+                        n.getSuffix(), n.getUrl(), n.getPhotoUrl(), timeFormatter.format(n.getTimeCreate()), n.isSeen(), n.getType()
+                ))
+                .collect(Collectors.toList());
     }
+
+
 
     @Override
     public void setSeen(Long notificationId, String userId) throws ItemNotFoundException, AccessMismatchException {

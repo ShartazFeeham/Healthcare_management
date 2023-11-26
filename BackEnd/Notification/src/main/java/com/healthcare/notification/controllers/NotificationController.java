@@ -3,6 +3,7 @@ package com.healthcare.notification.controllers;
 import com.healthcare.notification.entities.Notification;
 import com.healthcare.notification.exceptions.AccessMismatchException;
 import com.healthcare.notification.exceptions.ItemNotFoundException;
+import com.healthcare.notification.model.NotificationDTO;
 import com.healthcare.notification.service.interfaces.NotificationService;
 import com.healthcare.notification.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class NotificationController {
         return new ResponseEntity<String>("Notification created", HttpStatus.CREATED);
     }
 
-    @GetMapping("/{itemCount}/{pageNo}")
-    public ResponseEntity<List<Notification>> getAllNotifications(@PathVariable int itemCount, @PathVariable int pageNo) {
+    @GetMapping("/{pageNo}/{itemCount}")
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@PathVariable int itemCount, @PathVariable int pageNo) {
         return ResponseEntity.ok(notificationService.getAllByUserId(IDExtractor.getUserID(), itemCount, pageNo));
     }
 

@@ -1,4 +1,4 @@
-package com.healtcare.appointments.utilities;
+package com.healthcare.notification.utilities;
 
 import org.springframework.stereotype.Component;
 

@@ -16,6 +16,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
     List<Appointment> findByDoctorIdAndCancelledAndAppointmentTimeAfter(String patientId, boolean cancelled, LocalDateTime appointmentTime);
     int countByDoctorIdAndDateAndShift(String doctorId, LocalDate date, String shift);
     int countByDoctorIdAndDateAndShiftAndCancelled(String doctorId, LocalDate date, String shift, boolean cancelled);
+    List<Appointment> findByAppointmentTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     int countByDoctorId(String doctorId);
     long countByIdStartingWith(String idPattern);
 }
