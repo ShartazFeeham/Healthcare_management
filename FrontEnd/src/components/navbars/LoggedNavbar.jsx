@@ -23,6 +23,7 @@ import { isLogged } from "scripts/accountInfo";
 
 const LoggedNavbar = (props) => {
   const navigate = useNavigate();
+  const [notification, setNotification] = useState(0);
   if (!isLogged) {
     navigate("/");
   }
@@ -33,22 +34,43 @@ const LoggedNavbar = (props) => {
   });
 
   useEffect(() => {
-    let url;
-    const userId = localStorage.getItem("userId");
-    if (userId === null) return;
-    if (userId[0] === "P")
-      url = "http://localhost:7100/patients/minimal-info/" + userId;
-    else if (userId[0] === "D")
-      url = "http://localhost:7200/doctors/minimal-info/" + userId;
-    else url = "http://localhost:5100/access/minimal-info/" + userId;
-    AxiosInstance.get(url)
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      });
-  }, []);
+    const fetchUserData = () => {
+      let url;
+      const userId = localStorage.getItem("userId");
+      if (userId === null) return;
+      if (userId[0] === "P")
+        url = "http://localhost:7100/patients/minimal-info/" + userId;
+      else if (userId[0] === "D")
+        url = "http://localhost:7200/doctors/minimal-info/" + userId;
+      else url = "http://localhost:5100/access/minimal-info/" + userId;
+
+      AxiosInstance.get(url)
+        .then((response) => {
+          setUserData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    };
+
+    // Fetch user data initially
+    fetchUserData();
+
+    // Set up interval to fetch notifications every 3 seconds
+    const intervalId = setInterval(() => {
+      AxiosInstance.get("http://localhost:7600/notifications/unseen-count")
+        .then((response) => {
+          setNotification(response.data);
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error("Error fetching notifications:", error);
+        });
+    }, 3000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array to run only once when the component mounts
 
   const renderUserPhoto = () => {
     if (userData.photoURL) {
@@ -88,6 +110,34 @@ const LoggedNavbar = (props) => {
               </InputGroup>
             </FormGroup>
           </Form>
+          <div
+            style={{ position: "relative", display: "inline-block" }}
+            onClick={() => {
+              navigate("/health/notifications");
+            }}
+          >
+            <i
+              className="fa-solid fa-bell text-xl"
+              style={{ color: "#ffbe4d", cursor: "pointer" }}
+            ></i>
+            {notification > 0 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "0.5rem",
+                  right: "0.5rem",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "0.1rem 0.3rem",
+                  fontSize: "0.7rem",
+                  cursor: "pointer",
+                }}
+              >
+                {notification}
+              </div>
+            )}
+          </div>
           <Nav className="align-items-center d-none d-md-flex" navbar>
             <UncontrolledDropdown nav>
               <DropdownToggle className="pr-0" nav>

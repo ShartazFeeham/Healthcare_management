@@ -9,6 +9,6 @@ public class ShiftedScheduler {
     private final Remind remind;
     @Scheduled(fixedDelay = 1000 * 60 * 60 * 8, initialDelay = 1000)
     public void scheduleTask() {
-        remind.sendNotifications(null, 60 * 8);
+        remind.sendNotifications(60 * 8 - 60);
     }
 }

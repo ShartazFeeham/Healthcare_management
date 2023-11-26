@@ -18,7 +18,7 @@ public class Remind {
     private final AppointmentRepository appointmentRepository;
     private final NotificationSender notificationSender;
 
-    public void sendNotifications(Notification notification, Integer remainingTimeInMinutes){
+    public void sendNotifications(Integer remainingTimeInMinutes){
         LocalDateTime startTime = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.now().plusMinutes(remainingTimeInMinutes);
 

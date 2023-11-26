@@ -10,6 +10,6 @@ public class FiveMinuteScheduler {
     private final Remind remind;
     @Scheduled(fixedDelay = 1000 * 60 * 5, initialDelay = 1000)
     public void scheduleTask() {
-        remind.sendNotifications(null, 5);
+        remind.sendNotifications(5);
     }
 }

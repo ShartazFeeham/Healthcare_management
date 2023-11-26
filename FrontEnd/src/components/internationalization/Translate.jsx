@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import AxiosInstance from "scripts/axioInstance";
 
 const Translate = ({ text }) => {
-
   let language = localStorage.getItem("language");
   if (!language) {
     language = "Bengali";
@@ -27,7 +26,8 @@ const Translate = ({ text }) => {
     German: "de",
   };
 
-  const toggle = () => {
+  const toggle = (event) => {
+    event.stopPropagation();
     if (translated) {
       setDisplay(original);
       setTranslated(false);
@@ -55,11 +55,16 @@ const Translate = ({ text }) => {
 
   return (
     <div>
-      {display} <br></br>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: display.replace(/\n/g, "<br>"),
+        }}
+      />
       <div>
         {loading === false && translated === false ? (
           <div
-            onClick={toggle}
+            // onClick={toggle(event)}
+            onClick={(event) => toggle(event)}
             style={{ fontSize: "small", cursor: "pointer" }}
           >
             <i class="fa fa-language" aria-hidden="true"></i> See translation
@@ -76,7 +81,7 @@ const Translate = ({ text }) => {
         )}
         {loading === false && translated === true ? (
           <div
-            onClick={toggle}
+            onClick={(event) => toggle(event)}
             style={{ fontSize: "small", cursor: "pointer" }}
           >
             <i class="fa fa-undo" aria-hidden="true"></i> See original text

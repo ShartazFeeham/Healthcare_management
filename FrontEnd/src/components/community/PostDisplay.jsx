@@ -166,11 +166,7 @@ const PostDisplay = () => {
                 textAlign: "justify", // Justify the text
               }}
             >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: post.content.replace(/\n/g, "<br>"),
-                }}
-              />
+              <Translate text={post.content} />
               <div style={{ marginTop: "10px" }}>{post.date}</div>
             </div>
             <Row

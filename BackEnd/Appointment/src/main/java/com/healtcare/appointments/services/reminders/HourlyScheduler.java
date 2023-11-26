@@ -9,6 +9,6 @@ public class HourlyScheduler {
     private final Remind remind;
     @Scheduled(fixedDelay = 1000 * 60 * 60, initialDelay = 1000)
     public void scheduleTask() {
-        remind.sendNotifications(null, 60);
+        remind.sendNotifications(55);
     }
 }

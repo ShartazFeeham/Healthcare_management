@@ -9,6 +9,6 @@ public class DailyScheduler {
     private final Remind remind;
     @Scheduled(fixedDelay = 1000 * 60 * 60 * 24, initialDelay = 1000)
     public void scheduleTask() {
-        remind.sendNotifications(null, 60 * 24);
+        remind.sendNotifications(60 * 24 - 60 * 8);
     }
 }

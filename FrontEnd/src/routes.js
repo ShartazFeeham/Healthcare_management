@@ -28,6 +28,8 @@ import EquipmentDetails from "components/equipments/Details";
 import WriteCDSS from "components/cdss/WriteCDSS";
 import PatientDashboard from "components/patient-dashboard/Dashboard";
 import CreateAppointment from "components/appointment/CreateAppointment";
+import Notifications from "components/notification/Notifications";
+import SettingsPage from "components/notification/SettingsPage";
 
 var routes = [
   {
@@ -94,6 +96,14 @@ var routes = [
     component: <ForgottenPassword />,
     layout: "/public",
     role: "PUBLIC",
+  },
+  {
+    path: "/notifications",
+    name: "Notifications",
+    icon: "ni ni-circle-08 text-pink",
+    component: <Notifications />,
+    layout: "/health",
+    role: "",
   },
   {
     path: "/verify-email",
@@ -253,6 +263,14 @@ var routes = [
     name: "Write Treatment",
     icon: "fa-solid fa-hotel text-warning",
     component: <WriteCDSS />,
+    layout: "/health",
+    role: "ADMIN PATIENT DOCTOR",
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    icon: "fa fa-cog text-black",
+    component: <SettingsPage />,
     layout: "/health",
     role: "ADMIN PATIENT DOCTOR",
   },

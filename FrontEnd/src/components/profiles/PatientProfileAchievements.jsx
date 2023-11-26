@@ -73,7 +73,7 @@ export const PatientProfileAchievements = ({ patientId }) => {
                             <b>
                               <i className="ni ni-user-run text-success" />
                             </b>{" "}
-                            {achievement.achievementDate ? (
+                            {achievement.completedIn ? (
                               <>
                                 Completed in <b>{achievement.completedIn}</b>{" "}
                                 days
@@ -81,8 +81,10 @@ export const PatientProfileAchievements = ({ patientId }) => {
                             ) : (
                               "In progress " +
                               "(" +
-                              (achievement.totalScore /
-                                achievement.achievement.goalScore) *
+                              parseInt(
+                                achievement.totalScore /
+                                  achievement.achievement.goalScore
+                              ) *
                                 100 +
                               "%)"
                             )}

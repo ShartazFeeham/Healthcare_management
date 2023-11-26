@@ -175,7 +175,7 @@ public class DelayServiceImpl implements DelayService {
             String shiftedTime = timeFormatter
                     .formatTo12HourFormat((appointment.getAppointmentTime()
                             .plusMinutes(delay.getDelayMinutes())).toLocalTime());
-            String url = "http://localhost:3000/health/patients/" + appointment.getPatientId();
+            String url = "http://localhost:3000/health/patient";
 
             NotificationRequest notification = NotificationRequest.builder()
                     .userId(userId)
