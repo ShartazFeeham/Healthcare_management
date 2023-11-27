@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardBody, CardImg, CardTitle, Col } from "reactstrap";
 import AxiosInstance from "scripts/axioInstance";
 
@@ -6,7 +7,9 @@ const DocCard = ({ doctor, index, setSelectedDoctor }) => {
   const [tCount, setTCount] = useState(0);
   const [aCount, setACount] = useState(0);
   useEffect(() => {
-    AxiosInstance.get(`http://localhost:7400/appointments/total/${"DFS1"}`)
+    AxiosInstance.get(
+      `http://localhost:7400/appointments/total/${doctor.userId}`
+    )
       .then((response) => {
         setTCount(response.data);
       })
@@ -14,7 +17,7 @@ const DocCard = ({ doctor, index, setSelectedDoctor }) => {
         console.log("No completed appointments.");
         console.log(error);
       });
-    AxiosInstance.get(`http://localhost:7400/schedule/dates/${"DFS1"}`)
+    AxiosInstance.get(`http://localhost:7400/schedule/dates/${doctor.userId}`)
       .then((response) => {
         setACount(response.data.length);
       })
@@ -58,7 +61,9 @@ const DocCard = ({ doctor, index, setSelectedDoctor }) => {
           )}
           <CardBody>
             <b>
-              <CardTitle className="mb--1">{`Dr. ${doctor.firstName} ${doctor.lastName}`}</CardTitle>
+              <Link to={"/health/doctors/" + doctor.userId}>
+                <CardTitle className="mb--1">{`Dr. ${doctor.firstName} ${doctor.lastName}`}</CardTitle>
+              </Link>
             </b>
             <div className="m-2">
               <p className="">Specialized at {doctor.specializations}. </p>

@@ -24,6 +24,7 @@ const Completed = () => {
     )
       .then((response) => {
         setApps(response.data);
+        console.log(response);
       })
       .catch((error) => {
         console.log("No completed appointments.");

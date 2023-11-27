@@ -24,6 +24,8 @@ import { isLogged } from "scripts/accountInfo";
 const LoggedNavbar = (props) => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+
   if (!isLogged) {
     navigate("/");
   }
@@ -61,7 +63,6 @@ const LoggedNavbar = (props) => {
       AxiosInstance.get("http://localhost:7600/notifications/unseen-count")
         .then((response) => {
           setNotification(response.data);
-          console.log(response);
         })
         .catch((error) => {
           console.error("Error fetching notifications:", error);
@@ -88,6 +89,16 @@ const LoggedNavbar = (props) => {
     }
   };
 
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchKeyPress = (e) => {
+    if (e.key === "Enter") {
+      navigate(`/common/search?query=${encodeURIComponent(searchQuery)}`);
+    }
+  };
+
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -106,7 +117,13 @@ const LoggedNavbar = (props) => {
                     <i className="fas fa-search" />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Search" type="text" />
+                <Input
+                  placeholder="Search"
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onKeyPress={handleSearchKeyPress}
+                />
               </InputGroup>
             </FormGroup>
           </Form>
@@ -153,11 +170,15 @@ const LoggedNavbar = (props) => {
               <DropdownMenu className="dropdown-menu-arrow" right>
                 <DropdownItem to="/health/settings" tag={Link}>
                   <i class="fa fa-cog" aria-hidden="true"></i>
-                  <span>Settings</span>
+                  <Link to={"/health/settings"}>
+                    <span>Settings</span>
+                  </Link>
                 </DropdownItem>
                 <DropdownItem to="/health/logout" tag={Link}>
                   <i class="fa fa-sign-out" aria-hidden="true"></i>
-                  <span>Logout</span>
+                  <Link to={"/health/logout"}>
+                    <span>Lougout</span>
+                  </Link>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

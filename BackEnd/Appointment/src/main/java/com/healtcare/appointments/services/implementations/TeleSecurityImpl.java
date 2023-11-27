@@ -1,7 +1,7 @@
 package com.healtcare.appointments.services.implementations;
 
-import com.healtcare.appointments.entities.Appointment;
 import com.healtcare.appointments.exception.AccessDeniedException;
+import com.healtcare.appointments.entities.Appointment;
 import com.healtcare.appointments.services.interfaces.AppointmentService;
 import com.healtcare.appointments.services.interfaces.DelayService;
 import com.healtcare.appointments.services.interfaces.TeleSecurityService;

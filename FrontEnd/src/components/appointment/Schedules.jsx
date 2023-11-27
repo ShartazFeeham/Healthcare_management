@@ -146,7 +146,7 @@ const Schedules = ({ selectedDoctor, setSelectedDoctor }) => {
         <Col>
           <Card>
             <CardTitle className="m-4 mb--2">
-              <b>Schedule details</b>
+              <b>Schedule details</b> {selectedDate && <>({selectedDate})</>}
             </CardTitle>
             <CardBody style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
               {alertMessage && (

@@ -67,7 +67,7 @@ const RegisterPatient = () => {
         setAge("");
       })
       .catch((error) => {
-        setWarning(error.response.data.message);
+        console.log(error.response.data.message);
       });
   };
 

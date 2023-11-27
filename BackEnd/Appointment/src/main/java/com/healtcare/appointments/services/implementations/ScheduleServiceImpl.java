@@ -1,8 +1,8 @@
 package com.healtcare.appointments.services.implementations;
 
-import com.healtcare.appointments.entities.Schedule;
 import com.healtcare.appointments.exception.AccessDeniedException;
 import com.healtcare.appointments.exception.ItemNotFoundException;
+import com.healtcare.appointments.entities.Schedule;
 import com.healtcare.appointments.models.AvailabilityDTO;
 import com.healtcare.appointments.models.ScheduleGetDTO;
 import com.healtcare.appointments.models.ScheduleSetDTO;

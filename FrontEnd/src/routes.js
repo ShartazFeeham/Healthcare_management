@@ -30,6 +30,7 @@ import PatientDashboard from "components/patient-dashboard/Dashboard";
 import CreateAppointment from "components/appointment/CreateAppointment";
 import Notifications from "components/notification/Notifications";
 import SettingsPage from "components/notification/SettingsPage";
+import Search from "components/search/Search";
 
 var routes = [
   {
@@ -37,7 +38,7 @@ var routes = [
     name: "Home",
     icon: "fa fa-home text-info",
     component: <Index />,
-    layout: "/health",
+    layout: "/common",
     role: "",
   },
   {
@@ -269,7 +270,7 @@ var routes = [
   {
     path: "/settings",
     name: "Settings",
-    icon: "fa fa-cog text-black",
+    icon: "fa fa-cog text-primary",
     component: <SettingsPage />,
     layout: "/health",
     role: "ADMIN PATIENT DOCTOR",
@@ -296,6 +297,14 @@ var routes = [
     icon: "fa fa-sign-out text-black",
     component: <PostDisplay />,
     layout: "/health",
+    role: "",
+  },
+  {
+    path: "/search",
+    name: "Search",
+    icon: "fa fa-search text-info",
+    component: <Search />,
+    layout: "/common",
     role: "",
   },
 ];

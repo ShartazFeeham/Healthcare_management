@@ -1,12 +1,12 @@
 package com.healtcare.appointments.services.implementations;
 
-import com.healtcare.appointments.entities.Appointment;
-import com.healtcare.appointments.entities.Schedule;
 import com.healtcare.appointments.exception.AccessDeniedException;
 import com.healtcare.appointments.exception.ItemNotFoundException;
+import com.healtcare.appointments.repositories.AppointmentRepository;
+import com.healtcare.appointments.entities.Appointment;
+import com.healtcare.appointments.entities.Schedule;
 import com.healtcare.appointments.models.AppointmentListDTO;
 import com.healtcare.appointments.models.AppointmentRequestDTO;
-import com.healtcare.appointments.repositories.AppointmentRepository;
 import com.healtcare.appointments.repositories.ScheduleRepository;
 import com.healtcare.appointments.services.interfaces.AppointmentService;
 import com.healtcare.appointments.services.interfaces.DelayService;

@@ -10,6 +10,7 @@ import {
   Container,
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
+import RoomInfo from "./RoomInfo";
 
 const Upcoming = () => {
   const [apps, setApps] = useState([]);
@@ -17,12 +18,12 @@ const Upcoming = () => {
   const [appsPerPage] = useState(10);
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
-
   useEffect(() => {
     AxiosInstance.get(
       `http://localhost:7400/appointments/upcoming/patient/${userId}`
     )
       .then((response) => {
+        console.log(response);
         setApps(response.data);
       })
       .catch((error) => {
@@ -37,6 +38,12 @@ const Upcoming = () => {
   const currentApps = apps.slice(indexOfFirstApp, indexOfLastApp);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  function extractDoctorId(appointmentId) {
+    const parts = appointmentId.split("-");
+    const doctorId = parts[0];
+    return doctorId;
+  }
 
   return (
     <>
@@ -89,13 +96,15 @@ const Upcoming = () => {
                   <p className="mt-3 mb-0 text-muted text-sm">
                     <Row>
                       <Col>
-                        <span className="text-success mr-2">
+                        <span className="text-success mr-2 mb-2">
                           <i className="fa fa-user" />{" "}
                           <Link
-                            to={`/health/patients/${app.userId}`}
+                            to={`/health/doctors/${extractDoctorId(
+                              app.appointmentId
+                            )}`}
                             className="text-success"
                           >
-                            Patient profile
+                            Doctor profile
                           </Link>
                         </span>{" "}
                       </Col>
@@ -109,7 +118,12 @@ const Upcoming = () => {
                             <i class="fa-solid fa-phone"></i> Join call
                           </Button>
                         ) : (
-                          ""
+                          <>
+                            <i className="fa fa-building"></i>{" "}
+                            <RoomInfo
+                              doctorId={extractDoctorId(app.appointmentId)}
+                            />
+                          </>
                         )}
                       </Col>
                     </Row>

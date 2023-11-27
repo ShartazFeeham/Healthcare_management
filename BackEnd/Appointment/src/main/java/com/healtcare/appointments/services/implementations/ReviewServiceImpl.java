@@ -9,11 +9,9 @@ import com.healtcare.appointments.services.interfaces.ReviewService;
 import com.healtcare.appointments.utilities.TimeFormatter;
 import com.healtcare.appointments.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

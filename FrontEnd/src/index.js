@@ -22,7 +22,7 @@ root.render(
       <Route path="/public/*" element={<Public />} />
       <Route path="/common/*" element={<Common />} />
       <Route path="/tele/*" element={<TeleBG />} />
-      <Route path="/" element={<Navigate to="/health/index" replace />} />
+      <Route path="/" element={<Navigate to="/common/index" replace />} />
       {/* I can add page not found page here! */}
       {/* <Route path="*" element={<Navigate to="/health/index" replace />} /> */}
     </Routes>

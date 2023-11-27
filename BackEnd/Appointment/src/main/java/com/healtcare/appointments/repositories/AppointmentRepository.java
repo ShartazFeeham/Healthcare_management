@@ -1,7 +1,6 @@
 package com.healtcare.appointments.repositories;
 
 import com.healtcare.appointments.entities.Appointment;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

@@ -73,7 +73,7 @@ export const PatientProfileAchievements = ({ patientId }) => {
                             <b>
                               <i className="ni ni-user-run text-success" />
                             </b>{" "}
-                            {achievement.completedIn ? (
+                            {achievement.completionDate ? (
                               <>
                                 Completed in <b>{achievement.completedIn}</b>{" "}
                                 days

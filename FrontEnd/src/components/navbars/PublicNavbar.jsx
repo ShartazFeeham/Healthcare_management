@@ -47,15 +47,9 @@ const PublicNavbar = () => {
             </div>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="nav-link-icon" to="/" tag={Link}>
-                  <i className="ni ni-planet" />
-                  <span className="nav-link-inner--text">Dashboard</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
                 <NavLink
                   className="nav-link-icon"
-                  to="/public/register"
+                  to="/public/register-patient"
                   tag={Link}
                 >
                   <i className="ni ni-circle-08" />
@@ -72,10 +66,15 @@ const PublicNavbar = () => {
                   <span className="nav-link-inner--text">Login</span>
                 </NavLink>
               </NavItem>
+
               <NavItem>
-                <NavLink className="nav-link-icon" to="/public/help" tag={Link}>
+                <NavLink
+                  className="nav-link-icon"
+                  to="/common/search"
+                  tag={Link}
+                >
                   <i className="ni ni-single-02" />
-                  <span className="nav-link-inner--text">Help</span>
+                  <span className="nav-link-inner--text">Help desk</span>
                 </NavLink>
               </NavItem>
             </Nav>
