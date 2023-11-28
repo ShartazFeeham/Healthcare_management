@@ -49,7 +49,7 @@ public class PatientController {
     }
 
     @GetMapping("/minimal-info/{userId}")
-    public ResponseEntity<UserMinimalInfoDTO> updatePatientProfile(@PathVariable String userId) throws ItemNotFoundException {
+    public ResponseEntity<UserMinimalInfoDTO> getMinimalInfo(@PathVariable String userId) throws ItemNotFoundException {
         return ResponseEntity.ok(patientService.getUserMinimalInfo(userId));
     }
 
