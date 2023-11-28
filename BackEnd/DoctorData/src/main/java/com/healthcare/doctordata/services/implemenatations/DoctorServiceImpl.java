@@ -9,7 +9,6 @@ import com.healthcare.doctordata.models.*;
 import com.healthcare.doctordata.network.AccountCreateDTO;
 import com.healthcare.doctordata.repository.DoctorRepository;
 import com.healthcare.doctordata.utilities.token.IDExtractor;
-import com.healthcare.doctordata.models.*;
 import com.healthcare.doctordata.network.AccountCreateRequester;
 import com.healthcare.doctordata.network.PhoneNoUpdateRequester;
 import com.healthcare.doctordata.services.interfaces.DoctorService;

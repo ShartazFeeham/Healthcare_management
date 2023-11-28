@@ -2,6 +2,8 @@ package com.healthcare.doctordata.exceptions;
 
 import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 // This class serves as a global exception handler for handling various types of exceptions
 // that may occur during API operations.
@@ -42,6 +46,27 @@ public class GlobalExceptionHandler {
         // Return an HTTP response with a status code indicating a bad request.
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    // Exception handler for handling validation
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<ErrorResponse> handleValidationException(Exception e, HttpServletRequest request) {
+        Set<ConstraintViolation<?>> violations = ((ConstraintViolationException) e).getConstraintViolations();
+
+        String errorMessage = violations.stream()
+                .map(violation -> String.format("%s", violation.getMessage()))
+                .collect(Collectors.joining(", "));
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                errorMessage,
+                HttpStatus.BAD_REQUEST.toString(),
+                new Date(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+
 
     @ExceptionHandler({CustomException.class})
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {

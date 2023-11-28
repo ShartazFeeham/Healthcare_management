@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter @Setter @RequiredArgsConstructor @Entity  @Table(name = "posts")
@@ -18,9 +19,11 @@ public class Post {
 
     private String title;
     @Column(columnDefinition = "TEXT")
+    @NotNull(message = "Content cannot be null")
     private String content;
     private String photoURL;
     private LocalDateTime timeCreated;
+    @NotNull(message = "Type cannot be null")
     private String type;
 
     @OneToMany(mappedBy = "parentPost", cascade = CascadeType.ALL)

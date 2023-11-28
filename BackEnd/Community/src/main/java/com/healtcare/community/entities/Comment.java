@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -18,6 +19,7 @@ public class Comment {
 
     private String userId;
 
+    @NotNull(message = "Content cannot be null")
     @Column(columnDefinition = "TEXT")
     private String content;
     private LocalDateTime timeCreated;

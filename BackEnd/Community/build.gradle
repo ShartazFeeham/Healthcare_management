@@ -43,6 +43,8 @@ dependencies {
 
 	// Websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.2.0'
 }
 
 ext {
