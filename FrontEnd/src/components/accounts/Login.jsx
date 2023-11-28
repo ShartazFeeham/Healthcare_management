@@ -77,7 +77,9 @@ const Login = () => {
           localStorage.setItem("email", email);
           localStorage.setItem("userId", userId);
 
-          navigate("/");
+          if (role === "ADMIN") navigate("/health/admin");
+          else if (role === "PATIENT") navigate("/health/patient");
+          else navigate("/health/doctor");
         }
       })
       .catch((error) => {
