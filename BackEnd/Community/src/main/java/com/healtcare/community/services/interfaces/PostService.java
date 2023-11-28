@@ -14,4 +14,5 @@ public interface PostService {
     public PostDetailDTO getPostById(Long postId);
     public void update(String userId, Long postId, PostUpdateDTO postUpdateDTO);
     public void delete(String userId, Long postId);
+    public List<PostReadDTO> getTopSiteFeedbacks();
 }

@@ -48,4 +48,9 @@ public class PostController {
         postService.delete(IDExtractor.getUserID(), postId);
         return ResponseEntity.ok("Post deleted successfully");
     }
+
+    @GetMapping("/feedbacks-latest")
+    public ResponseEntity<List<PostReadDTO>> getLatestFeedbacks(){
+        return ResponseEntity.ok(postService.getTopSiteFeedbacks());
+    }
 }

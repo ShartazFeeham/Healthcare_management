@@ -143,6 +143,12 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
+    @Override
+    public List<PostReadDTO> getTopSiteFeedbacks() {
+        List<Post> posts = postRepository.findByTypeOrderByTimeCreatedAsc("feedback", PageRequest.of(0, 3)).getContent();
+        return posts.stream().map(this::convertToReadDTO).toList();
+    }
+
     private void verifyOwner(String userId, Post post){
         if(!post.getUserId().equals(userId)){
             throw new AccessDeniedException("post ("+post.getPostId()+"). "+"You don't have permission to " +
