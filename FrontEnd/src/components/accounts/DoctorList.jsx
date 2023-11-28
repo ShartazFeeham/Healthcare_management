@@ -58,19 +58,7 @@ const DoctorsList = () => {
 
   return (
     <>
-      <div
-        className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-        style={{
-          minHeight: "150px",
-          backgroundImage:
-            "url(" + require("../../assets/img/cover/health5.jpg") + ")",
-          backgroundSize: "cover",
-          backgroundPosition: "center top",
-        }}
-      >
-        <span className="mask bg-gradient-default opacity-6" />
-      </div>
-      <Container className="mt--7" fluid>
+      <Container fluid>
         <Row>
           <Col className="order-xl-1" xl="12">
             <Card className="bg-secondary shadow">

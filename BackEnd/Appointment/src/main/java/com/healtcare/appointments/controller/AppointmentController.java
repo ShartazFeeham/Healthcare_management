@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/appointments")
@@ -61,6 +62,18 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getUpcomingAppointmentsByDoctor(doctorId));
     }
 
+    // Endpoint to retrieve a list of upcoming appointments of public users.
+    @GetMapping("/complete/public")
+    public ResponseEntity<List<AppointmentListDTO>> getPublicUpcoming() {
+        return ResponseEntity.ok(appointmentService.getPublicCompletedAppointments());
+    }
+
+    // Endpoint to retrieve a list of upcoming appointments of public users.
+    @GetMapping("/upcoming/public")
+    public ResponseEntity<List<AppointmentListDTO>> getPublicCompleted() {
+        return ResponseEntity.ok(appointmentService.getPublicUpcomingAppointments());
+    }
+
     // Endpoint to count the number of booked appointments for a specific doctor on a given date and shift.
     @GetMapping("/booked/{doctorId}/{date}/{shift}")
     public ResponseEntity<Integer> countBookedAppointments(@PathVariable String doctorId, @PathVariable String date, @PathVariable String shift) {
@@ -85,5 +98,15 @@ public class AppointmentController {
     @GetMapping("/check/{appointmentId}")
     public ResponseEntity<Boolean> checkAppointmentValidity(@PathVariable String appointmentId) {
         return ResponseEntity.ok(appointmentService.checkAppointmentValidity(appointmentId));
+    }
+    // Endpoint to get the total appointments count
+    @GetMapping("/total-count")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(appointmentService.totalCount());
+    }
+    // Endpoint to get appointment statistics
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats() {
+        return ResponseEntity.ok(appointmentService.getAppointmentStatistics());
     }
 }

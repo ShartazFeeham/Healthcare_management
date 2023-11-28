@@ -1,13 +1,9 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import styles from '../Graphical/PieView.module.css'
+import styles from '../graphical/PieView.module.css'
 import PieItem from './PieItem';
-import { useTheme } from "@mui/material";
 
 export default function BarView({ title, data, colors, description, requiredAmount }) {
-
-    const theme = useTheme();
-    const mode = theme.palette.mode;
 
     const para1 = 'required'
     const para2 = 'value'
@@ -20,13 +16,13 @@ export default function BarView({ title, data, colors, description, requiredAmou
     }
     if (data === null || data.length === 0) return (<><div className={styles.container}><h3>Not enough data to make a Bar chart on <br></br> {title}</h3></div></>)
     return (<>
-        <div className={styles.container}>
-            <div className={styles.description}>
-                {description}
-            </div>
+        <div className='m-3'>
+            <h2 className={styles.description}>
+                {title}
+            </h2>
             <div className={styles.innercont}>
                 <div className={styles.visual}>
-                    <ResponsiveContainer width={250} height={250}>
+                    <ResponsiveContainer width={800} height={300}>
                         <BarChart
                             data={data}
                             margin={{
@@ -45,14 +41,14 @@ export default function BarView({ title, data, colors, description, requiredAmou
                     </ResponsiveContainer>
                 </div>
                 <div className={styles.title}>
-                    {title}
+                    {description}
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'justify' }}>
                     {data.map((entry, index) => (
                         <PieItem
                             key={`cell-${index}`}
                             entry={entry}
-                            color={mode === 'dark' ? 'black' : 'white'}
+                            color={'white'}
                             bgcolor={colors[index]}
                         />
                     ))}

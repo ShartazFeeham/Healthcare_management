@@ -19,10 +19,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -195,6 +192,26 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .filter(this::isAppointmentComplete).toList());
     }
 
+    @Override
+    public Long totalCount() {
+        return appointmentRepository.count();
+    }
+
+    @Override
+    public Map<String, Object> getAppointmentStatistics() {
+        Map<String, Object> result = new HashMap<>();
+        // Fetch shifts data
+        List<Map<String, Object>> shifts = appointmentRepository.findShiftStatistics();
+        // Fetch type data
+        List<Map<String, Object>> types = appointmentRepository.findTypeStatistics();
+        // Fetch daily stats data
+        List<Map<String, Object>> dailyStats = appointmentRepository.findDailyStatistics();
+        result.put("shifts", shifts);
+        result.put("type", types);
+        result.put("dailyStats", dailyStats);
+        return result;
+    }
+
     // Helper method to check if the appointment is before (now + delay + 20 minutes)
     private boolean isAppointmentComplete(Appointment appointment) {
         return getDelayedAdjustedTIme(appointment).plusMinutes(20).isBefore(LocalDateTime.now());
@@ -209,6 +226,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentListDTO> getUpcomingAppointmentsByPatient(String patientId) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         List<Appointment> appointments = appointmentRepository.findByPatientIdAndCancelledAndAppointmentTimeAfter(patientId, false, currentDateTime);
+        return appointmentListToAppointmentListRead(appointments);
+    }
+
+    @Override
+    public List<AppointmentListDTO> getPublicCompletedAppointments() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        List<Appointment> appointments = appointmentRepository.findByPatientIdStartingWithAndCancelledAndAppointmentTimeBefore("Ex", false, currentDateTime);
+        return appointmentListToAppointmentListRead(appointments);
+    }
+
+    @Override
+    public List<AppointmentListDTO> getPublicUpcomingAppointments() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        List<Appointment> appointments = appointmentRepository.findByPatientIdStartingWithAndCancelledAndAppointmentTimeAfter("Ex", false, currentDateTime);
         return appointmentListToAppointmentListRead(appointments);
     }
 

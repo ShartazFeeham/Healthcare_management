@@ -51,7 +51,7 @@ public class SearchServiceImpl implements SearchService {
         if(matchValue > 0){
             Map<String, Object> map = new HashMap<>();
             map.put("photo", entity.getProfilePhoto());
-            map.put("url", "/health/patients/" + entity.getUserId());
+            map.put("url", "/health/doctors/" + entity.getUserId());
             map.put("match", matchValue);
             map.put("type", "doctor");
 

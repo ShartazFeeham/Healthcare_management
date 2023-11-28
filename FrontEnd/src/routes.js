@@ -31,6 +31,7 @@ import CreateAppointment from "components/appointment/CreateAppointment";
 import Notifications from "components/notification/Notifications";
 import SettingsPage from "components/notification/SettingsPage";
 import Search from "components/search/Search";
+import AdminDashboard from "components/admin-dashboard/Dashboard";
 
 var routes = [
   {
@@ -61,7 +62,7 @@ var routes = [
     path: "/admin",
     name: "Home",
     icon: "fa fa-home text-info",
-    component: <Index />,
+    component: <AdminDashboard />,
     layout: "/health",
     role: "ADMIN",
   },
@@ -240,7 +241,7 @@ var routes = [
     icon: "fa-solid fa-users-line text-skyblue",
     component: <DoctorsList />,
     layout: "/health",
-    role: "ADMIN",
+    role: "",
   },
   {
     path: "/patients",
@@ -248,7 +249,7 @@ var routes = [
     icon: "fa-solid fa-users-rays text-gray",
     component: <PatientsList />,
     layout: "/health",
-    role: "ADMIN",
+    role: "",
   },
   {
     path: "/rooms",
@@ -256,7 +257,7 @@ var routes = [
     icon: "fa-solid fa-hotel text-warning",
     component: <RoomAllocation />,
     layout: "/health",
-    role: "ADMIN",
+    role: "",
   },
 
   {

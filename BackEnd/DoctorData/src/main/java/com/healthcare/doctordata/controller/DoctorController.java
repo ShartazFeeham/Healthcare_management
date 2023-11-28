@@ -59,4 +59,9 @@ public class DoctorController {
     public ResponseEntity<UserMinimalInfoDTO> updatePatientProfile(@PathVariable String userId) throws ItemNotFoundException {
         return ResponseEntity.ok(doctorService.getUserMinimalInfo(userId));
     }
+
+    @GetMapping("/total-count")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(doctorService.getTotalCount());
+    }
 }

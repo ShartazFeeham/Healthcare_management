@@ -13,4 +13,5 @@ public interface DoctorService {
     public void delete(String userId) throws ItemNotFoundException;
     UserMinimalInfoDTO getUserMinimalInfo(String userId) throws ItemNotFoundException;
     DoctorEditExistingDTO editExisting() throws ItemNotFoundException;
+    Long getTotalCount();
 }

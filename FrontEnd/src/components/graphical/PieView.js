@@ -1,18 +1,15 @@
 import { Cell, Pie, PieChart } from "recharts"
 import PieItem from "./PieItem"
 import styles from './PieView.module.css'
-import { Box, IconButton, useTheme, Typography } from "@mui/material";
 
 export default function PieView({ title, data, description, colors, size }) {
-    const theme = useTheme();
-    const mode = theme.palette.mode;
 
     if (data === null || data.length === 0) return (<><div className={styles.container}><h3>Not enough data to make a Pie chart on <br></br> {title}</h3></div></>)
     return (<div className="graph-item">
         <div className={styles.container}>
-            <div className={styles.description}>
-                {description}
-            </div>
+            <h2 className={styles.description}>
+                {title}
+            </h2>
             <div className={styles.innercont}>
                 <div className={styles.visual}>
                     <PieChart width={25 * size} height={25 * size}>
@@ -29,14 +26,14 @@ export default function PieView({ title, data, description, colors, size }) {
                     </PieChart>
                 </div>
                 <div className={styles.title}>
-                    {title}
+                    {description}
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'justify' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', textAlign: "center" }}>
                     {data.map((entry, index) => (
                         <PieItem
                             key={`cell-${index}`}
                             entry={entry}
-                            color={mode === 'dark' ? 'black' : 'white'}
+                            color={'white'}
                             bgcolor={colors[index]}
                         />
                     ))}

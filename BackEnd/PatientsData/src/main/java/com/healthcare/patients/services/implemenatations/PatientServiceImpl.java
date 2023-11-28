@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
@@ -144,5 +146,15 @@ public class PatientServiceImpl implements PatientService {
         return UserMinimalInfoDTO.builder().photoURL(patient.getProfilePhoto())
                 .firstName(patient.getFirstName()).lastName(patient.getLastName())
                 .build();
+    }
+
+    @Override
+    public Integer patientCount() {
+        return (int) patientRepository.count();
+    }
+
+    @Override
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
     }
 }

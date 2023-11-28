@@ -188,4 +188,9 @@ public class DoctorServiceImpl implements DoctorService {
 
         return profileDTO;
     }
+
+    @Override
+    public Long getTotalCount() {
+        return doctorRepository.count();
+    }
 }
