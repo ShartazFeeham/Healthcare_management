@@ -44,6 +44,7 @@ const Search = () => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Need help? Search anything!"
           style={{
             width: "80%",
             maxWidth: "700px",

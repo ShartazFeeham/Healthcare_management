@@ -46,7 +46,7 @@ const Logged = (props) => {
         {...props}
         routes={routes}
         logo={{
-          innerLink: "/health/index",
+          innerLink: "/common/index",
           imgSrc: require("../assets/img/brand/logo3.png"),
           imgAlt: "...",
         }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   UncontrolledCollapse,
   NavbarBrand,
@@ -11,10 +11,15 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { isAdmin } from "scripts/accountInfo";
+import { isPatient } from "scripts/accountInfo";
+import { isLogged } from "scripts/accountInfo";
 
 const CommonNavbar = () => {
+  const location = useLocation();
+  const currentUrl = location.pathname;
   const handleGoBack = () => {
-    window.history.back(); // Go back to the previous page
+    window.history.back();
   };
 
   return (
@@ -47,19 +52,80 @@ const CommonNavbar = () => {
               </Row>
             </div>
             <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink
-                  className="nav-link-icon"
-                  to="/"
-                  tag={Link}
-                  onClick={handleGoBack}
-                >
-                  <i className="ni ni-bold-left" />
-                  <span className="nav-link-inner--text">
-                    Back to previous page
-                  </span>
-                </NavLink>
-              </NavItem>
+              {!currentUrl.includes("index") ? (
+                <NavItem>
+                  <NavLink
+                    className="nav-link-icon"
+                    to="/"
+                    tag={Link}
+                    onClick={handleGoBack}
+                  >
+                    <i className="ni ni-bold-left" />
+                    <span className="nav-link-inner--text">
+                      Back to previous page
+                    </span>
+                  </NavLink>
+                </NavItem>
+              ) : (
+                <>
+                  {isLogged() ? (
+                    <>
+                      <NavItem>
+                        <NavLink
+                          className="nav-link-icon"
+                          to={
+                            isPatient()
+                              ? "/health/patient"
+                              : isAdmin()
+                              ? "/health/admin"
+                              : "/health/doctor"
+                          }
+                          tag={Link}
+                        >
+                          <i className="fa fa-home" />
+                          <span className="nav-link-inner--text">Home</span>
+                        </NavLink>
+                      </NavItem>
+                    </>
+                  ) : (
+                    <>
+                      <NavItem>
+                        <NavLink
+                          className="nav-link-icon"
+                          to="/public/register-patient"
+                          tag={Link}
+                        >
+                          <i className="ni ni-circle-08" />
+                          <span className="nav-link-inner--text">Register</span>
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          className="nav-link-icon"
+                          to="/public/login"
+                          tag={Link}
+                        >
+                          <i className="ni ni-key-25" />
+                          <span className="nav-link-inner--text">Login</span>
+                        </NavLink>
+                      </NavItem>
+
+                      <NavItem>
+                        <NavLink
+                          className="nav-link-icon"
+                          to="/common/search"
+                          tag={Link}
+                        >
+                          <i className="ni ni-single-02" />
+                          <span className="nav-link-inner--text">
+                            Help desk
+                          </span>
+                        </NavLink>
+                      </NavItem>
+                    </>
+                  )}
+                </>
+              )}
             </Nav>
           </UncontrolledCollapse>
         </Container>
