@@ -17,15 +17,19 @@ public class TeleSecurityImpl implements TeleSecurityService {
     private final AppointmentService appointmentService;
     private final DelayService delayService;
 
+    // Method to verify if a user has the right to join a telehealth appointment
     @Override
     public void verify(String appointmentId) {
+        // Get appointment details
         Appointment appointment = appointmentService.getAppointment(appointmentId);
         LocalDateTime now = LocalDateTime.now();
+
+        // Calculate the delay in minutes for the appointment
         Integer delayInMinutes = delayService.getDelayInMinutes(appointment.getDoctorId(), appointment.getShift(), appointment.getAppointmentTime());
         LocalDateTime appointmentTime = appointment.getAppointmentTime().plusMinutes(delayInMinutes);
 
-        // Check whether the user has right to join the appointment or not.
-        if(!appointmentId.contains(IDExtractor.getUserID())){
+        // Check whether the user has the right to join the appointment or not.
+        if (!appointmentId.contains(IDExtractor.getUserID())) {
             throw new AccessDeniedException("You can not join someone else's appointment!");
         }
 

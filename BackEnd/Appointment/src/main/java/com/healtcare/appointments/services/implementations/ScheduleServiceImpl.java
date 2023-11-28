@@ -15,6 +15,7 @@ import com.healtcare.appointments.utilities.constants.AppointmentConstants;
 import com.healtcare.appointments.utilities.token.IDExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -30,15 +31,18 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final AppointmentService appointmentService;
     private final DelayService delayService;
 
+    // Method to set a schedule
     @Override
     public void setSchedule(ScheduleSetDTO scheduleDTO) throws AccessDeniedException {
         LocalDate currentDate = LocalDate.now();
         LocalDate scheduleDate = scheduleDTO.getDate();
 
+        // Check if the schedule date is in the past
         if (scheduleDate.isBefore(currentDate)) {
             throw new AccessDeniedException("You are not allowed to create a schedule for a date that is already passed!");
         }
 
+        // Check if the schedule date is within the allowed scheduling limit
         if (scheduleDate.isAfter(currentDate.plusDays(AppointmentConstants.ADVANCE_SCHEDULING_DAYS_LIMIT))) {
             throw new AccessDeniedException("You can only schedule for at most " + AppointmentConstants.ADVANCE_SCHEDULING_DAYS_LIMIT
                     + " upcoming days. " + timeFormatter.formatDate(scheduleDate) + " is "
@@ -48,6 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Optional<Schedule> scheduleOp = scheduleRepository.findByDateAndDoctorId(scheduleDate, IDExtractor.getUserID());
         checkCapacityCap(scheduleDTO);
 
+        // If the schedule doesn't exist, create a new one; otherwise, update the existing schedule
         if (scheduleOp.isEmpty()) {
             createSchedule(scheduleDTO);
         } else {
@@ -55,6 +60,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    // Method to check if the capacity is within the allowed limits
     private void checkCapacityCap(ScheduleSetDTO scheduleDTO){
         if(scheduleDTO.getMorningCapacity() < AppointmentConstants.MIN_CAPACITY_LIMIT
                 || scheduleDTO.getMorningCapacity() > AppointmentConstants.MAX_CAPACITY_LIMIT){
@@ -73,30 +79,37 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    // Method to create a new schedule
     private void createSchedule(ScheduleSetDTO scheduleDTO) throws AccessDeniedException {
         Schedule schedule = scheduleSetDtoToSchedule(scheduleDTO);
         scheduleRepository.save(schedule);
     }
 
+    // Method to update an existing schedule
     private void updateSchedule(ScheduleSetDTO scheduleDTO, Schedule schedule) throws AccessDeniedException {
         String doctorId = IDExtractor.getUserID();
         LocalDate date = scheduleDTO.getDate();
 
+        // Update morning shift and capacity
         schedule.setMorningShift(updateShiftStatusChanges(doctorId, date, AppointmentConstants.SHIFT1, scheduleDTO.getMorning(), schedule.getMorningShift()));
         schedule.setMorningCapacity(updateShiftCapacityChanges(doctorId, date, AppointmentConstants.SHIFT1, scheduleDTO.getMorningCapacity(), schedule.getMorningCapacity()));
 
+        // Update afternoon shift and capacity
         schedule.setAfternoonShift(updateShiftStatusChanges(doctorId, date, AppointmentConstants.SHIFT2, scheduleDTO.getAfterNoon(), schedule.getAfternoonShift()));
         schedule.setAfternoonCapacity(updateShiftCapacityChanges(doctorId, date, AppointmentConstants.SHIFT2, scheduleDTO.getAfterNoonCapacity(), schedule.getAfternoonCapacity()));
 
+        // Update evening shift and capacity
         schedule.setEveningShift(updateShiftStatusChanges(doctorId, date, AppointmentConstants.SHIFT3, scheduleDTO.getEvening(), schedule.getEveningShift()));
         schedule.setEveningCapacity(updateShiftCapacityChanges(doctorId, date, AppointmentConstants.SHIFT3, scheduleDTO.getEveningCapacity(), schedule.getEveningCapacity()));
 
         scheduleRepository.save(schedule);
     }
 
+    // Method to update shift status changes
     private Integer updateShiftStatusChanges(String doctorId, LocalDate date, String slotName, Integer shiftChange, Integer shiftExisting)
             throws AccessDeniedException {
         if (!shiftChange.equals(shiftExisting)) {
+            // Check if there are booked appointments in the slot
             if (appointmentService.countBookedAppointments(doctorId, date, slotName) > 0) {
                 throw new AccessDeniedException("Patients have already booked appointments in " + slotName + " slot of "
                         + timeFormatter.formatDate(date) + ", you can't change it anymore");
@@ -105,10 +118,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         return shiftChange;
     }
 
+    // Method to update shift capacity changes
     private Integer updateShiftCapacityChanges(String doctorId, LocalDate date, String slotName, Integer capacityChange, Integer capacityExisting)
             throws AccessDeniedException {
         if (!capacityChange.equals(capacityExisting)) {
             Integer bookings = appointmentService.countAppointmentCapacity(doctorId, date, slotName);
+            // Check if there are booked appointments exceeding the new capacity
             if (bookings > capacityChange) {
                 throw new AccessDeniedException("Patients have already booked " + bookings + " appointments in " + slotName + " slot of "
                         + timeFormatter.formatDate(date) + ", you can't change it below " + bookings);
@@ -117,6 +132,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return capacityChange;
     }
 
+    // Method to get a schedule by date and doctor ID
     @Override
     public ScheduleGetDTO getScheduleByDateAndDoctorId(String date, String doctorId) {
         LocalDate parsedDate = LocalDate.parse(date);
@@ -129,11 +145,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleToScheduleGetDto(schedule.get());
     }
 
+    // Method to get dates by doctor ID
     @Override
     public List<LocalDate> getDatesByDoctorId(String doctorId) {
         return scheduleRepository.findDistinctDatesByDoctorIdAndStartDate(doctorId, LocalDate.now().minusDays(1));
     }
 
+    // Method to convert ScheduleSetDTO to Schedule
     private Schedule scheduleSetDtoToSchedule(ScheduleSetDTO scheduleDTO) {
         Schedule schedule = new Schedule();
         schedule.setDoctorId(IDExtractor.getUserID());
@@ -147,6 +165,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedule;
     }
 
+    // Method to convert Schedule to ScheduleGetDTO
     private ScheduleGetDTO scheduleToScheduleGetDto(Schedule schedule) {
         LocalDate appointmentDate = schedule.getDate();
         // Morning

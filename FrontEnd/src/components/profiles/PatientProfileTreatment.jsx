@@ -45,19 +45,12 @@ export const PatientProfileTreatment = ({ patientId }) => {
           </Col>
           <Col lg="6">
             <p>
-              <FontAwesomeIcon icon={faCalendar} /> Closing Date:{" "}
-              <b>{treatment.closingDate}</b>
+              <FontAwesomeIcon icon={faChartLine} /> Progression:{" "}
+              <b>{treatment.progression}</b>
             </p>
           </Col>
         </Row>
-        <Row>
-          <Col lg="12">
-            <p>
-              <FontAwesomeIcon icon={faComment} /> Doctor Comment:{" "}
-              <b>{treatment.doctorComment}</b>
-            </p>
-          </Col>
-        </Row>
+
         <Row>
           <Col lg="12">
             <p>
@@ -113,10 +106,10 @@ export const PatientProfileTreatment = ({ patientId }) => {
           </Col>
         </Row>
         <Row>
-          <Col lg="6">
+          <Col lg="12">
             <p>
-              <FontAwesomeIcon icon={faChartLine} /> Progression:{" "}
-              <b>{treatment.progression}</b>
+              <FontAwesomeIcon icon={faComment} /> Doctor Comment:{" "}
+              <b>{treatment.doctorComment}</b>
             </p>
           </Col>
         </Row>

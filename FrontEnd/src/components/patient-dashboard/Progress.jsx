@@ -144,7 +144,7 @@ const Progress = () => {
                       >
                         <img
                           className="rounded-circle"
-                          src={achievement.logoUrl}
+                          src={achievement.logoURL}
                         />
                       </a>
                     </Col>

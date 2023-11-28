@@ -22,20 +22,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service @RequiredArgsConstructor
-public class CDSSServiceImpl implements CDSSService{
+@Service
+@RequiredArgsConstructor
+public class CDSSServiceImpl implements CDSSService {
 
     private final TreatmentRepository treatmentRepository;
     private final TreatmentService treatmentService;
     private final ReportRepository reportRepository;
     private final GPTRequester gptRequester;
 
+    // Method to get similar treatments for a given patient
     @Override
     public List<Treatment> getSimilar(String patientId) throws InvalidRequestException {
         int batchSize = 10, page = 0;
         List<Treatment> targetTreatments = treatmentRepository.findByPatientId(patientId);
         if (targetTreatments.isEmpty()) {
-            throw new InvalidRequestException("Not enough data to run CDSS. Patient must have at least one illness/treatments data to analyze");
+            throw new InvalidRequestException("Not enough data to run CDSS. Patient must have at least one illness/treatment data to analyze");
         }
 
         Map<Long, Integer> similarityMap = new HashMap<>();
@@ -43,8 +45,8 @@ public class CDSSServiceImpl implements CDSSService{
             List<Treatment> batch = treatmentRepository.findAll(PageRequest.of(page, batchSize)).stream().toList();
             if (batch.isEmpty()) break;
             for (Treatment treatment : batch) {
-                // If its own data then skip
-                if(treatment.getPatientId().equals(patientId)) continue;;
+                // If it's own data then skip
+                if(treatment.getPatientId().equals(patientId)) continue;
                 int similarity = targetTreatments.stream()
                         .mapToInt(targetTreatment -> targetTreatment.getSimilarityValue(treatment))
                         .max()
@@ -73,6 +75,7 @@ public class CDSSServiceImpl implements CDSSService{
                 .collect(Collectors.toList());
     }
 
+    // Method to generate a report for a given patient
     @Override
     public String getReport(String patientId) throws CustomException {
         List<Treatment> similar = getSimilar(patientId);
@@ -86,21 +89,21 @@ public class CDSSServiceImpl implements CDSSService{
         } catch (Exception e) {
             throw new RuntimeException("Error converting object to JSON string", e);
         }
-        String message = "This is a tough request, listen very carefully. I'm giving you a patients' treatment/illness " +
+        String message = "This is a tough request, listen very carefully. I'm giving you a patient's treatment/illness " +
                 "data then I'll give you two other most matching patients' data. You'll have to do some analysis on these. " +
-                "The analysis will be of 3 steps, each steps with proper detailed description. 1. Analysis on target parents' " +
+                "The analysis will be of 3 steps, each steps with proper detailed description. 1. Analysis on target patient's " +
                 "treatment info, kind of an overview. 2. Analysis on those two similar patients' data, do not mention similar " +
-                "patients data directly, rather say like: patients who has similar health tract also suffered... like this, " +
-                "this section must be bit larger (at least 150 words). 3. Last section is feedback for the patient, what may " +
-                "happen in future based on your perception and the data analysis too, what treatments he/she may need, what " +
-                "specialized doctor is preferred, what kind of diagnoses may need. 3rd section also should be around 200 words. " +
+                "patients data directly, rather say like: patients who have similar health tract also suffered... like this, " +
+                "this section must be a bit larger (at least 150 words). 3. The last section is feedback for the patient, what may " +
+                "happen in the future based on your perception and the data analysis too, what treatments he/she may need, what " +
+                "specialized doctor is preferred, what kind of diagnoses may need. The 3rd section also should be around 200 words. " +
                 "That's it, also note that you should not write anything additional like: Certainly here is the... or Understood here is..." +
                 "Just straight to the point and detailed analysis. Here is patient data - " + patientString + "Here is similar profile patient" +
                 "data - " + similarPatientString;
 
-        try{
+        try {
             String result = gptRequester.send(message);
-            if(IDExtractor.getUserID().equals(patientId)){
+            if (IDExtractor.getUserID().equals(patientId)) {
                 Report report = new Report();
                 report.setContent(result);
                 report.setPatientId(patientId);
@@ -109,17 +112,17 @@ public class CDSSServiceImpl implements CDSSService{
                 reportRepository.save(report);
             }
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new CustomException("InternalCallException", "Internal call to AI analysis failed.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    // Method to get all reports for a given patient
     @Override
     public List<Report> getReports(String patientId) throws AccessDeniedException {
-        if(IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().equals(patientId)){
+        if (IDExtractor.getUserID().startsWith("D") || IDExtractor.getUserID().equals(patientId)) {
             return reportRepository.findByPatientId(patientId);
         }
-        throw new AccessDeniedException("You can not see others' personal data analysis!");
+        throw new AccessDeniedException("You cannot see others' personal data analysis!");
     }
 }

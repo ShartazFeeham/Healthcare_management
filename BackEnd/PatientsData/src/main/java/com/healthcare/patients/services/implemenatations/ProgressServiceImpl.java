@@ -153,9 +153,15 @@ public class ProgressServiceImpl implements ProgressService {
         if (totalScore >= progress.getAchievement().getGoalScore()
                 && progress.getCompletionDate() == null) {
             LocalDate currentDate = LocalDate.now();
-            long daysDifference = ChronoUnit.DAYS.between(progress.getChallengeDate(), currentDate);
+            LocalDate startDate = LocalDate.MAX;
+            LocalDate endDate = LocalDate.MIN;
+            for(Score score: progress.getScores()){
+                if(score.getDate().isBefore(startDate)) startDate = score.getDate();
+                if(score.getDate().isAfter(endDate)) endDate = score.getDate();
+            }
+            long daysDifference = ChronoUnit.DAYS.between(startDate, endDate);
             progress.setCompletedIn((int) daysDifference);
-            progress.setCompletionDate(currentDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
+            progress.setCompletionDate(endDate.format(DateTimeFormatter.ofPattern("dd MMMM uuuu")));
 
             return true;
         }

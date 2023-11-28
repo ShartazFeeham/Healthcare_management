@@ -14,12 +14,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class RecoveryServiceImpl implements RecoveryService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // Changes the password for the specified user.
     @Override
     public void changePassword(String userId, PasswordChangeDTO passwordChangeDTO)
             throws AccountNotFoundException, PasswordMismatchException {
@@ -37,18 +39,21 @@ public class RecoveryServiceImpl implements RecoveryService {
         accountRepository.save(account);
     }
 
+    // Resets the password for the specified user based on the provided email and OTP.
     @Override
     public void resetPassword(PasswordResetDTO passwordResetDTO) throws AccountNotFoundException {
         // Check if the account exists
         Account account = accountRepository.findByEmail(passwordResetDTO.getEmail())
                 .orElseThrow(() -> new AccountNotFoundException("email " + passwordResetDTO.getEmail()));
 
-        if(account.getOtp() != null && account.getOtp() != 0
+        // Validate OTP and update the password
+        if (account.getOtp() != null && account.getOtp() != 0
                 && account.getOtp().equals(passwordResetDTO.getOtp())
-                && account.getOtpGenerationTime().isAfter(LocalDateTime.now().minusMinutes(5L))){
+                && account.getOtpGenerationTime().isAfter(LocalDateTime.now().minusMinutes(5L))) {
             account.setPassword(passwordEncoder.encode(passwordResetDTO.getNewPassword()));
             accountRepository.save(account);
+        } else {
+            throw new OTPValidationException(passwordResetDTO.getOtp());
         }
-        else throw new OTPValidationException(passwordResetDTO.getOtp());
     }
 }

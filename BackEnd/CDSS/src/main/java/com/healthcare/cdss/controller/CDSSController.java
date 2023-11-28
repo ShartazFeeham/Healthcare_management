@@ -22,17 +22,20 @@ public class CDSSController {
 
     private final CDSSService cdssService;
 
+    // Endpoint to get similar treatments for a patient
     @GetMapping("/similar/{patientId}")
     public ResponseEntity<List<Treatment>> getSimilarTreatments(@PathVariable String patientId) throws InvalidRequestException {
         List<Treatment> similarTreatments = cdssService.getSimilar(patientId);
         return ResponseEntity.ok(similarTreatments);
     }
 
+    // Endpoint to generate a report for a patient
     @GetMapping("/report/generate/{patientId}")
     public ResponseEntity<String> getReport(@PathVariable String patientId) throws CustomException {
         return ResponseEntity.ok(cdssService.getReport(patientId));
     }
 
+    // Endpoint to get all reports for a patient
     @GetMapping("/report/list/{patientId}")
     public ResponseEntity<List<Report>> getAllReport(@PathVariable String patientId) throws InvalidRequestException, AccessDeniedException {
         return ResponseEntity.ok(cdssService.getReports(patientId));

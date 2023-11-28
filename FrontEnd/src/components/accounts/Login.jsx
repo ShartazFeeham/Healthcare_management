@@ -204,8 +204,10 @@ const Login = () => {
                       disabled={isOtpSent}
                     >
                       {isOtpSent
-                        ? text("login-resend-otp", "OTP Sent. Resend OTP.") +
-                          { timer }
+                        ? text(
+                            "login-resend-otp",
+                            "OTP Sent. Resend OTP in " + timer + "s"
+                          )
                         : "Send OTP"}
                     </Button>
                   </div>

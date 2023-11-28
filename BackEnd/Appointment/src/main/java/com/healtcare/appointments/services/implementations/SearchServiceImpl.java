@@ -12,49 +12,57 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
 
     private final EquipmentRepository equipmentRepository;
     private final ScheduleRepository scheduleRepository;
     private final TimeFormatter timeFormatter;
 
+    // Method to perform a search based on a keyword
     @Override
     public List<Map<String, Object>> search(String keyword) {
         List<Map<String, Object>> results = new ArrayList<>();
         Set<String> keywords = stringToSet(keyword);
 
+        // Search in equipment records
         var records1 = equipmentRepository.findAll();
-        for(var record: records1) {
-            Map<String, Object> entity = serach(keywords, record);
-            if(entity != null) results.add(entity);
+        for (var record : records1) {
+            Map<String, Object> entity = search(keywords, record);
+            if (entity != null) results.add(entity);
         }
 
-        if(keyword == null || keyword.isEmpty()) return results;
-        Map<String, Object> schedules = serach(keywords);
-        if(schedules != null) results.add(schedules);
+        // If the keyword is empty or null, return results without searching in schedules
+        if (keyword == null || keyword.isEmpty()) return results;
+
+        // Search in schedules
+        Map<String, Object> schedules = search(keywords);
+        if (schedules != null) results.add(schedules);
 
         return results;
     }
 
-    private Map<String, Object> serach(Set<String> words){
+    // Method to perform search in schedules based on keywords
+    private Map<String, Object> search(Set<String> words) {
         Map<String, Object> map = new HashMap<>();
         List<String> params = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
         String doctorId = "";
 
-        for(String word: words){
+        for (String word : words) {
+            // Find distinct dates by doctor ID and start date
             var dates = scheduleRepository.findDistinctDatesByDoctorIdAndStartDate(word, LocalDate.now().minusDays(1L));
-            for(LocalDate date: dates){
+            for (LocalDate date : dates) {
                 Optional<Schedule> scheduleOp = scheduleRepository.findByDateAndDoctorId(date, word);
-                if(scheduleOp.isPresent()){
+                if (scheduleOp.isPresent()) {
                     Schedule schedule = scheduleOp.get();
                     doctorId = schedule.getDoctorId();
-                    String shifts = (schedule.getMorningShift() > 0 ? "Morning (8am - 12pm), " : "" )
+                    String shifts = (schedule.getMorningShift() > 0 ? "Morning (8am - 12pm), " : "")
                             + (schedule.getAfternoonShift() > 0 ? "Afternoon (1pm - 5pm), " : "")
                             + (schedule.getEveningShift() > 0 ? "Evening (5pm - 9pm), " : "");
-                    if(!shifts.isEmpty()){
+                    if (!shifts.isEmpty()) {
                         params.add(timeFormatter.formatDate(schedule.getDate()));
                         values.add(shifts.substring(0, shifts.length() - 2) + " ");
                     }
@@ -62,7 +70,8 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        if(!values.isEmpty()){
+        // If values are found, create a map with relevant information
+        if (!values.isEmpty()) {
             map.put("url", "/health/appointment");
             map.put("match", 20);
             map.put("type", "appointment");
@@ -82,7 +91,8 @@ public class SearchServiceImpl implements SearchService {
         return null;
     }
 
-    private Map<String, Object> serach(Set<String> words, Equipment entity){
+    // Method to perform search in equipment based on keywords
+    private Map<String, Object> search(Set<String> words, Equipment entity) {
         int matchValue = 0;
         matchValue += getMatchingWordCount(entity.getId(), words, 10);
         matchValue += getMatchingWordCount(entity.getName(), words, 5);
@@ -90,7 +100,8 @@ public class SearchServiceImpl implements SearchService {
         matchValue += getMatchingWordCount(entity.getUseCases(), words, 1);
         matchValue += getMatchingWordCount(entity.getCosting(), words, 1);
 
-        if(matchValue > 0){
+        // If there is a match, create a map with relevant information
+        if (matchValue > 0) {
             Map<String, Object> map = new HashMap<>();
             map.put("photo", entity.getPhotoURL());
             map.put("url", "/common/equipments/" + entity.getId());
@@ -120,18 +131,20 @@ public class SearchServiceImpl implements SearchService {
         return null;
     }
 
+    // Method to convert a string to a set of lowercase words
     private Set<String> stringToSet(String text) {
-        if(text == null) return new HashSet<>();
+        if (text == null) return new HashSet<>();
         String[] splitWords = text.toLowerCase().split("\\s+");
         return new HashSet<>(Arrays.asList(splitWords));
     }
 
+    // Method to get the count of matching words based on a value
     private int getMatchingWordCount(String text, Set<String> searchWords, int value) {
         Set<String> textWords = stringToSet(text);
         int matchValue = 0;
-        for(String keyword: searchWords){
-            for(String targetWord: textWords){
-                if(targetWord.contains(keyword)) {
+        for (String keyword : searchWords) {
+            for (String targetWord : textWords) {
+                if (targetWord.contains(keyword)) {
                     matchValue += value;
                     break;
                 }

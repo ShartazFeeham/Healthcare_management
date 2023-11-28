@@ -34,18 +34,12 @@ public class Patient {
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Phone cannot be blank")
     private String phone;
 
-    @NotBlank(message = "Address cannot be blank")
     private String address;
-
     @NotBlank(message = "Gender cannot be blank")
     private String gender;
-
-    @NotBlank(message = "Blood group cannot be blank")
     private String bloodGroup;
-
     private String profilePhoto;
 
     // Patient health-related properties

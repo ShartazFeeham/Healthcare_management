@@ -1,8 +1,6 @@
 package com.healthcare.helpdesk.exceptions;
 
-import jakarta.persistence.PersistenceException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +14,7 @@ import java.util.Date;
 public class GlobalExceptionHandler {
 
     // Exception handler for handling NullPointerException, DataAccessException, and PersistenceException.
-    @ExceptionHandler({NullPointerException.class, DataAccessException.class, PersistenceException.class})
+    @ExceptionHandler({NullPointerException.class})
     public ResponseEntity<ErrorResponse> handleDatabaseExceptions(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),

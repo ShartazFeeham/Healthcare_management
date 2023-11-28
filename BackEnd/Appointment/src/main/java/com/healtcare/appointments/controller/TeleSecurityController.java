@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController @RequiredArgsConstructor
+@RestController
+@RequiredArgsConstructor
 public class TeleSecurityController {
+
     private final TeleSecurityService teleSecurityService;
+
+    // Endpoint to verify a user for a telehealth meeting. It can be doctor or patient
     @GetMapping("/tele/verify/{appointmentId}")
     public ResponseEntity<String> verify(@PathVariable String appointmentId){
         teleSecurityService.verify(appointmentId);

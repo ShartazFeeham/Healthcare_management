@@ -19,10 +19,12 @@ public class RecoveryController {
 
     private final RecoveryService recoveryService;
 
+    // Constructor-based injection of RecoveryService
     public RecoveryController(RecoveryService recoveryService) {
         this.recoveryService = recoveryService;
     }
 
+    // Changes the password for the currently authenticated user.
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO passwordChangeDTO)
             throws AccountNotFoundException, PasswordMismatchException {
@@ -30,6 +32,7 @@ public class RecoveryController {
         return ResponseEntity.ok("Password changed successfully.");
     }
 
+    // Resets the password based on the provided reset information (Password, OTP)
     @PutMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetDTO passwordResetDTO)
             throws AccountNotFoundException, OTPValidationException {

@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-@RestController @AllArgsConstructor
+@RestController
+@AllArgsConstructor
 public class SearchController {
+
     private final SearchService searchService;
+
+    // Endpoint to perform a search based on keywords.
     @GetMapping("/search/{keywords}")
     public ResponseEntity<List<Map<String, Object>>> search(@PathVariable String keywords){
         return ResponseEntity.ok(searchService.search(keywords));

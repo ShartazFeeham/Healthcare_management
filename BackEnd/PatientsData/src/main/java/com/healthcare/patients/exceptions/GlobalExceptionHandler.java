@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     // Exception handler for handling NullPointerException, DataAccessException, and PersistenceException.
-    @ExceptionHandler({NullPointerException.class, DataAccessException.class, PersistenceException.class})
+    @ExceptionHandler({NullPointerException.class, DataAccessException.class})
     public ResponseEntity<ErrorResponse> handleDatabaseExceptions(Exception e, HttpServletRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
     // Exception handler for handling validation
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<ErrorResponse> handleValidationException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidationException(ConstraintViolationException e, HttpServletRequest request) {
         Set<ConstraintViolation<?>> violations = ((ConstraintViolationException) e).getConstraintViolations();
 
         String errorMessage = violations.stream()
@@ -65,7 +65,6 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
 
 
     @ExceptionHandler({CustomException.class})

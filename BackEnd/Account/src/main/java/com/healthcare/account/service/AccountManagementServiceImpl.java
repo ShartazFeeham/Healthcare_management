@@ -20,7 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@Service @RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class AccountManagementServiceImpl implements AccountManagementService {
 
     private final AdminAccountRepository adminAccountRepository;
@@ -28,9 +29,10 @@ public class AccountManagementServiceImpl implements AccountManagementService {
     private final PasswordEncoder passwordEncoder;
     private final AccessService accessService;
 
+    // Creates a new account and saves it to the database.
     @Override
     public void createAccount(AccountCreateDTO accountCreateDTO) throws DuplicateEntityException {
-        // Check if the email  already exists to prevent duplicates
+        // Check if the email already exists to prevent duplicates
         if (accountRepository.findByEmail(accountCreateDTO.getEmail()).isPresent()) {
             throw new DuplicateEntityException("Account", "email", accountCreateDTO.getEmail());
         }
@@ -42,21 +44,26 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         newAccount.setPassword(passwordEncoder.encode(accountCreateDTO.getPassword()));
         newAccount.setRegisterDate(LocalDate.now());
         newAccount.setAccountLocked(true);
-        if(accountCreateDTO.getUserId().startsWith("D")){
+
+        // Set the role based on the user ID prefix
+        if (accountCreateDTO.getUserId().startsWith("D")) {
             newAccount.setAccountDeactivated(true);
         }
 
-        if(newAccount.getUserId().startsWith("P")) newAccount.setRole(Role.PATIENT);
-        else if(newAccount.getUserId().startsWith("D")) newAccount.setRole(Role.DOCTOR);
-        else if(newAccount.getUserId().startsWith("A")) newAccount.setRole(Role.ADMIN);
+        // Validate and set the role
+        if (newAccount.getUserId().startsWith("P")) newAccount.setRole(Role.PATIENT);
+        else if (newAccount.getUserId().startsWith("D")) newAccount.setRole(Role.DOCTOR);
+        else if (newAccount.getUserId().startsWith("A")) newAccount.setRole(Role.ADMIN);
         else throw new CustomException("ItemNotFoundException", "Account", "Given role doesn't exist!", HttpStatus.NOT_FOUND);
 
         accountRepository.save(newAccount);
         accessService.generateOTP(newAccount.getUserId());
 
+        // Fetch and return user information after account creation
         getUserInfo(newAccount.getUserId());
     }
 
+    // Fetches user information based on the user identity.
     @Override
     public AccountReadDTO getUserInfo(String identity) throws AccountNotFoundException {
         Account account = accessService.findByIdentity(identity);
@@ -70,6 +77,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         return result;
     }
 
+    // Creates a new admin account and associates it with a regular account.
     @Override
     public void createAdminAccount(AdminAccountCreateDTO createAdminDTO) throws DuplicateEntityException {
         String id = getId(createAdminDTO.getFirstName(), createAdminDTO.getLastName());
@@ -83,22 +91,23 @@ public class AccountManagementServiceImpl implements AccountManagementService {
         account.setUserId(id);
         account.setEmail(createAdminDTO.getEmail());
         account.setPassword(createAdminDTO.getPassword());
-        
+
         adminAccountRepository.save(adminAccount);
-        
-        try{
+
+        try {
             createAccount(account);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
+            // Rollback admin account creation if an exception occurs during regular account creation
             adminAccountRepository.deleteById(id);
             throw e;
         }
     }
 
+    // Generates a unique user ID based on the first letters of the first and last names.
     private String getId(String firstName, String lastName) {
         // Generate the initial ID pattern using the first letters of the first and last name
         String idPattern = "A" + firstName.toUpperCase().charAt(0) + lastName.toUpperCase().charAt(0);
         long count = adminAccountRepository.countByUserIdStartingWith(idPattern) + 1;
-        return  idPattern + count;
+        return idPattern + count;
     }
 }
